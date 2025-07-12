@@ -2,6 +2,9 @@ package io.github.thijzert123.homewizardapi.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Optional;
+import java.util.OptionalDouble;
+
 /**
  * A device to measure water use.
  * <p>
@@ -25,21 +28,21 @@ public class Watermeter extends Device {
     private final String serial;
 
     @JsonProperty("firmware_version")
-    private String firmwareVersion;
+    private final Optional<String> firmwareVersion = Optional.empty();
     @JsonProperty("api_version")
-    private String apiVersion;
+    private final Optional<String> apiVersion = Optional.empty();
 
     @JsonProperty("wifi_ssid")
-    private String wifiSsid;
+    private final Optional<String> wifiSsid = Optional.empty();
     @JsonProperty("wifi_strength")
-    private double wifiStrength;
+    private final OptionalDouble wifiStrength = OptionalDouble.empty();
 
     @JsonProperty("total_liter_m3")
-    private double totalLiterM3;
+    private final OptionalDouble totalLiterM3 = OptionalDouble.empty();
     @JsonProperty("active_liter_lpm")
-    private double activeLiterLpm;
+    private final OptionalDouble activeLiterLpm = OptionalDouble.empty();
     @JsonProperty("total_liter_offset_m3")
-    private double totalLiterOffsetM3;
+    private final OptionalDouble totalLiterOffsetM3 = OptionalDouble.empty();
 
     Watermeter(final String serviceName,
                final String hostAddress,
@@ -106,22 +109,22 @@ public class Watermeter extends Device {
     }
 
     @Override
-    public String getFirmwareVersion() {
+    public Optional<String> getFirmwareVersion() {
         return firmwareVersion;
     }
 
     @Override
-    public String getApiVersion() {
+    public Optional<String> getApiVersion() {
         return apiVersion;
     }
 
     @Override
-    public String getWifiSsid() {
+    public Optional<String> getWifiSsid() {
         return wifiSsid;
     }
 
     @Override
-    public double getWifiStrength() {
+    public OptionalDouble getWifiStrength() {
         return wifiStrength;
     }
 
@@ -130,7 +133,7 @@ public class Watermeter extends Device {
      *
      * @return total water usage in cubic meters since installation
      */
-    public double getTotalLiterM3() {
+    public OptionalDouble getTotalLiterM3() {
         return totalLiterM3;
     }
 
@@ -139,7 +142,7 @@ public class Watermeter extends Device {
      *
      * @return active water usage in liters per minute
      */
-    public double getActiveLiterLpm() {
+    public OptionalDouble getActiveLiterLpm() {
         return activeLiterLpm;
     }
 
@@ -152,7 +155,7 @@ public class Watermeter extends Device {
      * @deprecated value is in development and should not be used, annotation is used as a warning for IDEs
      */
     @Deprecated
-    public double getTotalLiterOffsetM3() {
+    public OptionalDouble getTotalLiterOffsetM3() {
         return totalLiterOffsetM3;
     }
 }

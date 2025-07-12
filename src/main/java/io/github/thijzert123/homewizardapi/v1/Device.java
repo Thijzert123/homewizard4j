@@ -3,16 +3,25 @@ package io.github.thijzert123.homewizardapi.v1;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.http.HttpRequest;
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 /**
  * A HomeWizard device, such as a Watermeter or P1-meter.
+ * <p>
+ * For some methods, you first need to call an update method ({@link #updateDeviceInfo()} and {@link #updateMeasurements()}).
+ * If you don't do that, they return an empty {@link Optional}.
  *
  * @author Thijzert123
+ * @see Optional
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Device {
@@ -21,6 +30,8 @@ public abstract class Device {
 
     Device() {
         objectMapper = new ObjectMapper();
+        // Makes sure Optional is supported
+        objectMapper.registerModule(new Jdk8Module());
     }
 
     private boolean update(final String fullAddress, final Device objectToUpdate) {
@@ -33,8 +44,9 @@ public abstract class Device {
 
         final String responseBody = HttpUtils.getBody("GET", fullAddress, HttpRequest.BodyPublishers.noBody());
         try {
-            LOGGER.debug("Mapping body with ObjectMapper, updating this instance");
+            LOGGER.debug("Mapping body with ObjectMapper, updating this instance... ");
             objectMapper.readerForUpdating(objectToUpdate).readValue(responseBody);
+            LOGGER.debug("Mapping body with ObjectMapper, updating this instance, done");
             return true;
         } catch (final JsonProcessingException jsonProcessingException) {
             LOGGER.error(jsonProcessingException.getMessage(), jsonProcessingException);
@@ -51,9 +63,19 @@ public abstract class Device {
     }
 
     /**
+     * Calls {@link #updateDeviceInfo()} and {@link #updateMeasurements()}.
+     *
+     * @return whether both actions where successful
+     */
+    public boolean updateAll() {
+        return updateDeviceInfo() && updateMeasurements();
+    }
+
+    /**
      * Updates the fields related to the device info. Requires {@link #isApiEnabled()} to be <code>true</code>.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/api#parameters">Official API documentation related to this method</a>
+     *
      * @return whether the action was successful
      * @see #isApiEnabled()
      */
@@ -63,6 +85,7 @@ public abstract class Device {
      * Updates the fields related to measurements. Requires {@link #isApiEnabled()} to be <code>true</code>.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/measurement">Official API documentation related to this method</a>
+     *
      * @return whether the action was successful
      * @see #isApiEnabled()
      */
@@ -117,6 +140,7 @@ public abstract class Device {
      * Returns the host address, for example <code>192.168.1.123</code>.
      * <p>
      * This information is always available.
+     *
      * @return returns the host address
      */
     public abstract String getHostAddress();
@@ -125,6 +149,7 @@ public abstract class Device {
      * Returns the port. Because the <code>v1</code> API uses HTTP, the port should always be <code>80</code>.
      * <p>
      * This information is always available.
+     *
      * @return the port
      */
     public abstract int getPort();
@@ -200,7 +225,7 @@ public abstract class Device {
      * @return the version of the currently installed firmware
      * @see #updateDeviceInfo()
      */
-    public abstract String getFirmwareVersion();
+    public abstract Optional<String> getFirmwareVersion();
 
     /**
      * Returns the current API version. It should always be <code>v1</code>.
@@ -212,29 +237,48 @@ public abstract class Device {
      * @return the current API version
      * @see #updateDeviceInfo()
      */
-    public abstract String getApiVersion();
+    public abstract Optional<String> getApiVersion();
 
     /**
      * Returns the SSID of the Wi-Fi network the device is connected to.
      * <p>
-     * In order to get this information, you must first call {@link #updateDeviceInfo()}.
+     * In order to get this information, you must first call {@link #updateMeasurements()}.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/api#parameters">Official API documentation related to this method</a>
      *
      * @return the SSID of the Wi-Fi network the device is connected to
-     * @see #updateDeviceInfo()
+     * @see #updateMeasurements()
      */
-    public abstract String getWifiSsid();
+    public abstract Optional<String> getWifiSsid();
 
     /**
      * Returns the strength of the Wi-Fi the device is currently connected to.
      * <p>
-     * In order to get this information, you must first call {@link #updateDeviceInfo()}.
+     * In order to get this information, you must first call {@link #updateMeasurements()}.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/api#parameters">Official API documentation related to this method</a>
      *
      * @return the Wi-Fi strength
-     * @see #updateDeviceInfo()
+     * @see #updateMeasurements()
      */
-    public abstract double getWifiStrength();
+    public abstract OptionalDouble getWifiStrength();
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final Method method : getClass().getMethods()) {
+            final String name = method.getName();
+            if (name.startsWith("get") && method.getParameterCount() == 0) {
+                stringBuilder.append(name).append(" = ");
+                String returnValue;
+                try {
+                    returnValue = method.invoke(this).toString();
+                } catch (final IllegalAccessException | InvocationTargetException exception) {
+                    returnValue = exception.getMessage();
+                }
+                stringBuilder.append(returnValue).append(System.lineSeparator());
+            }
+        }
+        return stringBuilder.toString();
+    }
 }
