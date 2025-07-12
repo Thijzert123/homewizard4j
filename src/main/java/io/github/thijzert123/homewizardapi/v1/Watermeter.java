@@ -18,6 +18,7 @@ public class Watermeter extends Device {
      */
     public static final String PRODUCT_TYPE = "HWE-WTR";
     private final String productName;
+    private final SystemConfiguration systemConfiguration;
 
     private final String serviceName;
     private final String hostAddress;
@@ -58,6 +59,8 @@ public class Watermeter extends Device {
         this.apiPath = apiPath;
         this.serial = serial;
         this.productName = productName;
+
+        systemConfiguration = new SystemConfiguration(this);
     }
 
     public boolean updateDeviceInfo() {
@@ -106,6 +109,11 @@ public class Watermeter extends Device {
     @Override
     public String getProductName() {
         return productName;
+    }
+
+    @Override
+    public SystemConfiguration getSystemConfiguration() {
+        return systemConfiguration;
     }
 
     @Override

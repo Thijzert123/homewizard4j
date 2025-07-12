@@ -47,6 +47,7 @@ public class HttpUtils {
      * @param fullAddress full address, can be without <code>http://</code>
      * @param bodyPublisher body publisher if necessary for the request method
      * @return body of the request
+     * @throws HomeWizardApiException when something goes wrong
      */
     static String getBody(final String method, String fullAddress, final HttpRequest.BodyPublisher bodyPublisher) {
         if (!fullAddress.startsWith("http://")) {
@@ -65,7 +66,7 @@ public class HttpUtils {
             checkErrors(response);
 
             final String body = response.body();
-            LOGGER.debug("GET body: '{}'", body);
+            LOGGER.debug("GET body retrieved: '{}'", body);
             return body;
         } catch (final IOException | InterruptedException exception) {
             throw new HomeWizardApiException(exception, LOGGER);

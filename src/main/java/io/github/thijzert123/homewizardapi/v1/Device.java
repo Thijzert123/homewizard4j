@@ -24,7 +24,7 @@ import java.util.OptionalDouble;
  * @see Optional
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Device {
+abstract class Device {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ObjectMapper objectMapper;
 
@@ -34,7 +34,7 @@ public abstract class Device {
         objectMapper.registerModule(new Jdk8Module());
     }
 
-    private boolean update(final String fullAddress, final Device objectToUpdate) {
+    boolean update(final String fullAddress, final Object objectToUpdate) {
         LOGGER.debug("Updating device fields");
 
         if (!isApiEnabled()) {
@@ -64,11 +64,13 @@ public abstract class Device {
 
     /**
      * Calls {@link #updateDeviceInfo()} and {@link #updateMeasurements()}.
+     * It retrieves the system configuration vis {@link #getSystemConfiguration()}
+     * and calls {@link SystemConfiguration#update()}.
      *
-     * @return whether both actions where successful
+     * @return whether all actions where successful
      */
     public boolean updateAll() {
-        return updateDeviceInfo() && updateMeasurements();
+        return updateDeviceInfo() && updateMeasurements() && getSystemConfiguration().update();
     }
 
     /**
@@ -216,6 +218,17 @@ public abstract class Device {
     public abstract String getProductName();
 
     /**
+     * Returns the system configuration. You can change the values with the returned class.
+     * <p>
+     * This information is always available.
+     * <p>
+     * <a href="https://api-documentation.homewizard.com/docs/v1/system">Official API documentation related to this method</a>
+     *
+     * @return the system configuration
+     */
+    public abstract SystemConfiguration getSystemConfiguration();
+
+    /**
      * Returns the version of the currently installed firmware.
      * <p>
      * In order to get this information, you must first call {@link #updateDeviceInfo()}.
@@ -263,12 +276,17 @@ public abstract class Device {
      */
     public abstract OptionalDouble getWifiStrength();
 
+    /**
+     * Provides a human-readable {@link String} useful for debugging by calling all get* methods.
+     *
+     * @return a human-readable representation of this class
+     */
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder();
         for (final Method method : getClass().getMethods()) {
             final String name = method.getName();
-            if (name.startsWith("get") && method.getParameterCount() == 0) {
+            if (name.startsWith("get") && method.getParameterCount() == 0 && !name.equals("getClass")) {
                 stringBuilder.append(name).append(" = ");
                 String returnValue;
                 try {
@@ -276,9 +294,9 @@ public abstract class Device {
                 } catch (final IllegalAccessException | InvocationTargetException exception) {
                     returnValue = exception.getMessage();
                 }
-                stringBuilder.append(returnValue).append(System.lineSeparator());
+                stringBuilder.append(returnValue).append(", ");
             }
         }
-        return stringBuilder.toString();
+        return stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).toString();
     }
 }
