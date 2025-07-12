@@ -24,7 +24,7 @@ import java.util.OptionalDouble;
  * @see Optional
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-abstract class Device {
+public abstract class Device {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ObjectMapper objectMapper;
 
@@ -42,7 +42,7 @@ abstract class Device {
             return false;
         }
 
-        final String responseBody = HttpUtils.getBody("GET", fullAddress, HttpRequest.BodyPublishers.noBody());
+        final String responseBody = HttpUtils.getBody("GET", fullAddress);
         try {
             LOGGER.debug("Mapping body with ObjectMapper, updating this instance... ");
             objectMapper.readerForUpdating(objectToUpdate).readValue(responseBody);
@@ -101,7 +101,7 @@ abstract class Device {
      */
     public void identify() {
         LOGGER.debug("Identify device");
-        HttpUtils.getBody("PUT", getFullApiPath() + "/identify", HttpRequest.BodyPublishers.noBody());
+        HttpUtils.getBody("PUT", getFullApiPath() + "/identify");
     }
 
     /**

@@ -12,8 +12,10 @@ import java.util.OptionalDouble;
  *
  * @author Thijzert123
  */
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class Watermeter extends Device {
     /**
+     * Unique product identifier.
      * @see Device#getProductType()
      */
     public static final String PRODUCT_TYPE = "HWE-WTR";
@@ -63,12 +65,14 @@ public class Watermeter extends Device {
         systemConfiguration = new SystemConfiguration(this);
     }
 
+    @Override
     public boolean updateDeviceInfo() {
-        return super.updateDeviceInfo(this);
+        return updateDeviceInfo(this);
     }
 
+    @Override
     public boolean updateMeasurements() {
-        return super.updateMeasurements(this);
+        return updateMeasurements(this);
     }
 
     @Override
@@ -136,26 +140,40 @@ public class Watermeter extends Device {
         return wifiStrength;
     }
 
+
     /**
+     * Returns the total water usage in cubic meters (m^3) since the installation of the device.
+     * <p>
+     * In order to get this information, you must first call {@link #updateMeasurements()}.
+     * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#parameters-3">Official API documentation related to this method</a>
      *
      * @return total water usage in cubic meters since installation
+     * @see #updateMeasurements()
      */
     public OptionalDouble getTotalLiterM3() {
         return totalLiterM3;
     }
 
     /**
+     * Returns the active water usage in liters per minute.
+     * <p>
+     * In order to get this information, you must first call {@link #updateMeasurements()}.
+     * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#parameters-3">Official API documentation related to this method</a>
      *
      * @return active water usage in liters per minute
+     * @see #updateMeasurements()
      */
     public OptionalDouble getActiveLiterLpm() {
         return activeLiterLpm;
     }
 
     /**
+     * Returns total liter offset.
      * According to the official API documentation, this value is in development and should not be used.
+     * <p>
+     * In order to get this information, you must first call {@link #updateMeasurements()}.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#parameters-3">Official API documentation related to this method</a>
      *

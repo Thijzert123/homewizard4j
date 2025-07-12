@@ -73,6 +73,10 @@ public class HttpUtils {
         }
     }
 
+    static String getBody(final String method, String fullAddress) {
+        return getBody(method, fullAddress, HttpRequest.BodyPublishers.noBody());
+    }
+
     /**
      * <a href="https://api-documentation.homewizard.com/docs/v1/error-handling#error-codes">Official API documentation</a>
      *

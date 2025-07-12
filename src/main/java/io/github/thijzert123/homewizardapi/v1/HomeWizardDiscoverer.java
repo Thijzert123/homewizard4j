@@ -22,10 +22,12 @@ public class HomeWizardDiscoverer {
 
     final List<ServiceInfo> allServiceInfo;
     final List<ServiceInfo> allWatermeterServiceInfo;
+    final List<ServiceInfo> allP1MeterServiceInfo;
 
     public HomeWizardDiscoverer() {
         allServiceInfo = new ArrayList<>();
         allWatermeterServiceInfo = new ArrayList<>();
+        allP1MeterServiceInfo = new ArrayList<>();
 
         try {
             final JmDNS jmDNS = JmDNS.create(InetAddress.getLocalHost());
@@ -43,6 +45,10 @@ public class HomeWizardDiscoverer {
         return allWatermeterServiceInfo;
     }
 
+    public List<ServiceInfo> getAllP1MeterServiceInfo() {
+        return allP1MeterServiceInfo;
+    }
+
     public List<Watermeter> getWatermeters() {
         final List<Watermeter> watermeters = new ArrayList<>();
         allWatermeterServiceInfo.forEach((serviceInfo -> {
@@ -56,5 +62,27 @@ public class HomeWizardDiscoverer {
                     serviceInfo.getPropertyString("product_name")));
         }));
         return watermeters;
+    }
+
+    public List<P1Meter> getP1Meters() {
+        final List<P1Meter> p1Meters = new ArrayList<>();
+        allP1MeterServiceInfo.forEach(serviceInfo -> {
+            p1Meters.add(new P1Meter(
+                    serviceInfo.getQualifiedName(),
+                    serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
+                    serviceInfo.getPort(),
+                    Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
+                    serviceInfo.getPropertyString("path"),
+                    serviceInfo.getPropertyString("serial"),
+                    serviceInfo.getPropertyString("product_name")));
+        });
+        return p1Meters;
+    }
+
+    public List<Device> getAllDevices() {
+        final List<Device> devices = new ArrayList<>();
+        devices.addAll(getWatermeters());
+        devices.addAll(getP1Meters());
+        return devices;
     }
 }

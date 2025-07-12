@@ -44,6 +44,9 @@ class HomeWizardServiceListener implements ServiceListener {
         if (Objects.equals(productType, Watermeter.PRODUCT_TYPE)) {
             LOGGER.trace("Product type Watermeter");
             discoverer.allWatermeterServiceInfo.add(serviceInfo);
+        } else if (Objects.equals(productType, P1Meter.PRODUCT_TYPE)) {
+            LOGGER.trace("Product type P1Meter");
+            discoverer.allP1MeterServiceInfo.add(serviceInfo);
         }
     }
 }
