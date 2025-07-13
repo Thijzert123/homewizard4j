@@ -2,7 +2,6 @@ package io.github.thijzert123.homewizardapi.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.thijzert123.homewizardapi.HomeWizardApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 /**
- * Utility class for internal HTTP traffic.
+ * Utility class for internal HTTP traffic. You should not have to use this, except for changing the {@link HttpClient}.
  *
  * @author Thijzert123
  */
@@ -22,6 +21,9 @@ public class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+
+    private HttpUtils() {
+    }
 
     /**
      * Set your own {@link HttpClient} to customize things like timeout duration.
@@ -43,8 +45,8 @@ public class HttpUtils {
      * Makes an HTTP request and returns the body. If you input the fullAddress without <code>http://</code>,
      * it appends that at the front of the address.
      *
-     * @param method request method
-     * @param fullAddress full address, can be without <code>http://</code>
+     * @param method        request method
+     * @param fullAddress   full address, can be without <code>http://</code>
      * @param bodyPublisher body publisher if necessary for the request method
      * @return body of the request
      * @throws HomeWizardApiException when something goes wrong
@@ -82,7 +84,7 @@ public class HttpUtils {
      *
      * @param response the response to check
      * @throws HomeWizardErrorResponseException when status code wasn't 200 or 400 and the error has been handled correctly
-     * @throws HomeWizardApiException when something else has gone wrong, or if status code was 400
+     * @throws HomeWizardApiException           when something else has gone wrong, or if status code was 400
      */
     private static void checkErrors(final HttpResponse<String> response) {
         final int statusCode = response.statusCode();

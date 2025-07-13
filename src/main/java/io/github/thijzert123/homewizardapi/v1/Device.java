@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.http.HttpRequest;
 import java.util.Optional;
 import java.util.OptionalDouble;
 

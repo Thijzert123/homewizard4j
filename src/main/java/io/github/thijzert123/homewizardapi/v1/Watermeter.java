@@ -8,14 +8,16 @@ import java.util.OptionalDouble;
 /**
  * A device to measure water use.
  * <p>
- * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#watermeter-hwe-wtr">Official API documentation for this device</a>
+ * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#watermeter-hwe-wtr">Official API documentation related to this class</a>
  *
  * @author Thijzert123
+ * @see Device
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class Watermeter extends Device {
     /**
      * Unique product identifier.
+     *
      * @see Device#getProductType()
      */
     public static final String PRODUCT_TYPE = "HWE-WTR";

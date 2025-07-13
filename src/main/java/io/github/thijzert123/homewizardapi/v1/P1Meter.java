@@ -2,18 +2,23 @@ package io.github.thijzert123.homewizardapi.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.net.http.HttpRequest;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 /**
+ * A device to measure mainly electricity and gas use.
+ * <p>
+ * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#p1-meter-hwe-p1">Official API documentation related to this class</a>
+ *
  * @author Thijzert123
+ * @see Device
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class P1Meter extends Device {
     /**
      * Unique product identifier.
+     *
      * @see Device#getProductType()
      */
     public static final String PRODUCT_TYPE = "HWE-P1";
@@ -41,7 +46,7 @@ public class P1Meter extends Device {
     @JsonProperty("unique_id")
     private final Optional<String> uniqueId = Optional.empty();
     @JsonProperty("smr_version")
-    private final OptionalInt smrVersion = OptionalInt.empty();
+    private final OptionalDouble smrVersion = OptionalDouble.empty();
     @JsonProperty("meter_model")
     private final Optional<String> meterModel = Optional.empty();
     @JsonProperty("total_power_import_kwh")
@@ -114,6 +119,8 @@ public class P1Meter extends Device {
     private final OptionalDouble gasTimestamp = OptionalDouble.empty();
     @JsonProperty("unique_gas_id")
     private final OptionalDouble uniqueGasId = OptionalDouble.empty();
+    @JsonProperty("external")
+    private final Optional<List<ExternalP1Device>> externalP1Devices = Optional.empty();
 
     P1Meter(final String serviceName,
             final String hostAddress,
@@ -245,7 +252,7 @@ public class P1Meter extends Device {
      * @return DSMR version of the smart meter
      * @see #updateMeasurements()
      */
-    public OptionalInt getSmrVersion() {
+    public OptionalDouble getSmrVersion() {
         return smrVersion;
     }
 
@@ -753,5 +760,19 @@ public class P1Meter extends Device {
      */
     public OptionalDouble getUniqueGasId() {
         return uniqueGasId;
+    }
+
+    /**
+     * Returns a list of externally connected utility meters.
+     * <p>
+     * In order to get this information, you must first call {@link #updateMeasurements()}.
+     * <p>
+     * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#parameters">Official API documentation related to this method</a>
+     *
+     * @return a list of externally connected utility meters
+     * @see #updateMeasurements()
+     */
+    public Optional<List<ExternalP1Device>> getExternalP1Devices() {
+        return externalP1Devices;
     }
 }
