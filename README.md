@@ -3,7 +3,7 @@
   <h1>homewizard4j</h1>
   Unofficial Java API for HomeWizard devices
 
-  _retrieving data_ • _changing configuration_ • _error handling_
+  _automatic discovery_ • _retrieving data_ • _changing configuration_
 </div>
 
 ## Usage
