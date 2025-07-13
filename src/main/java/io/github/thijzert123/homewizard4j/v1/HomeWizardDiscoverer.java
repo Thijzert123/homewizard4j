@@ -44,17 +44,16 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     private static final String SERVICE_TYPE = "_hwenergy._tcp.local.";
     private final JmDNS jmDNS;
 
-    final List<ServiceInfo> allServiceInfo;
-    final List<ServiceInfo> allWatermeterServiceInfo;
-    final List<ServiceInfo> allP1MeterServiceInfo;
+    final List<Watermeter> watermeters;
+    final List<P1Meter> p1Meters;
 
     /**
      * Initializes the discoverer and starts scanning for HomeWizard devices.
+     * This discoverer starts with 0 devices.
      */
     public HomeWizardDiscoverer() {
-        allServiceInfo = new ArrayList<>();
-        allWatermeterServiceInfo = new ArrayList<>();
-        allP1MeterServiceInfo = new ArrayList<>();
+        watermeters = new ArrayList<>();
+        p1Meters = new ArrayList<>();
 
         try {
             jmDNS = JmDNS.create(InetAddress.getLocalHost());
@@ -65,37 +64,22 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
+     * Initializes the discoverer and starts scanning for HomeWizard devices.
+     * It adds the devices from the provided discoverer.
+     *
+     * @param discovererToMerge discoverer to merge with this one
+     */
+    public HomeWizardDiscoverer(final HomeWizardDiscoverer discovererToMerge) {
+        this();
+        watermeters.addAll(discovererToMerge.getWatermeters());
+        p1Meters.addAll(discovererToMerge.getP1Meters());
+    }
+
+    /**
      * Closes the {@link JmDNS} discoverer.
      */
     public void close() throws IOException {
         jmDNS.close();
-    }
-
-    /**
-     * Returns information about all HomeWizard mDNS services discovered.
-     *
-     * @return information about all HomeWizard mDNS services discovered
-     */
-    public List<ServiceInfo> getAllServiceInfo() {
-        return allServiceInfo;
-    }
-
-    /**
-     * Returns information about all HomeWizard watermeter mDNS services discovered.
-     *
-     * @return information about all HomeWizard watermeter mDNS services discovered
-     */
-    public List<ServiceInfo> getAllWatermeterServiceInfo() {
-        return allWatermeterServiceInfo;
-    }
-
-    /**
-     * Returns information about all HomeWizard P1 meter mDNS services discovered.
-     *
-     * @return information about all HomeWizard P1 meter mDNS services discovered
-     */
-    public List<ServiceInfo> getAllP1MeterServiceInfo() {
-        return allP1MeterServiceInfo;
     }
 
     /**
@@ -104,17 +88,6 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * @return all watermeter devices
      */
     public List<Watermeter> getWatermeters() {
-        final List<Watermeter> watermeters = new ArrayList<>();
-        allWatermeterServiceInfo.forEach((serviceInfo -> {
-            watermeters.add(new Watermeter(
-                    serviceInfo.getQualifiedName(),
-                    serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
-                    serviceInfo.getPort(),
-                    Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
-                    serviceInfo.getPropertyString("path"),
-                    serviceInfo.getPropertyString("serial"),
-                    serviceInfo.getPropertyString("product_name")));
-        }));
         return watermeters;
     }
 
@@ -124,17 +97,6 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * @return all P1 meter devices
      */
     public List<P1Meter> getP1Meters() {
-        final List<P1Meter> p1Meters = new ArrayList<>();
-        allP1MeterServiceInfo.forEach(serviceInfo -> {
-            p1Meters.add(new P1Meter(
-                    serviceInfo.getQualifiedName(),
-                    serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
-                    serviceInfo.getPort(),
-                    Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
-                    serviceInfo.getPropertyString("path"),
-                    serviceInfo.getPropertyString("serial"),
-                    serviceInfo.getPropertyString("product_name")));
-        });
         return p1Meters;
     }
 

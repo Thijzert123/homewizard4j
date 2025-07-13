@@ -29,7 +29,6 @@ class HomeWizardServiceListener implements ServiceListener {
     @Override
     public void serviceRemoved(final ServiceEvent serviceEvent) {
         LOGGER.debug("Service removed: {}", serviceEvent.getInfo());
-        discoverer.allServiceInfo.remove(serviceEvent.getInfo());
     }
 
     @Override
@@ -37,16 +36,37 @@ class HomeWizardServiceListener implements ServiceListener {
         LOGGER.debug("Service resolved: {}", serviceEvent.getInfo());
 
         final ServiceInfo serviceInfo = serviceEvent.getInfo();
-        discoverer.allServiceInfo.add(serviceInfo);
-
         final String productType = serviceInfo.getPropertyString("product_type");
+
         LOGGER.trace("Product type: {}", productType);
         if (Objects.equals(productType, Watermeter.PRODUCT_TYPE)) {
             LOGGER.trace("Product type Watermeter");
-            discoverer.allWatermeterServiceInfo.add(serviceInfo);
+            addWatermeter(serviceInfo);
         } else if (Objects.equals(productType, P1Meter.PRODUCT_TYPE)) {
             LOGGER.trace("Product type P1Meter");
-            discoverer.allP1MeterServiceInfo.add(serviceInfo);
+            addP1Meter(serviceInfo);
         }
+    }
+
+    private void addWatermeter(final ServiceInfo serviceInfo) {
+        discoverer.watermeters.add(new Watermeter(
+                serviceInfo.getQualifiedName(),
+                serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
+                serviceInfo.getPort(),
+                Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
+                serviceInfo.getPropertyString("path"),
+                serviceInfo.getPropertyString("serial"),
+                serviceInfo.getPropertyString("product_name")));
+    }
+
+    private void addP1Meter(final ServiceInfo serviceInfo) {
+        discoverer.p1Meters.add(new P1Meter(
+                serviceInfo.getQualifiedName(),
+                serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
+                serviceInfo.getPort(),
+                Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
+                serviceInfo.getPropertyString("path"),
+                serviceInfo.getPropertyString("serial"),
+                serviceInfo.getPropertyString("product_name")));
     }
 }
