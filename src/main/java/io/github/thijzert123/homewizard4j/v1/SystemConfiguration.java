@@ -96,20 +96,6 @@ public class SystemConfiguration {
      */
     @Override
     public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (final Method method : getClass().getMethods()) {
-            final String name = method.getName();
-            if (name.startsWith("get") && method.getParameterCount() == 0 && !name.equals("getClass")) {
-                stringBuilder.append(name).append(" = ");
-                String returnValue;
-                try {
-                    returnValue = method.invoke(this).toString();
-                } catch (final IllegalAccessException | InvocationTargetException exception) {
-                    returnValue = exception.getMessage();
-                }
-                stringBuilder.append(returnValue).append(", ");
-            }
-        }
-        return stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).toString();
+        return "isCloudEnabled = " + isCloudEnabled();
     }
 }
