@@ -9,7 +9,7 @@
 ## Usage
 ### Discovery
 You should always start with a `HomeWizardDiscoverer`. This is able to scan for all HomeWizard devices in your local network.
-When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be done by using `Thread.sleep()`, waiting for a user input or using an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know how many devices to be scanned you are waiting for.
+When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be done by using `Thread.sleep()`, waiting for a user input or using an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know how many devices you are waiting for.
 
 When you eventually have a `List` with multiple instances of `Device`, you can use `getProductName()` for an user-friendly name representation of the device. This can be useful for debugging purposes, but also for quick examples like this.
 
@@ -44,10 +44,17 @@ public class Example1 {
     }
 }
 ```
+Example output when a watermeter and P1 meter are discovered:
+```
+Watermeter
+P1 Meter
+```
 ### System configuration
 Every `Device` has a `SystemConfiguration` inside. When using API v1, you can only change whether cloud communication on the device is enabled. To do this, use `getSystemConfiguration()` on your `Device`. The returned `SystemConfiguration` is still empty, so to fill it with the configuration that is currently active on the device, call `update()` on the `SystemConfiguration` instance. Then you can use `isCloudEnabled()` to return whether cloud communication is enabled on the device.
 
-To change a value... (coming soon)
+To change a value, simply use one of the setters, which, in this case, is `setCloudEnabled()`. Change it to the value you want, but remember to call `save()` to make sure the changed data is also updated on the device.
+In the example below, you can see that after changing the value, `update()` is still called. This isn't _necessary_, but it is recommended, because other programs can change the same value after you have saved your value.
+In conclusion, you should call `update()` regularly.
 ```java
 import io.github.thijzert123.homewizard4j.v1.*;
 
@@ -74,4 +81,9 @@ public class Example2 {
         });
     }
 }
+```
+Example output when one device is discovered and cloud communication wasn't enabled beforehand:
+```
+Cloud enabled: Optional[false]
+Cloud enabled: Optional[true]
 ```
