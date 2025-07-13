@@ -71,7 +71,7 @@ public class SystemConfiguration {
      *
      * @return whether the cloud is enabled
      */
-    public Optional<Boolean> getCloudEnabled() {
+    public Optional<Boolean> isCloudEnabled() {
         LOGGER.debug("getCloudEnabled: '{}'", cloudEnabled);
         return cloudEnabled;
     }
