@@ -1,6 +1,6 @@
 package io.github.thijzert123.homewizardapi.test;
 
-import io.github.thijzert123.homewizardapi.v1.HomeWizardDiscoverer;
+import io.github.thijzert123.homewizard4j.v1.HomeWizardDiscoverer;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

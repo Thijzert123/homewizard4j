@@ -1,4 +1,4 @@
-package io.github.thijzert123.homewizardapi.v1;
+package io.github.thijzert123.homewizard4j.v1;
 
 import org.slf4j.Logger;
 
