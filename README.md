@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/Thijzert123/homewizard4j/blob/main/logo.png?raw=true" width=100 height=100/>
+  <img src="https://github.com/Thijzert123/homewizard4j/blob/main/logo.png?raw=true" width=100 height=100 />
   <h1>homewizard4j</h1>
   Unofficial Java API for HomeWizard devices
 
