@@ -7,6 +7,8 @@
 </div>
 
 ## Usage
+For more in-depth explanation per class/method, please refer to the Javadocs.
+
 ### Discovery
 You should always start with a `HomeWizardDiscoverer`. This is able to scan for all HomeWizard devices in your local network.
 When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be done by using `Thread.sleep()`, waiting for a user input or using an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know how many devices you are waiting for.
@@ -49,6 +51,7 @@ Example output when a watermeter and P1 meter are discovered:
 Watermeter
 P1 Meter
 ```
+
 ### System configuration
 Every `Device` has a `SystemConfiguration` inside. When using API v1, you can only change whether cloud communication on the device is enabled. To do this, use `getSystemConfiguration()` on your `Device`. The returned `SystemConfiguration` is still empty, so to fill it with the configuration that is currently active on the device, call `update()` on the `SystemConfiguration` instance. Then you can use `isCloudEnabled()` to return whether cloud communication is enabled on the device.
 
@@ -87,3 +90,10 @@ Example output when one device is discovered and cloud communication wasn't enab
 Cloud enabled: Optional[false]
 Cloud enabled: Optional[true]
 ```
+
+### Updating data
+You might have already noticed that most getters of a `Device` return an `Optional` of some kind. This has two reasons:
+- For some fields, you first have to update the device by calling `update*()` methods. In the Javadocs you can see what update method you have to call for a specific field to update.
+- Not all data points are returned by the official API when updating. When you don't use gas, the P1 meter won't return datapoints that are about gas.
+
+The default value for all fields is `Optional.empty()` (or with another form of `Optional`, like `OptionalInt` or `OptionalDouble`), except for some. These fields are required when initializing the class, so you can always access them. Some of these values are never able to change (product type), others _should_ never change, like the api version: this can _technically_ change, but doesn't because the api version is dependent on how you do HTTP request; these are always the same.
