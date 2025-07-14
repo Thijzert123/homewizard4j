@@ -221,13 +221,14 @@ public abstract class Device extends Updatable {
     /**
      * A unique identifier for a device that won't change in the official API, for example <code>HWE-WTR</code>.
      * <p>
-     * This information is always available.
+     * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records">Official API documentation related to this method</a>
      *
      * @return the unique product type
      */
-    public abstract String getProductType();
+    public abstract Optional<String> getProductType();
 
     /**
      * Returns a user-friendly name (example: <code>Watermeter</code>) that may change at any time, so you should not use this for device identification.

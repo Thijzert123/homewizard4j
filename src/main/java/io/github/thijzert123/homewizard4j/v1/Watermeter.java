@@ -2,6 +2,7 @@ package io.github.thijzert123.homewizard4j.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -16,12 +17,14 @@ import java.util.OptionalDouble;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class Watermeter extends Device {
     /**
-     * Unique product identifier.
+     * Possible unique product identifiers for this device.
      *
-     * @see Device#getProductType()
+     * @see #getProductType()
      */
-    public static final String PRODUCT_TYPE = "HWE-WTR";
+    public static final List<String> PRODUCT_TYPES = List.of("HWE-WTR");
 
+    @JsonProperty("product_type")
+    private final Optional<String> productType;
     @JsonProperty("product_name")
     private final Optional<String> productName;
     @JsonProperty("serial")
@@ -49,6 +52,7 @@ public class Watermeter extends Device {
                       final String hostAddress,
                       final int port,
                       final String apiPath,
+                      final Optional<String> productType,
                       final Optional<String> productName,
                       final Optional<String> serial) {
         super(
@@ -59,6 +63,7 @@ public class Watermeter extends Device {
                 apiPath
         );
 
+        this.productType = productType;
         this.productName = productName;
         this.serial = serial;
     }
@@ -83,6 +88,7 @@ public class Watermeter extends Device {
                 hostAddress,
                 port,
                 apiPath,
+                Optional.empty(),
                 Optional.empty(),
                 Optional.empty()
         );
@@ -121,8 +127,8 @@ public class Watermeter extends Device {
     }
 
     @Override
-    public String getProductType() {
-        return PRODUCT_TYPE;
+    public Optional<String> getProductType() {
+        return productType;
     }
 
     @Override

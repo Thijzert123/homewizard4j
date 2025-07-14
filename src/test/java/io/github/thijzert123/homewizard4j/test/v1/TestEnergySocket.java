@@ -36,7 +36,7 @@ public class TestEnergySocket {
 
     @Test
     public void testDeviceInfo() {
-        Assertions.assertEquals("HWE-SKT", energySocket.getProductType());
+        Assertions.assertEquals("HWE-SKT", energySocket.getProductType().get());
         Assertions.assertEquals("Energy Socket", energySocket.getProductName().get());
         Assertions.assertEquals("3c35e7aabbcc", energySocket.getSerial().get());
         Assertions.assertEquals("5.18", energySocket.getFirmwareVersion().get());

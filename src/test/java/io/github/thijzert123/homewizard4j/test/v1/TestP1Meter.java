@@ -34,7 +34,7 @@ public class TestP1Meter {
 
     @Test
     public void testDeviceInfo() {
-        Assertions.assertEquals("HWE-P1", p1Meter.getProductType());
+        Assertions.assertEquals("HWE-P1", p1Meter.getProductType().get());
         Assertions.assertEquals("P1 Meter", p1Meter.getProductName().get());
         Assertions.assertEquals("3c39e7aabbcc", p1Meter.getSerial().get());
         Assertions.assertEquals("5.18", p1Meter.getFirmwareVersion().get());

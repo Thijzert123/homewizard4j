@@ -17,12 +17,14 @@ import java.util.OptionalDouble;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class P1Meter extends Device {
     /**
-     * Unique product identifier.
+     * Possible unique product identifiers for this device.
      *
-     * @see Device#getProductType()
+     * @see #getProductType()
      */
-    public static final String PRODUCT_TYPE = "HWE-P1";
+    public static final List<String> PRODUCT_TYPES = List.of("HWE-P1");
 
+    @JsonProperty("product_type")
+    private final Optional<String> productType;
     @JsonProperty("product_name")
     private final Optional<String> productName;
     @JsonProperty("serial")
@@ -122,6 +124,7 @@ public class P1Meter extends Device {
                final String hostAddress,
                final int port,
                final String apiPath,
+               final Optional<String> productType,
                final Optional<String> productName,
                final Optional<String> serial) {
         super(
@@ -132,6 +135,7 @@ public class P1Meter extends Device {
                 apiPath
         );
 
+        this.productType = productType;
         this.productName = productName;
         this.serial = serial;
     }
@@ -156,6 +160,7 @@ public class P1Meter extends Device {
                 hostAddress,
                 port,
                 apiPath,
+                Optional.empty(),
                 Optional.empty(),
                 Optional.empty()
         );
@@ -208,8 +213,8 @@ public class P1Meter extends Device {
     }
 
     @Override
-    public String getProductType() {
-        return PRODUCT_TYPE;
+    public Optional<String> getProductType() {
+        return productType;
     }
 
     @Override

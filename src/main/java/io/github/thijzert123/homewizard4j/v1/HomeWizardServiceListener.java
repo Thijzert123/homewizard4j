@@ -41,13 +41,13 @@ class HomeWizardServiceListener implements ServiceListener {
         final String productType = serviceInfo.getPropertyString("product_type");
 
         LOGGER.trace("Product type: {}", productType);
-        if (Objects.equals(productType, Watermeter.PRODUCT_TYPE)) {
+        if (Watermeter.PRODUCT_TYPES.contains(productType)) {
             LOGGER.trace("Product type Watermeter");
             addWatermeter(serviceInfo);
-        } else if (Objects.equals(productType, P1Meter.PRODUCT_TYPE)) {
+        } else if (P1Meter.PRODUCT_TYPES.contains(productType)) {
             LOGGER.trace("Product type P1Meter");
             addP1Meter(serviceInfo);
-        } else if (Objects.equals(productType, EnergySocket.PRODUCT_TYPE)) {
+        } else if (EnergySocket.PRODUCT_TYPES.contains(productType)) {
             LOGGER.trace("Product type EnergySocket");
             addEnergySocket(serviceInfo);
         }
@@ -62,6 +62,7 @@ class HomeWizardServiceListener implements ServiceListener {
                     int.class,
                     String.class,
                     Optional.class,
+                    Optional.class,
                     Optional.class
             ).newInstance(
                     Optional.of(serviceInfo.getQualifiedName()),
@@ -69,8 +70,9 @@ class HomeWizardServiceListener implements ServiceListener {
                     serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
                     serviceInfo.getPort(),
                     serviceInfo.getPropertyString("path"),
+                    Optional.of(serviceInfo.getPropertyString("product_type")),
                     Optional.of(serviceInfo.getPropertyString("product_name")),
-                    Optional.of(serviceInfo.getPropertyString("product_name"))
+                    Optional.of(serviceInfo.getPropertyString("serial"))
             );
         } catch (final InstantiationException |
                        IllegalAccessException |
