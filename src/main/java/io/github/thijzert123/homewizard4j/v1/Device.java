@@ -22,18 +22,46 @@ import java.util.OptionalDouble;
  * @author Thijzert123
  * @see Optional
  */
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Device {
+    /**
+     * The default port of the API.
+     */
+    public static final int DEFAULT_PORT = 80;
+    /**
+     * The default API path.
+     */
+    public static final String DEFAULT_API_PATH = "/api/v1";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ObjectMapper objectMapper;
 
-    Device() {
+    private final Optional<String> serviceName;
+    private final boolean apiEnabled;
+    private final String hostAddress;
+    private final int port;
+    private final String apiPath;
+    private final SystemConfiguration systemConfiguration;
+
+    Device(final Optional<String> serviceName,
+           final boolean apiEnabled,
+           final String hostAddress,
+           final int port,
+           final String apiPath) {
         objectMapper = new ObjectMapper();
         // Makes sure Optional is supported
         objectMapper.registerModule(new Jdk8Module());
+
+        this.serviceName = serviceName;
+        this.apiEnabled = apiEnabled;
+        this.hostAddress = hostAddress;
+        this.port = port;
+        this.apiPath = apiPath;
+        systemConfiguration = new SystemConfiguration(this);
     }
 
-    boolean update(final String fullAddress, final Object objectToUpdate) {
+    boolean update(final String fullAddress, final Object objectToUpdate) throws HomeWizardApiException {
         LOGGER.debug("Updating device fields");
 
         if (!isApiEnabled()) {
@@ -46,18 +74,17 @@ public abstract class Device {
             LOGGER.debug("Mapping body with ObjectMapper, updating this instance... ");
             objectMapper.readerForUpdating(objectToUpdate).readValue(responseBody);
             LOGGER.debug("Mapping body with ObjectMapper, updating this instance, done");
-            return true;
         } catch (final JsonProcessingException jsonProcessingException) {
-            LOGGER.error(jsonProcessingException.getMessage(), jsonProcessingException);
+            throw new HomeWizardApiException(jsonProcessingException, LOGGER);
         }
-        return false;
+        return true;
     }
 
-    boolean updateDeviceInfo(final Device objectToUpdate) {
+    boolean updateDeviceInfo(final Device objectToUpdate) throws HomeWizardApiException {
         return update(getFullAddress() + "/api", objectToUpdate);
     }
 
-    boolean updateMeasurements(final Device objectToUpdate) {
+    boolean updateMeasurements(final Device objectToUpdate) throws HomeWizardApiException {
         return update(getFullApiPath() + "/data", objectToUpdate);
     }
 
@@ -67,8 +94,9 @@ public abstract class Device {
      * and calls {@link SystemConfiguration#update()}.
      *
      * @return whether all actions where successful
+     * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public boolean updateAll() {
+    public boolean updateAll() throws HomeWizardApiException {
         return updateDeviceInfo() && updateMeasurements() && getSystemConfiguration().update();
     }
 
@@ -79,8 +107,9 @@ public abstract class Device {
      *
      * @return whether the action was successful
      * @see #isApiEnabled()
+     * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public abstract boolean updateDeviceInfo();
+    public abstract boolean updateDeviceInfo() throws HomeWizardApiException;
 
     /**
      * Updates the fields related to measurements. Requires {@link #isApiEnabled()} to be <code>true</code>.
@@ -89,18 +118,33 @@ public abstract class Device {
      *
      * @return whether the action was successful
      * @see #isApiEnabled()
+     * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public abstract boolean updateMeasurements();
+    public abstract boolean updateMeasurements() throws HomeWizardApiException;
 
     /**
      * The status light of the device will blink for a few seconds after calling this method,
      * allowing someone to identify the physical device.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/identify">Official API documentation related to this method</a>
+     *
+     * @throws HomeWizardApiException when something has gone wrong when requesting blinking the status light
      */
-    public void identify() {
+    public void identify() throws HomeWizardApiException {
         LOGGER.debug("Identify device");
         HttpUtils.getBody("PUT", getFullApiPath() + "/identify");
+    }
+
+    /**
+     * Returns the full qualified service name, for example <code>watermeter-ABC123._hwenergy._tcp.local.</code>.
+     * <p>
+     * This information is always available if the instance was returned by {@link HomeWizardDiscoverer}.
+     * Otherwise, you can never get this information, even if you use one of the update methods.
+     *
+     * @return full qualified service name
+     */
+    public Optional<String> getServiceName() {
+        return serviceName;
     }
 
     /**
@@ -129,33 +173,6 @@ public abstract class Device {
     }
 
     /**
-     * Returns the full qualified service name, for example <code>watermeter-ABC123._hwenergy._tcp.local.</code>.
-     * <p>
-     * This information is always available.
-     *
-     * @return full qualified service name
-     */
-    public abstract String getServiceName();
-
-    /**
-     * Returns the host address, for example <code>192.168.1.123</code>.
-     * <p>
-     * This information is always available.
-     *
-     * @return returns the host address
-     */
-    public abstract String getHostAddress();
-
-    /**
-     * Returns the port. Because the <code>v1</code> API uses HTTP, the port should always be <code>80</code>.
-     * <p>
-     * This information is always available.
-     *
-     * @return the port
-     */
-    public abstract int getPort();
-
-    /**
      * Returns weather the API is enabled. If <code>false</code>,
      * {@link #updateDeviceInfo()} and {@link #updateMeasurements()} cannot be used.
      * To enable the local API, go to
@@ -167,7 +184,31 @@ public abstract class Device {
      *
      * @return whether the API is enabled
      */
-    public abstract boolean isApiEnabled();
+    public boolean isApiEnabled() {
+        return apiEnabled;
+    }
+
+    /**
+     * Returns the host address, for example <code>192.168.1.123</code>.
+     * <p>
+     * This information is always available.
+     *
+     * @return returns the host address
+     */
+    public String getHostAddress() {
+        return hostAddress;
+    }
+
+    /**
+     * Returns the port. Because the <code>v1</code> API uses HTTP, the port should always be <code>80</code>.
+     * <p>
+     * This information is always available.
+     *
+     * @return the port
+     */
+    public int getPort() {
+        return port;
+    }
 
     /**
      * Returns the path to the API. With <code>v1</code>, it should be <code>/api/v1</code>.
@@ -178,20 +219,36 @@ public abstract class Device {
      *
      * @return the path to the API
      */
-    public abstract String getApiPath();
+    public String getApiPath() {
+        return apiPath;
+    }
+
+    /**
+     * Returns the system configuration. You can change the values with the returned class.
+     * <p>
+     * This information is always available.
+     * <p>
+     * <a href="https://api-documentation.homewizard.com/docs/v1/system">Official API documentation related to this method</a>
+     *
+     * @return the system configuration
+     */
+    public SystemConfiguration getSystemConfiguration() {
+        return systemConfiguration;
+    }
 
     /**
      * Returns the serial number, also used as the MAC address.
      * This unique value per device consists of 12 hexadecimal characters,
      * for example <code>1a2b3c4d5e6f</code>.
      * <p>
-     * This information is always available.
+     * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records">Official API documentation related to this method</a>
      *
      * @return a unique serial number for this device
      */
-    public abstract String getSerial();
+    public abstract Optional<String> getSerial();
 
     /**
      * A unique identifier for a device that won't change in the official API, for example <code>HWE-WTR</code>.
@@ -208,24 +265,14 @@ public abstract class Device {
      * Returns a user-friendly name (example: <code>Watermeter</code>) that may change at any time, so you should not use this for device identification.
      * Instead, use {@link #getProductType()}.
      * <p>
-     * This information is always available.
+     * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records">Official API documentation related to this method</a>
      *
      * @return product name
      */
-    public abstract String getProductName();
-
-    /**
-     * Returns the system configuration. You can change the values with the returned class.
-     * <p>
-     * This information is always available.
-     * <p>
-     * <a href="https://api-documentation.homewizard.com/docs/v1/system">Official API documentation related to this method</a>
-     *
-     * @return the system configuration
-     */
-    public abstract SystemConfiguration getSystemConfiguration();
+    public abstract Optional<String> getProductName();
 
     /**
      * Returns the version of the currently installed firmware.

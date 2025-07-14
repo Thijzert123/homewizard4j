@@ -39,8 +39,9 @@ public class SystemConfiguration {
      * they will be discarded!
      *
      * @return whether the action was successful
+     * @throws HomeWizardApiException when something has gone wrong while updating data
      */
-    public boolean update() {
+    public boolean update() throws HomeWizardApiException {
         LOGGER.debug("Updating system configuration");
         return device.update(systemApiPath, this);
     }
@@ -50,8 +51,9 @@ public class SystemConfiguration {
      * you this method fails and returns <code>false</code>.
      *
      * @return whether the action was successful
+     * @throws HomeWizardApiException when something has gone wrong while saving
      */
-    public boolean save() {
+    public boolean save() throws HomeWizardApiException {
         LOGGER.debug("Saving system configuration");
         if (cloudEnabled.isEmpty()) {
             LOGGER.debug("All fields have empty optional, failed saving system configuration");

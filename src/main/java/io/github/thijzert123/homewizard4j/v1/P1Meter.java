@@ -22,16 +22,11 @@ public class P1Meter extends Device {
      * @see Device#getProductType()
      */
     public static final String PRODUCT_TYPE = "HWE-P1";
-    private final String productName;
-    private final SystemConfiguration systemConfiguration;
 
-    private final String serviceName;
-    private final String hostAddress;
-    private final int port;
-
-    private final boolean apiEnabled;
-    private final String apiPath;
-    private final String serial;
+    @JsonProperty("product_name")
+    private final Optional<String> productName;
+    @JsonProperty("serial")
+    private final Optional<String> serial;
 
     @JsonProperty("firmware_version")
     private final Optional<String> firmwareVersion = Optional.empty();
@@ -122,22 +117,65 @@ public class P1Meter extends Device {
     @JsonProperty("external")
     private final Optional<List<ExternalP1Device>> externalP1Devices = Optional.empty();
 
-    P1Meter(final String serviceName,
-            final String hostAddress,
-            final int port,
-            final boolean apiEnabled,
-            final String apiPath,
-            final String serial,
-            final String productName) {
-        this.serviceName = serviceName;
-        this.hostAddress = hostAddress;
-        this.port = port;
-        this.apiEnabled = apiEnabled;
-        this.apiPath = apiPath;
-        this.serial = serial;
-        this.productName = productName;
+    P1Meter(final Optional<String> serviceName,
+               final boolean apiEnabled,
+               final String hostAddress,
+               final int port,
+               final String apiPath,
+               final Optional<String> productName,
+               final Optional<String> serial) {
+        super(
+                serviceName,
+                apiEnabled,
+                hostAddress,
+                port,
+                apiPath
+        );
 
-        systemConfiguration = new SystemConfiguration(this);
+        this.productName = productName;
+        this.serial = serial;
+    }
+
+    /**
+     * Manually create a {@link P1Meter}. When getting devices this way, some methods become useless,
+     * for example {@link #getServiceName()}. For more information on what data is available,
+     * check the Javadocs for the methods.
+     *
+     * @param apiEnabled whether the API is enabled on the device: you have to check this yourself!
+     * @param hostAddress host address, like {@code 192.168.1.123}
+     * @param port port, should be {@code 80}
+     * @param apiPath API path, should be {@code /api/v1}
+     */
+    public P1Meter(final boolean apiEnabled,
+                      final String hostAddress,
+                      final int port,
+                      final String apiPath) {
+        this(
+                Optional.empty(),
+                apiEnabled,
+                hostAddress,
+                port,
+                apiPath,
+                Optional.empty(),
+                Optional.empty()
+        );
+    }
+
+    /**
+     * Manually create a {@link P1Meter}. This assumes that the API is enabled. It is important that you have checked
+     * this before, because if the API is not actually enabled, some exceptions when updating could occur.
+     * <p>
+     * For port and API path, the values {@link Device#DEFAULT_PORT} and {@link Device#DEFAULT_API_PATH} are used.
+     *
+     * @param hostAddress the host
+     */
+    public P1Meter(final String hostAddress) {
+        this(
+                true,
+                hostAddress,
+                Device.DEFAULT_PORT,
+                Device.DEFAULT_API_PATH
+        );
     }
 
     /**
@@ -149,47 +187,22 @@ public class P1Meter extends Device {
      *
      * @return telegram by the P1 meter
      */
-    public String retrieveLastTelegram() {
+    public String retrieveLastTelegram() throws HomeWizardApiException {
         return HttpUtils.getBody("GET", getFullApiPath() + "/telegram");
     }
 
     @Override
-    public boolean updateDeviceInfo() {
+    public boolean updateDeviceInfo() throws HomeWizardApiException {
         return updateDeviceInfo(this);
     }
 
     @Override
-    public boolean updateMeasurements() {
+    public boolean updateMeasurements() throws HomeWizardApiException {
         return updateMeasurements(this);
     }
 
     @Override
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    @Override
-    public String getHostAddress() {
-        return hostAddress;
-    }
-
-    @Override
-    public int getPort() {
-        return port;
-    }
-
-    @Override
-    public boolean isApiEnabled() {
-        return apiEnabled;
-    }
-
-    @Override
-    public String getApiPath() {
-        return apiPath;
-    }
-
-    @Override
-    public String getSerial() {
+    public Optional<String> getSerial() {
         return serial;
     }
 
@@ -199,13 +212,8 @@ public class P1Meter extends Device {
     }
 
     @Override
-    public String getProductName() {
+    public Optional<String> getProductName() {
         return productName;
-    }
-
-    @Override
-    public SystemConfiguration getSystemConfiguration() {
-        return systemConfiguration;
     }
 
     @Override

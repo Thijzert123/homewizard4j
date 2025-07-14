@@ -10,7 +10,7 @@ import org.slf4j.Logger;
  *
  * @author Thijzert123
  */
-public class HomeWizardApiException extends RuntimeException {
+public class HomeWizardApiException extends Exception {
     HomeWizardApiException(final String message, final Throwable cause, final Logger logger) {
         super(message, cause);
         logger.error(message, cause);

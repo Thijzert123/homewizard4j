@@ -51,7 +51,8 @@ public class HttpUtils {
      * @return body of the request
      * @throws HomeWizardApiException when something goes wrong
      */
-    static String getBody(final String method, String fullAddress, final HttpRequest.BodyPublisher bodyPublisher) {
+    static String getBody(final String method, String fullAddress, final HttpRequest.BodyPublisher bodyPublisher)
+            throws HomeWizardApiException {
         if (!fullAddress.startsWith("http://")) {
             fullAddress = "http://" + fullAddress;
         }
@@ -75,7 +76,7 @@ public class HttpUtils {
         }
     }
 
-    static String getBody(final String method, String fullAddress) {
+    static String getBody(final String method, String fullAddress) throws HomeWizardApiException {
         return getBody(method, fullAddress, HttpRequest.BodyPublishers.noBody());
     }
 
@@ -86,7 +87,8 @@ public class HttpUtils {
      * @throws HomeWizardErrorResponseException when status code wasn't 200 or 400 and the error has been handled correctly
      * @throws HomeWizardApiException           when something else has gone wrong, or if status code was 400
      */
-    private static void checkErrors(final HttpResponse<String> response) {
+    private static void checkErrors(final HttpResponse<String> response)
+            throws HomeWizardApiException, HomeWizardErrorResponseException {
         final int statusCode = response.statusCode();
         LOGGER.trace("Check errors, status code '{}'", statusCode);
 
