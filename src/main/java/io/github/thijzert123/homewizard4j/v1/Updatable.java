@@ -1,5 +1,6 @@
 package io.github.thijzert123.homewizard4j.v1;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -11,6 +12,7 @@ import java.lang.invoke.MethodHandles;
 /**
  * @author Thijzert123
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 abstract class Updatable extends DataPrintable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     final ObjectMapper objectMapper;

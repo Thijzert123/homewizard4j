@@ -1,6 +1,5 @@
 package io.github.thijzert123.homewizard4j.v1;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +17,6 @@ import java.util.OptionalDouble;
  * @see Optional
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Device extends Updatable {
     /**
      * The default port of the API.

@@ -128,6 +128,12 @@ public class EnergySocket extends Device {
     }
 
     @Override
+    public void updateAll() throws HomeWizardApiException {
+        super.updateAll();
+        getDeviceState().update();
+    }
+
+    @Override
     public void updateDeviceInfo() throws HomeWizardApiException {
         updateDeviceInfo(this);
     }
