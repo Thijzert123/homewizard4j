@@ -186,6 +186,7 @@ public class P1Meter extends Device {
      * <a href="https://api-documentation.homewizard.com/docs/v1/telegram">Official API documentation related to this method</a>
      *
      * @return telegram by the P1 meter
+     * @throws HomeWizardApiException when something has gone wrong while retrieving the telegram
      */
     public String retrieveLastTelegram() throws HomeWizardApiException {
         return HttpUtils.getBody("GET", getFullApiPath() + "/telegram");
