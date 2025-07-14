@@ -18,12 +18,13 @@ When you eventually have a `List` with multiple instances of `Device`, you can u
 Below is how all the code would look together. Notice that you can call `close()` to stop the discoverer from scanning devices. This can be useful if you know you already have all the devices discovered, because when closing the discoverer you can conserve resources. To scan again, you have to create a new `HomeWizardDiscoverer`. You can, however, hand over all devices from one `HomeWizardDiscoverer` instance to another one, with the `HomeWizardDiscoverer(HomeWizardDiscoverer)` constructor.
 For more information, please refer to the Javadocs.
 ```java
+package io.github.thijzert123.homewizard4j.example;
 import io.github.thijzert123.homewizard4j.v1.*;
+import java.util.*;
 import java.io.IOException;
-import java.util.List;
 
-public class Example1 {
-    public void printAllDeviceNames() throws InterruptedException, IOException {
+public class PrintAllDeviceNames {
+    public static void main(final String[] args) throws InterruptedException, IOException {
         // Create the discoverer and start scanning for HomeWizard devices.
         final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer();
 
@@ -39,7 +40,7 @@ public class Example1 {
 
         for (final Device device : deviceList) {
             // User-friendly name of the device
-            final String productName = device.getProductName();
+            final Optional<String> productName = device.getProductName();
 
             System.out.println(productName);
         }
@@ -59,15 +60,16 @@ To change a value, simply use one of the setters, which, in this case, is `setCl
 In the example below, you can see that after changing the value, `update()` is still called. This isn't _necessary_, but it is recommended, because other programs can change the same value after you have saved your value.
 In conclusion, you should call `update()` regularly.
 ```java
+package io.github.thijzert123.homewizard4j.example;
 import io.github.thijzert123.homewizard4j.v1.*;
+import java.io.IOException;
 
-public class Example2 {
-    public void changeAndPrintCloudCommunication() throws InterruptedException {
-        // Used for retrieving all HomeWizard devices
+public class ChangeAndPrintCloudCommunication {
+    public static void main(final String[] args) throws InterruptedException, IOException {
         final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer();
         Thread.sleep(1000);
 
-        discoverer.getAllDevices().forEach(device -> {
+        for (final Device device : discoverer.getAllDevices()) {
             final SystemConfiguration configuration = device.getSystemConfiguration();
 
             // Update fields and print data
@@ -81,7 +83,7 @@ public class Example2 {
             // Update fields and print data
             configuration.update(); // This isn't technically necessary, but it's good practise
             System.out.println("Cloud enabled: " + configuration.isCloudEnabled());
-        });
+        };
     }
 }
 ```
@@ -96,4 +98,4 @@ You might have already noticed that most getters of a `Device` return an `Option
 - For some fields, you first have to update the device by calling `update*()` methods. In the Javadocs you can see what update method you have to call for a specific field to update.
 - Not all data points are returned by the official API when updating. When you don't use gas, the P1 meter won't return datapoints that are about gas.
 
-The default value for all fields is `Optional.empty()` (or with another form of `Optional`, like `OptionalInt` or `OptionalDouble`), except for some. These fields are required when initializing the class, so you can always access them. Some of these values are never able to change (product type), others _should_ never change, like the api version: this can _technically_ change, but doesn't because the api version is dependent on how you do HTTP request; these are always the same.
+The default value for all fields is `Optional.empty()` (or with another form of `Optional`, like `OptionalInt` or `OptionalDouble`), except for some. These fields are required when initializing the class, so you can always access them. Some of these values are never able to change (product type), others _should_ never change, like the api version: this can _technically_ change, but it doesn't because the api version is dependent on how you do HTTP request; these are always the same.
