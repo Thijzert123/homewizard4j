@@ -1,9 +1,10 @@
+package io.github.thijzert123.homewizard4j.example;
 import io.github.thijzert123.homewizard4j.v1.*;
+import java.util.*;
 import java.io.IOException;
-import java.util.List;
 
-public class Example1 {
-    public void printAllDeviceNames() throws InterruptedException, IOException {
+public class PrintAllDeviceNames {
+    public static void main(final String[] args) throws InterruptedException, IOException {
         // Create the discoverer and start scanning for HomeWizard devices.
         final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer();
 
@@ -19,7 +20,7 @@ public class Example1 {
 
         for (final Device device : deviceList) {
             // User-friendly name of the device
-            final String productName = device.getProductName();
+            final Optional<String> productName = device.getProductName();
 
             System.out.println(productName);
         }

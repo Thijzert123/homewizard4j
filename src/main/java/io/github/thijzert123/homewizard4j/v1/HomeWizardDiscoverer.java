@@ -50,17 +50,15 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     /**
      * Initializes the discoverer and starts scanning for HomeWizard devices.
      * This discoverer starts with 0 devices.
+     *
+     * @throws IOException when something has gone wrong while creating the mDNS discoverer
      */
-    public HomeWizardDiscoverer() {
+    public HomeWizardDiscoverer() throws IOException {
         watermeters = new ArrayList<>();
         p1Meters = new ArrayList<>();
 
-        try {
-            jmDNS = JmDNS.create(InetAddress.getLocalHost());
-            jmDNS.addServiceListener(SERVICE_TYPE, new HomeWizardServiceListener(this));
-        } catch (final IOException ioException) {
-            throw new HomeWizardApiException(ioException, LOGGER);
-        }
+        jmDNS = JmDNS.create(InetAddress.getLocalHost());
+        jmDNS.addServiceListener(SERVICE_TYPE, new HomeWizardServiceListener(this));
     }
 
     /**
@@ -68,8 +66,9 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * It adds the devices from the provided discoverer.
      *
      * @param discovererToMerge discoverer to merge with this one
+     * @throws IOException when something has gone wrong while creating the mDNS discoverer
      */
-    public HomeWizardDiscoverer(final HomeWizardDiscoverer discovererToMerge) {
+    public HomeWizardDiscoverer(final HomeWizardDiscoverer discovererToMerge) throws IOException {
         this();
         watermeters.addAll(discovererToMerge.getWatermeters());
         p1Meters.addAll(discovererToMerge.getP1Meters());

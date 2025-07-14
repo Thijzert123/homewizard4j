@@ -2,6 +2,8 @@ package io.github.thijzert123.homewizard4j.v1;
 
 import org.slf4j.Logger;
 
+import java.io.IOException;
+
 /**
  * When something has gone wrong while doing actions related to the HomeWizard API, this exception can be thrown.
  * The only thing special about this exception is that it automatically logs to the provided logger.
@@ -10,7 +12,7 @@ import org.slf4j.Logger;
  *
  * @author Thijzert123
  */
-public class HomeWizardApiException extends Exception {
+public class HomeWizardApiException extends IOException {
     HomeWizardApiException(final String message, final Throwable cause, final Logger logger) {
         super(message, cause);
         logger.error(message, cause);
