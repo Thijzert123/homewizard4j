@@ -46,6 +46,9 @@ class HomeWizardServiceListener implements ServiceListener {
         } else if (Objects.equals(productType, P1Meter.PRODUCT_TYPE)) {
             LOGGER.trace("Product type P1Meter");
             addP1Meter(serviceInfo);
+        } else if (Objects.equals(productType, EnergySocket.PRODUCT_TYPE)) {
+            LOGGER.trace("Product type EnergySocket");
+            addEnergySocket(serviceInfo);
         }
     }
 
@@ -63,6 +66,18 @@ class HomeWizardServiceListener implements ServiceListener {
 
     private void addP1Meter(final ServiceInfo serviceInfo) {
         discoverer.p1Meters.add(new P1Meter(
+                Optional.of(serviceInfo.getQualifiedName()),
+                Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
+                serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
+                serviceInfo.getPort(),
+                serviceInfo.getPropertyString("path"),
+                Optional.of(serviceInfo.getPropertyString("product_name")),
+                Optional.of(serviceInfo.getPropertyString("product_name"))
+        ));
+    }
+
+    private void addEnergySocket(final ServiceInfo serviceInfo) {
+        discoverer.energySockets.add(new EnergySocket(
                 Optional.of(serviceInfo.getQualifiedName()),
                 Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
                 serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address

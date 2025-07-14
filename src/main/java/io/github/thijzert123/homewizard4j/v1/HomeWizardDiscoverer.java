@@ -4,13 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceInfo;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Discovers HomeWizard devices using mDNS. This class should be your starting point when using the API.
@@ -46,6 +44,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
 
     final List<Watermeter> watermeters;
     final List<P1Meter> p1Meters;
+    final List<EnergySocket> energySockets;
 
     /**
      * Initializes the discoverer and starts scanning for HomeWizard devices.
@@ -56,6 +55,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     public HomeWizardDiscoverer() throws IOException {
         watermeters = new ArrayList<>();
         p1Meters = new ArrayList<>();
+        energySockets = new ArrayList<>();
 
         jmDNS = JmDNS.create(InetAddress.getLocalHost());
         jmDNS.addServiceListener(SERVICE_TYPE, new HomeWizardServiceListener(this));
@@ -72,6 +72,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
         this();
         watermeters.addAll(discovererToMerge.getWatermeters());
         p1Meters.addAll(discovererToMerge.getP1Meters());
+        energySockets.addAll(discovererToMerge.getEnergySockets());
     }
 
     /**
@@ -100,6 +101,15 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
+     * Returns all energy socket devices.
+     *
+     * @return all energy socket devices
+     */
+    public List<EnergySocket> getEnergySockets() {
+        return energySockets;
+    }
+
+    /**
      * Returns all devices.
      *
      * @return all devices
@@ -108,6 +118,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
         final List<Device> devices = new ArrayList<>();
         devices.addAll(getWatermeters());
         devices.addAll(getP1Meters());
+        devices.addAll(getEnergySockets());
         return devices;
     }
 }
