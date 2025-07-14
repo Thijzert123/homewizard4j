@@ -9,6 +9,8 @@
 ## Usage
 For more in-depth explanation per class/method, please refer to the Javadocs. It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
 
+All the code examples below are also available for you to see/run at `src/test/java/io/github/thijzert123/homewizard4j/example`.
+
 ### Discovery
 You should always start with a `HomeWizardDiscoverer`. This is able to scan for all HomeWizard devices in your local network.
 When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be done by using `Thread.sleep()`, waiting for a user input or using an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know how many devices you are waiting for.
