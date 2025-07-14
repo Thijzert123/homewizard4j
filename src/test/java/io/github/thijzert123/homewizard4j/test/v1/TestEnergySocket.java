@@ -53,7 +53,7 @@ public class TestEnergySocket {
         Assertions.assertEquals(231.539, energySocket.getActiveVoltageV().getAsDouble());
         Assertions.assertEquals(2.346, energySocket.getActiveCurrentA().getAsDouble());
         Assertions.assertEquals(123.456, energySocket.getActiveReactivePowerVar().getAsDouble());
-        Assertions.assertEquals(666.768, energySocket.getActiveApparentPowerVar().getAsDouble());
+        Assertions.assertEquals(666.768, energySocket.getActiveApparentPowerVa().getAsDouble());
         Assertions.assertEquals(0.81688, energySocket.getActivePowerFactor().getAsDouble());
         Assertions.assertEquals(50.005, energySocket.getActiveFrequencyHz().getAsDouble());
     }

@@ -271,8 +271,6 @@ public class EnergySocket extends Device {
 
     /**
      * Returns the apparent power in volt-amperes.
-     * There is a spelling mistake with this data point in the official API, but in this Java API, it is fixed
-     * ({@code active_apparent_power_va} -> {@code active_apparent_power_var}).
      * <p>
      * In order to get this information, you must first call {@link #updateMeasurements()}.
      * This information is only available for {@code HWE-SKT-21}.
@@ -282,7 +280,7 @@ public class EnergySocket extends Device {
      * @return apparent power in volt-amperes
      * @see #updateMeasurements()
      */
-    public OptionalDouble getActiveApparentPowerVar() {
+    public OptionalDouble getActiveApparentPowerVa() {
         return activeApparentPowerVa;
     }
 
