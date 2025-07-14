@@ -106,13 +106,13 @@ public class Watermeter extends Device {
     }
 
     @Override
-    public boolean updateDeviceInfo() throws HomeWizardApiException {
-        return updateDeviceInfo(this);
+    public void updateDeviceInfo() throws HomeWizardApiException {
+        updateDeviceInfo(this);
     }
 
     @Override
-    public boolean updateMeasurements() throws HomeWizardApiException {
-        return updateMeasurements(this);
+    public void updateMeasurements() throws HomeWizardApiException {
+        updateMeasurements(this);
     }
 
     @Override

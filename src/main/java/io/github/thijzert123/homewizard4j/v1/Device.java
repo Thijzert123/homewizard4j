@@ -1,15 +1,10 @@
 package io.github.thijzert123.homewizard4j.v1;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -24,7 +19,7 @@ import java.util.OptionalDouble;
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Device {
+public abstract class Device extends Updatable {
     /**
      * The default port of the API.
      */
@@ -35,7 +30,6 @@ public abstract class Device {
     public static final String DEFAULT_API_PATH = "/api/v1";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final ObjectMapper objectMapper;
 
     private final Optional<String> serviceName;
     private final boolean apiEnabled;
@@ -49,10 +43,6 @@ public abstract class Device {
            final String hostAddress,
            final int port,
            final String apiPath) {
-        objectMapper = new ObjectMapper();
-        // Makes sure Optional is supported
-        objectMapper.registerModule(new Jdk8Module());
-
         this.serviceName = serviceName;
         this.apiEnabled = apiEnabled;
         this.hostAddress = hostAddress;
@@ -61,43 +51,12 @@ public abstract class Device {
         systemConfiguration = new SystemConfiguration(this);
     }
 
-    boolean update(final String fullAddress, final Object objectToUpdate) throws HomeWizardApiException {
-        LOGGER.debug("Updating device fields");
-
-        if (!isApiEnabled()) {
-            LOGGER.debug("API is not enabled, not updating");
-            return false;
-        }
-
-        final String responseBody = HttpUtils.getBody("GET", fullAddress);
-        try {
-            LOGGER.debug("Mapping body with ObjectMapper, updating this instance... ");
-            objectMapper.readerForUpdating(objectToUpdate).readValue(responseBody);
-            LOGGER.debug("Mapping body with ObjectMapper, updating this instance, done");
-        } catch (final JsonProcessingException jsonProcessingException) {
-            throw new HomeWizardApiException(jsonProcessingException, LOGGER);
-        }
-        return true;
+    void updateDeviceInfo(final Device objectToUpdate) throws HomeWizardApiException {
+        update(getFullAddress() + "/api", objectToUpdate);
     }
 
-    boolean updateDeviceInfo(final Device objectToUpdate) throws HomeWizardApiException {
-        return update(getFullAddress() + "/api", objectToUpdate);
-    }
-
-    boolean updateMeasurements(final Device objectToUpdate) throws HomeWizardApiException {
-        return update(getFullApiPath() + "/data", objectToUpdate);
-    }
-
-    /**
-     * Calls {@link #updateDeviceInfo()} and {@link #updateMeasurements()}.
-     * It retrieves the system configuration vis {@link #getSystemConfiguration()}
-     * and calls {@link SystemConfiguration#update()}.
-     *
-     * @return whether all actions where successful
-     * @throws HomeWizardApiException when something has gone wrong while updating
-     */
-    public boolean updateAll() throws HomeWizardApiException {
-        return updateDeviceInfo() && updateMeasurements() && getSystemConfiguration().update();
+    void updateMeasurements(final Device objectToUpdate) throws HomeWizardApiException {
+        update(getFullApiPath() + "/data", objectToUpdate);
     }
 
     /**
@@ -105,22 +64,33 @@ public abstract class Device {
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/api#parameters">Official API documentation related to this method</a>
      *
-     * @return whether the action was successful
      * @see #isApiEnabled()
      * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public abstract boolean updateDeviceInfo() throws HomeWizardApiException;
+    public abstract void updateDeviceInfo() throws HomeWizardApiException;
 
     /**
      * Updates the fields related to measurements. Requires {@link #isApiEnabled()} to be <code>true</code>.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/measurement">Official API documentation related to this method</a>
      *
-     * @return whether the action was successful
      * @see #isApiEnabled()
      * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public abstract boolean updateMeasurements() throws HomeWizardApiException;
+    public abstract void updateMeasurements() throws HomeWizardApiException;
+
+    /**
+     * Calls {@link #updateDeviceInfo()} and {@link #updateMeasurements()}.
+     * It retrieves the system configuration vis {@link #getSystemConfiguration()}
+     * and calls {@link SystemConfiguration#update()}.
+     *
+     * @throws HomeWizardApiException when something has gone wrong while updating
+     */
+    public void updateAll() throws HomeWizardApiException {
+        updateDeviceInfo();
+        updateMeasurements();
+        getSystemConfiguration().update();
+    }
 
     /**
      * The status light of the device will blink for a few seconds after calling this method,
@@ -321,28 +291,4 @@ public abstract class Device {
      * @see #updateMeasurements()
      */
     public abstract OptionalDouble getWifiStrength();
-
-    /**
-     * Provides a human-readable {@link String} useful for debugging by calling all get* methods.
-     *
-     * @return a human-readable representation of this class
-     */
-    @Override
-    public String toString() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (final Method method : getClass().getMethods()) {
-            final String name = method.getName();
-            if (name.startsWith("get") && method.getParameterCount() == 0 && !name.equals("getClass")) {
-                stringBuilder.append(name).append(" = ");
-                String returnValue;
-                try {
-                    returnValue = method.invoke(this).toString();
-                } catch (final IllegalAccessException | InvocationTargetException exception) {
-                    returnValue = exception.getMessage();
-                }
-                stringBuilder.append(returnValue).append(", ");
-            }
-        }
-        return stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length()).toString();
-    }
 }

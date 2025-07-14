@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/Thijzert123/homewizard4j/blob/main/logo.png?raw=true" width=100 height=100 />
+  <img src="https://github.com/Thijzert123/homewizard4j/blob/main/logo.png?raw=true" alt="homewizard4j logo" width=100 height=100 />
   <h1>homewizard4j</h1>
   Unofficial Java API for HomeWizard devices
 
@@ -15,7 +15,7 @@ All the code examples below are also available for you to see/run at `src/test/j
 You should always start with a `HomeWizardDiscoverer`. This is able to scan for all HomeWizard devices in your local network.
 When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be done by using `Thread.sleep()`, waiting for a user input or using an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know how many devices you are waiting for.
 
-When you eventually have a `List` with multiple instances of `Device`, you can use `getProductName()` for an user-friendly name representation of the device. This can be useful for debugging purposes, but also for quick examples like this.
+When you eventually have a `List` with multiple instances of `Device`, you can use `getProductName()` for a user-friendly name representation of the device. This can be useful for debugging purposes, but also for quick examples like this.
 
 Below is how all the code would look together. Notice that you can call `close()` to stop the discoverer from scanning devices. This can be useful if you know you already have all the devices discovered, because when closing the discoverer you can conserve resources. To scan again, you have to create a new `HomeWizardDiscoverer`. You can, however, hand over all devices from one `HomeWizardDiscoverer` instance to another one, with the `HomeWizardDiscoverer(HomeWizardDiscoverer)` constructor.
 For more information, please refer to the Javadocs.
@@ -131,6 +131,6 @@ Cloud enabled: Optional[true]
 ### Updating data
 You might have already noticed that most getters of a `Device` return an `Optional` of some kind. This has two reasons:
 - For some fields, you first have to update the device by calling `update*()` methods. In the Javadocs you can see what update method you have to call for a specific field to update.
-- Not all data points are returned by the official API when updating. When you don't use gas, the P1 meter won't return datapoints that are about gas.
+- Not all data points are returned by the official API when updating. When you don't use gas, the P1 meter won't return data points that are about gas.
 
 The default value for all fields is `Optional.empty()` (or with another form of `Optional`, like `OptionalInt` or `OptionalDouble`), except for some. These fields are required when initializing the class, so you can always access them. Some of these values are never able to change (product type), others _should_ never change, like the api version: this can _technically_ change, but it doesn't because the api version is dependent on how you do HTTP request; these are always the same.

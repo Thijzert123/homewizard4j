@@ -22,6 +22,8 @@ public class EnergySocket extends Device {
      */
     public static final String PRODUCT_TYPE = "HWE-SKT";
 
+    private final DeviceState deviceState;
+
     @JsonProperty("product_name")
     private final Optional<String> productName;
     @JsonProperty("serial")
@@ -63,12 +65,12 @@ public class EnergySocket extends Device {
     private final OptionalDouble activeFrequencyHz = OptionalDouble.empty();
 
     EnergySocket(final Optional<String> serviceName,
-            final boolean apiEnabled,
-            final String hostAddress,
-            final int port,
-            final String apiPath,
-            final Optional<String> productName,
-            final Optional<String> serial) {
+                 final boolean apiEnabled,
+                 final String hostAddress,
+                 final int port,
+                 final String apiPath,
+                 final Optional<String> productName,
+                 final Optional<String> serial) {
         super(
                 serviceName,
                 apiEnabled,
@@ -77,24 +79,26 @@ public class EnergySocket extends Device {
                 apiPath
         );
 
+        deviceState = new DeviceState(this);
+
         this.productName = productName;
         this.serial = serial;
     }
 
     /**
-     * Manually create a {@link P1Meter}. When getting devices this way, some methods become useless,
+     * Manually create a {@link EnergySocket}. When getting devices this way, some methods become useless,
      * for example {@link #getServiceName()}. For more information on what data is available,
      * check the Javadocs for the methods.
      *
-     * @param apiEnabled whether the API is enabled on the device: you have to check this yourself!
+     * @param apiEnabled  whether the API is enabled on the device: you have to check this yourself!
      * @param hostAddress host address, like {@code 192.168.1.123}
-     * @param port port, should be {@code 80}
-     * @param apiPath API path, should be {@code /api/v1}
+     * @param port        port, should be {@code 80}
+     * @param apiPath     API path, should be {@code /api/v1}
      */
     public EnergySocket(final boolean apiEnabled,
-                   final String hostAddress,
-                   final int port,
-                   final String apiPath) {
+                        final String hostAddress,
+                        final int port,
+                        final String apiPath) {
         this(
                 Optional.empty(),
                 apiEnabled,
@@ -107,7 +111,7 @@ public class EnergySocket extends Device {
     }
 
     /**
-     * Manually create a {@link P1Meter}. This assumes that the API is enabled. It is important that you have checked
+     * Manually create a {@link EnergySocket}. This assumes that the API is enabled. It is important that you have checked
      * this before, because if the API is not actually enabled, some exceptions when updating could occur.
      * <p>
      * For port and API path, the values {@link Device#DEFAULT_PORT} and {@link Device#DEFAULT_API_PATH} are used.
@@ -124,13 +128,13 @@ public class EnergySocket extends Device {
     }
 
     @Override
-    public boolean updateDeviceInfo() throws HomeWizardApiException {
-        return updateDeviceInfo(this);
+    public void updateDeviceInfo() throws HomeWizardApiException {
+        updateDeviceInfo(this);
     }
 
     @Override
-    public boolean updateMeasurements() throws HomeWizardApiException {
-        return updateMeasurements(this);
+    public void updateMeasurements() throws HomeWizardApiException {
+        updateMeasurements(this);
     }
 
     @Override
@@ -174,7 +178,6 @@ public class EnergySocket extends Device {
      * In order to get this information, you must first call {@link #updateMeasurements()}.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#parameters-1">Official API documentation related to this method</a>
-     * 
      *
      * @return energy usage meter reading in kWh
      * @see #updateMeasurements()
@@ -298,5 +301,15 @@ public class EnergySocket extends Device {
      */
     public OptionalDouble getActiveFrequencyHz() {
         return activeFrequencyHz;
+    }
+
+    /**
+     * Returns the {@link DeviceState}. With this you are able to change settings specific to the energy socket.
+     *
+     * @return the {@link DeviceState}
+     * @see DeviceState
+     */
+    public DeviceState getDeviceState() {
+        return deviceState;
     }
 }

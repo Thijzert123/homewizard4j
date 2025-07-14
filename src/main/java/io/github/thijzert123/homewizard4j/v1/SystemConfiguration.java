@@ -5,9 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.http.HttpRequest;
 import java.util.Optional;
 
 /**
@@ -21,47 +18,30 @@ import java.util.Optional;
  * @see #update()
  * @see Optional
  */
-public class SystemConfiguration {
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+public class SystemConfiguration extends Savable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final Device device;
-    private final String systemApiPath;
+    private final String apiAddress;
 
     @JsonProperty("cloud_enabled")
     private Optional<Boolean> cloudEnabled = Optional.empty();
 
     SystemConfiguration(final Device device) {
-        this.device = device;
-        systemApiPath = device.getFullApiPath() + "/system";
+        apiAddress = device.getFullApiPath() + "/system";
     }
 
     /**
-     * Updates the data from the device. If you have made changes without saving them using {@link #save()},
-     * they will be discarded!
+     * Updates all the data in the device.
      *
-     * @return whether the action was successful
-     * @throws HomeWizardApiException when something has gone wrong while updating data
+     * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public boolean update() throws HomeWizardApiException {
-        LOGGER.debug("Updating system configuration");
-        return device.update(systemApiPath, this);
+    public void update() throws HomeWizardApiException {
+        update(apiAddress, this);
     }
 
-    /**
-     * Saves the changed data to the device. If all data fields have an empty {@link Optional},
-     * you this method fails and returns <code>false</code>.
-     *
-     * @return whether the action was successful
-     * @throws HomeWizardApiException when something has gone wrong while saving
-     */
-    public boolean save() throws HomeWizardApiException {
-        LOGGER.debug("Saving system configuration");
-        if (cloudEnabled.isEmpty()) {
-            LOGGER.debug("All fields have empty optional, failed saving system configuration");
-            return false;
-        }
-        HttpUtils.getBody("PUT", systemApiPath,
-                HttpRequest.BodyPublishers.ofString("{\"cloud_enabled\": " + cloudEnabled.get() + "}"));
-        return true;
+    @Override
+    public void save() throws HomeWizardApiException {
+        save(apiAddress, this);
     }
 
     /**
@@ -89,15 +69,5 @@ public class SystemConfiguration {
     public void setCloudEnabled(final boolean cloudEnabled) {
         LOGGER.debug("setCloudEnabled: '{}'", cloudEnabled);
         this.cloudEnabled = Optional.of(cloudEnabled);
-    }
-
-    /**
-     * Provides a human-readable {@link String} useful for debugging by calling all get* methods.
-     *
-     * @return a human-readable representation of this class
-     */
-    @Override
-    public String toString() {
-        return "isCloudEnabled = " + isCloudEnabled();
     }
 }

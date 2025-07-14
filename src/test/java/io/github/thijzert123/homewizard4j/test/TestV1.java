@@ -23,7 +23,7 @@ public class TestV1 {
                 device.updateAll();
                 LOGGER.info(device.toString());
             }
-        } catch (InterruptedException | IOException exception) {
+        } catch (final InterruptedException | IOException exception) {
             throw new RuntimeException(exception);
         }
     }
