@@ -134,3 +134,6 @@ You might have already noticed that most getters of a `Device` return an `Option
 - Not all data points are returned by the official API when updating. When you don't use gas, the P1 meter won't return data points that are about gas.
 
 The default value for all fields is `Optional.empty()` (or with another form of `Optional`, like `OptionalInt` or `OptionalDouble`), except for some. These fields are required when initializing the class, so you can always access them. Some of these values are never able to change (product type), others _should_ never change, like the api version: this can _technically_ change, but it doesn't because the api version is dependent on how you do HTTP request; these are always the same.
+
+---
+_This project is not affiliated with HomeWizard_
