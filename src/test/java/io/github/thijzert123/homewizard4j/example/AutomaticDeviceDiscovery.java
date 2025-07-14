@@ -3,7 +3,7 @@ import io.github.thijzert123.homewizard4j.v1.*;
 import java.util.*;
 import java.io.IOException;
 
-public class PrintAllDeviceNames {
+public class AutomaticDeviceDiscovery {
     public static void main(final String[] args) throws InterruptedException, IOException {
         // Create the discoverer and start scanning for HomeWizard devices.
         final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer();
