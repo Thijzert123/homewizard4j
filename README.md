@@ -7,7 +7,7 @@
 </div>
 
 ## Usage
-For more in-depth explanation per class/method, please refer to the Javadocs.
+For more in-depth explanation per class/method, please refer to the Javadocs. It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
 
 ### Discovery
 You should always start with a `HomeWizardDiscoverer`. This is able to scan for all HomeWizard devices in your local network.
@@ -51,6 +51,39 @@ Example output when a watermeter and P1 meter are discovered:
 ```
 Optional[Watermeter]
 Optional[P1 Meter]
+```
+
+### Manual devices
+You can also choose to not use the discoverer, but instead initialize a `Device` yourself. For this you need the IP address (or domain name) of the device. In the example below you see that that is not the only data we give to the constructor.
+That is because we also pass whether the API is enabled on the device (hence the `true` value). Then we pass the IP/domain name, port and the API path. You can also choose to use the constructor where you only pass the IP. The other values will be default:
+- API enabled: `true`
+- Port: `80`
+- API path: `/api/v1`
+
+When using a manual added `Device`, you lose access to some of its fields, for example `getServiceName()`. That is because this data is only passed with the discoverer. For more information about if or when data is available, check the methods in the Javadocs.
+```java
+package io.github.thijzert123.homewizard4j.example;
+import io.github.thijzert123.homewizard4j.v1.*;
+import java.util.*;
+import java.io.IOException;
+
+public class ManualDevice {
+    public static void main(final String[] args) throws IOException {
+        // Initialize watermeter with specified IP
+        final Watermeter watermeter = new Watermeter(true, "192.168.1.123", 80, "/api/v1");
+
+        // Update all possible data
+        watermeter.updateAll();
+
+        // Get product name and print
+        final Optional<String> productName = watermeter.getProductName();
+        System.out.println(productName);
+    }
+}
+```
+Output:
+```
+Optional[Watermeter]
 ```
 
 ### System configuration
