@@ -48,8 +48,8 @@ public class Example1 {
 ```
 Example output when a watermeter and P1 meter are discovered:
 ```
-Watermeter
-P1 Meter
+Optional[Watermeter]
+Optional[P1 Meter]
 ```
 
 ### System configuration
