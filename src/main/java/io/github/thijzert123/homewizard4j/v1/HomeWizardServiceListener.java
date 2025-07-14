@@ -7,6 +7,7 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,39 +53,43 @@ class HomeWizardServiceListener implements ServiceListener {
         }
     }
 
+    private Object createDevice(final Class<?> clazz, final ServiceInfo serviceInfo) {
+        try {
+            return clazz.getDeclaredConstructor(
+                    Optional.class,
+                    boolean.class,
+                    String.class,
+                    int.class,
+                    String.class,
+                    Optional.class,
+                    Optional.class
+            ).newInstance(
+                    Optional.of(serviceInfo.getQualifiedName()),
+                    Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
+                    serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
+                    serviceInfo.getPort(),
+                    serviceInfo.getPropertyString("path"),
+                    Optional.of(serviceInfo.getPropertyString("product_name")),
+                    Optional.of(serviceInfo.getPropertyString("product_name"))
+            );
+        } catch (final InstantiationException |
+                       IllegalAccessException |
+                       InvocationTargetException |
+                       NoSuchMethodException exception) {
+            LOGGER.error("Fatal error while creating device, please report this to the library developer(s)", exception);
+            throw new RuntimeException(exception);
+        }
+    }
+
     private void addWatermeter(final ServiceInfo serviceInfo) {
-        discoverer.watermeters.add(new Watermeter(
-                Optional.of(serviceInfo.getQualifiedName()),
-                Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
-                serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
-                serviceInfo.getPort(),
-                serviceInfo.getPropertyString("path"),
-                Optional.of(serviceInfo.getPropertyString("product_name")),
-                Optional.of(serviceInfo.getPropertyString("product_name"))
-        ));
+        discoverer.watermeters.add((Watermeter) createDevice(Watermeter.class, serviceInfo));
     }
 
     private void addP1Meter(final ServiceInfo serviceInfo) {
-        discoverer.p1Meters.add(new P1Meter(
-                Optional.of(serviceInfo.getQualifiedName()),
-                Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
-                serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
-                serviceInfo.getPort(),
-                serviceInfo.getPropertyString("path"),
-                Optional.of(serviceInfo.getPropertyString("product_name")),
-                Optional.of(serviceInfo.getPropertyString("product_name"))
-        ));
+        discoverer.p1Meters.add((P1Meter) createDevice(P1Meter.class, serviceInfo));
     }
 
     private void addEnergySocket(final ServiceInfo serviceInfo) {
-        discoverer.energySockets.add(new EnergySocket(
-                Optional.of(serviceInfo.getQualifiedName()),
-                Objects.equals(serviceInfo.getPropertyString("api_enabled"), "1"),
-                serviceInfo.getHostAddresses()[0], // HomeWizard stuff should only have 1 host address
-                serviceInfo.getPort(),
-                serviceInfo.getPropertyString("path"),
-                Optional.of(serviceInfo.getPropertyString("product_name")),
-                Optional.of(serviceInfo.getPropertyString("product_name"))
-        ));
+        discoverer.energySockets.add((EnergySocket) createDevice(EnergySocket.class, serviceInfo));
     }
 }
