@@ -6,7 +6,7 @@
   _automatic discovery_ • _retrieving data_ • _changing configuration_
 
   [![Maven-central](https://img.shields.io/maven-central/v/io.github.thijzert123/homewizard4j?style=for-the-badge&logo=maven&color=blue)](https://central.sonatype.com/artifact/io.github.thijzert123/homewizard4j)
-  [![Javadoc](https://javadoc.io/badge2/io.github.thijzert123/homewizard4j/javadoc.svg?style=for-the-badge&color=yellow)](https://javadoc.io/doc/io.github.thijzert123/homewizard4j)
+  [![Javadoc](https://javadoc.io/badge2/io.github.thijzert123/homewizard4j/javadoc.svg?color=yellow&style=for-the-badge)](https://javadoc.io/doc/io.github.thijzert123/homewizard4j) 
   [![License](https://img.shields.io/github/license/Thijzert123/homewizard4j?style=for-the-badge&color=A9CF04)](https://opensource.org/license/apache-2-0)
   [![Code quality](https://img.shields.io/codefactor/grade/github/Thijzert123/homewizard4j?style=for-the-badge)](https://www.codefactor.io/repository/github/thijzert123/homewizard4j)
 </div>
@@ -15,7 +15,7 @@
 Currently only the `v1` API is supported. Support for `v2` is in development. All devices (that are nativly compatible with `v1`) are implemented in this Java API, but `EnergySocket` and `KWhMeter` are untested. They _should_ work, but if you have encountered a bug or error, please open an issue.
 
 ## Usage
-For more in-depth explanation per class/method, please refer to the Javadocs. It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
+For more in-depth explanation per class/method, please refer to the [Javadocs](https://javadoc.io/doc/io.github.thijzert123/homewizard4j). It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
 
 All the code examples below are also available for you to see/run at `src/test/java/io/github/thijzert123/homewizard4j/example`.
 
