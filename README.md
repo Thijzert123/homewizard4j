@@ -5,7 +5,7 @@
 
   _automatic discovery_ • _retrieving data_ • _changing configuration_
 
-  ![Maven-central](https://img.shields.io/maven-central/v/io.github.thijzert123/homewizard4j?style=for-the-badge&logo=maven&color=blue)
+  [![Maven-central](https://img.shields.io/maven-central/v/io.github.thijzert123/homewizard4j?style=for-the-badge&logo=maven&color=blue)](https://central.sonatype.com/artifact/io.github.thijzert123/homewizard4j)
   [![Javadoc](https://javadoc.io/badge2/io.github.thijzert123/homewizard4j/javadoc.svg?style=for-the-badge&color=yellow)](https://javadoc.io/doc/io.github.thijzert123/homewizard4j)
   [![License](https://img.shields.io/github/license/Thijzert123/homewizard4j?style=for-the-badge&color=A9CF04)](https://opensource.org/license/apache-2-0)
   [![Code quality](https://img.shields.io/codefactor/grade/github/Thijzert123/homewizard4j?style=for-the-badge)](https://www.codefactor.io/repository/github/thijzert123/homewizard4j)
