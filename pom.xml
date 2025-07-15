@@ -6,7 +6,7 @@
 
     <groupId>io.github.thijzert123</groupId>
     <artifactId>homewizard4j</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>HomeWizard API for Java</name>
     <description>Unofficial Java API for HomeWizard devices</description>
