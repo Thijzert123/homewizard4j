@@ -6,18 +6,21 @@
   _automatic discovery_ • _retrieving data_ • _changing configuration_
 </div>
 
+## Compatibility
+Currently only the `v1` API is supported. Support for `v2` is in development. All devices (that are nativly compatible with `v1`) are implemented in this Java API, but `EnergySocket` and `KWhMeter` are untested. They _should_ work, but if you have encountered a bug or error, please open an issue.
+
 ## Usage
 For more in-depth explanation per class/method, please refer to the Javadocs. It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
 
 All the code examples below are also available for you to see/run at `src/test/java/io/github/thijzert123/homewizard4j/example`.
 
 ### Discovery
-You should always start with a `HomeWizardDiscoverer`. This is able to scan for all HomeWizard devices in your local network.
-When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be done by using `Thread.sleep()`, waiting for a user input or using an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know how many devices you are waiting for.
+You should always start with a `HomeWizardDiscoverer`. This can scan for all HomeWizard devices in your local network.
+When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be achieved by using `Thread.sleep()`, waiting for user input, or employing an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know the number of devices to wait for.
 
 When you eventually have a `List` with multiple instances of `Device`, you can use `getProductName()` for a user-friendly name representation of the device. This can be useful for debugging purposes, but also for quick examples like this.
 
-Below is how all the code would look together. Notice that you can call `close()` to stop the discoverer from scanning devices. This can be useful if you know you already have all the devices discovered, because when closing the discoverer you can conserve resources. To scan again, you have to create a new `HomeWizardDiscoverer`. You can, however, hand over all devices from one `HomeWizardDiscoverer` instance to another one, with the `HomeWizardDiscoverer(HomeWizardDiscoverer)` constructor.
+Below is how all the code would look together. Notice that you can call `close()` to stop the discoverer from scanning devices. This can be useful if you know you already have all the devices discovered because when closing the discoverer you can conserve resources. To scan again, you have to create a new `HomeWizardDiscoverer`. You can, however, hand over all devices from one `HomeWizardDiscoverer` instance to another one, with the `HomeWizardDiscoverer(HomeWizardDiscoverer)` constructor.
 For more information, please refer to the Javadocs.
 ```java
 package io.github.thijzert123.homewizard4j.example;
@@ -56,13 +59,13 @@ Optional[P1 Meter]
 ```
 
 ### Manual devices
-You can also choose to not use the discoverer, but instead initialize a `Device` yourself. For this you need the IP address (or domain name) of the device. In the example below you see that that is not the only data we give to the constructor.
-That is because we also pass whether the API is enabled on the device (hence the `true` value). Then we pass the IP/domain name, port and the API path. You can also choose to use the constructor where you only pass the IP. The other values will be default:
+You can also choose not to use the discoverer but instead initialize a `Device` yourself. For this, you need the IP address (or domain name) of the device. In the example below you see that this is not the only data we pass to the constructor.
+That is because we also pass whether the API is enabled on the device (hence the `true` value). Then we pass the IP/domain name, port, and the API path. You can also choose to use the constructor where you only pass the IP. The other values will be the default:
 - API enabled: `true`
 - Port: `80`
 - API path: `/api/v1`
 
-When using a manual added `Device`, you lose access to some of its fields, for example `getServiceName()`. That is because this data is only passed with the discoverer. For more information about if or when data is available, check the methods in the Javadocs.
+When using a manually added `Device`, you lose access to some of its fields, for example, `getServiceName()`. That is because this data is only passed to the `Device` initializer when using the discoverer. For more information about if or when data is available, check the methods in the Javadocs.
 ```java
 package io.github.thijzert123.homewizard4j.example;
 import io.github.thijzert123.homewizard4j.v1.*;
@@ -92,7 +95,7 @@ Optional[Watermeter]
 Every `Device` has a `SystemConfiguration` inside. When using API v1, you can only change whether cloud communication on the device is enabled. To do this, use `getSystemConfiguration()` on your `Device`. The returned `SystemConfiguration` is still empty, so to fill it with the configuration that is currently active on the device, call `update()` on the `SystemConfiguration` instance. Then you can use `isCloudEnabled()` to return whether cloud communication is enabled on the device.
 
 To change a value, simply use one of the setters, which, in this case, is `setCloudEnabled()`. Change it to the value you want, but remember to call `save()` to make sure the changed data is also updated on the device.
-In the example below, you can see that after changing the value, `update()` is still called. This isn't _necessary_, but it is recommended, because other programs can change the same value after you have saved your value.
+In the example below, you can see that after changing the value, `update()` is still called. This isn't _necessary_, but it is recommended because other programs can change the same value after you have saved your value.
 In conclusion, you should call `update()` regularly.
 ```java
 package io.github.thijzert123.homewizard4j.example;
@@ -130,10 +133,10 @@ Cloud enabled: Optional[true]
 
 ### Updating data
 You might have already noticed that most getters of a `Device` return an `Optional` of some kind. This has two reasons:
-- For some fields, you first have to update the device by calling `update*()` methods. In the Javadocs you can see what update method you have to call for a specific field to update.
+- For some fields, you first have to update the device by calling one of the `update*()` methods. In the Javadocs you can see what update method you have to call for a specific field to update.
 - Not all data points are returned by the official API when updating. When you don't use gas, the P1 meter won't return data points that are about gas.
 
-The default value for all fields is `Optional.empty()` (or with another form of `Optional`, like `OptionalInt` or `OptionalDouble`), except for some. These fields are required when initializing the class, so you can always access them. Some of these values are never able to change (product type), others _should_ never change, like the api version: this can _technically_ change, but it doesn't because the api version is dependent on how you do HTTP request; these are always the same.
+The default value for all fields is `Optional.empty()` (or with another form of `Optional`, like `OptionalInt` or `OptionalDouble`), except for some. These fields are required when initializing the class, so you can always access them. Some of these values are never able to change, for example, host address and port.
 
 ---
-_This project is not affiliated with HomeWizard_
+_This project is not affiliated with HomeWizard._
