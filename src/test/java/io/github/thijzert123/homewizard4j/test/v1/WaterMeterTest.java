@@ -35,7 +35,7 @@ public class WaterMeterTest {
     @Test
     public void testDeviceInfo() {
         Assertions.assertEquals("HWE-WTR", waterMeter.getProductType().get());
-        Assertions.assertEquals("WaterMeter", waterMeter.getProductName().get());
+        Assertions.assertEquals("Watermeter", waterMeter.getProductName().get());
         Assertions.assertEquals("3c39e7363bCC", waterMeter.getSerial().get());
         Assertions.assertEquals("5.18", waterMeter.getFirmwareVersion().get());
         Assertions.assertEquals("v1", waterMeter.getApiVersion().get());
