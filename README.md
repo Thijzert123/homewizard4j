@@ -15,9 +15,26 @@
 Currently only the `v1` API is supported. Support for `v2` is in development. All devices (that are nativly compatible with `v1`) are implemented in this Java API, but `EnergySocket` and `KWhMeter` are untested. They _should_ work, but if you have encountered a bug or error, please open an issue.
 
 ## Usage
-For more in-depth explanation per class/method, please refer to the [Javadocs](https://javadoc.io/doc/io.github.thijzert123/homewizard4j). It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
+For more in-depth explanation per class/method than is mentioned on this page, please refer to the [Javadocs](https://javadoc.io/doc/io.github.thijzert123/homewizard4j). It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
 
-All the code examples below are also available for you to see/run at `src/test/java/io/github/thijzert123/homewizard4j/example`.
+All the code examples below are also available for you to see/run at [`src/test/java/io/github/thijzert123/homewizard4j/example`](https://github.com/Thijzert123/homewizard4j/tree/main/src/test/java/io/github/thijzert123/homewizard4j/example).
+
+### Adding the dependency
+Use one of the snippets below or get one at [Maven Central](https://central.sonatype.com/artifact/io.github.thijzert123/homewizard4j).
+
+#### Maven
+```xml
+<dependency>
+    <groupId>io.github.thijzert123</groupId>
+    <artifactId>homewizard4j</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+#### Gradle
+```gradle
+implementation group: 'io.github.thijzert123', name: 'homewizard4j', version: '1.0.0'
+```
 
 ### Discovery
 You should always start with a `HomeWizardDiscoverer`. This can scan for all HomeWizard devices in your local network.
