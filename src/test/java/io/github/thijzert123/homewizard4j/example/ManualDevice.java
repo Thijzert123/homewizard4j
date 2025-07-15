@@ -5,14 +5,14 @@ import java.io.IOException;
 
 public class ManualDevice {
     public static void main(final String[] args) throws IOException {
-        // Initialize watermeter with specified IP
-        final Watermeter watermeter = new Watermeter(true, "192.168.1.123", 80, "/api/v1");
+        // Initialize water meter with specified IP
+        final WaterMeter waterMeter = new WaterMeter(true, "192.168.1.123", 80, "/api/v1");
 
         // Update all possible data
-        watermeter.updateAll();
+        waterMeter.updateAll();
 
         // Get product name and print
-        final Optional<String> productName = watermeter.getProductName();
+        final Optional<String> productName = waterMeter.getProductName();
         System.out.println(productName);
     }
 }

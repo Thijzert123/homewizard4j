@@ -8,9 +8,12 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 /**
- * A HomeWizard device, such as a Watermeter or P1-meter.
+ * A HomeWizard device, such as a Water meter or P1-meter. To get an instance, you can use {@link HomeWizardDiscoverer}
+ * or manually initialize it. For more information about that, see
+ * <a href="https://github.com/Thijzert123/homewizard4j?tab=readme-ov-file#manual-devices">manual devices</a>.
  * <p>
- * For some methods, you first need to call an update method ({@link #updateDeviceInfo()} or {@link #updateMeasurements()}).
+ * For some methods, you first need to call an update method ({@link #updateDeviceInfo()} or {@link #updateMeasurements()})
+ * before they become useful.
  * If you don't do that, they return an empty {@link Optional}.
  * See <a href="https://github.com/Thijzert123/homewizard4j#updating-data">updating data</a> for more information.
  *
@@ -238,7 +241,7 @@ public abstract class Device extends Updatable {
     public abstract Optional<String> getProductType();
 
     /**
-     * Returns a user-friendly name representation of the device. For example: <code>Watermeter</code>.
+     * Returns a user-friendly name representation of the device. For example: <code>WaterMeter</code>.
      * It may change at any time, so you should not use this for device identification.
      * Instead, use {@link #getProductType()} if you want to know exactly what type of device something is.
      * <p>

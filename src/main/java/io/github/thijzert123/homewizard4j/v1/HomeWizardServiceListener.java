@@ -41,9 +41,9 @@ class HomeWizardServiceListener implements ServiceListener {
         final String productType = serviceInfo.getPropertyString("product_type");
 
         LOGGER.trace("Product type: {}", productType);
-        if (Watermeter.PRODUCT_TYPES.contains(productType)) {
-            LOGGER.trace("Product type Watermeter");
-            addWatermeter(serviceInfo);
+        if (WaterMeter.PRODUCT_TYPES.contains(productType)) {
+            LOGGER.trace("Product type WaterMeter");
+            addWaterMeter(serviceInfo);
         } else if (P1Meter.PRODUCT_TYPES.contains(productType)) {
             LOGGER.trace("Product type P1Meter");
             addP1Meter(serviceInfo);
@@ -86,8 +86,8 @@ class HomeWizardServiceListener implements ServiceListener {
         }
     }
 
-    private void addWatermeter(final ServiceInfo serviceInfo) {
-        discoverer.watermeters.add((Watermeter) createDevice(Watermeter.class, serviceInfo));
+    private void addWaterMeter(final ServiceInfo serviceInfo) {
+        discoverer.waterMeters.add((WaterMeter) createDevice(WaterMeter.class, serviceInfo));
     }
 
     private void addP1Meter(final ServiceInfo serviceInfo) {

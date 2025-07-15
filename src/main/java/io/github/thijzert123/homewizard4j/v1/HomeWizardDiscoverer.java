@@ -26,13 +26,15 @@ import java.util.List;
  * // Wait for some time...
  * //
  *
- * // Get all devices, including watermeters and P1 meters
+ * // Get all devices, including water meters and P1 meters
  * {@code final List<Device> devices = discoverer.getAllDevices();}
  * for (final Device device : devices) {
  *     // Print the name of each device
  *     System.out.println(device.getProductName());
  * }
  * </pre>
+ *
+ * For more information, see <a href="https://github.com/Thijzert123/homewizard4j?tab=readme-ov-file#discovery">discovery</a>.
  *
  * @author Thijzert123
  * @see Device
@@ -42,7 +44,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     private static final String SERVICE_TYPE = "_hwenergy._tcp.local.";
     private final JmDNS jmDNS;
 
-    final List<Watermeter> watermeters;
+    final List<WaterMeter> waterMeters;
     final List<P1Meter> p1Meters;
     final List<EnergySocket> energySockets;
     final List<KWhMeter> kWhMeters;
@@ -54,7 +56,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * @throws IOException when something has gone wrong while creating the mDNS discoverer
      */
     public HomeWizardDiscoverer() throws IOException {
-        watermeters = new ArrayList<>();
+        waterMeters = new ArrayList<>();
         p1Meters = new ArrayList<>();
         energySockets = new ArrayList<>();
         kWhMeters = new ArrayList<>();
@@ -72,7 +74,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      */
     public HomeWizardDiscoverer(final HomeWizardDiscoverer discovererToMerge) throws IOException {
         this();
-        watermeters.addAll(discovererToMerge.getWatermeters());
+        waterMeters.addAll(discovererToMerge.getWaterMeters());
         p1Meters.addAll(discovererToMerge.getP1Meters());
         energySockets.addAll(discovererToMerge.getEnergySockets());
     }
@@ -85,12 +87,12 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
-     * Returns all watermeter devices.
+     * Returns all waterMeter devices.
      *
-     * @return all watermeter devices
+     * @return all waterMeter devices
      */
-    public List<Watermeter> getWatermeters() {
-        return watermeters;
+    public List<WaterMeter> getWaterMeters() {
+        return waterMeters;
     }
 
     /**
@@ -127,7 +129,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      */
     public List<Device> getAllDevices() {
         final List<Device> devices = new ArrayList<>();
-        devices.addAll(getWatermeters());
+        devices.addAll(getWaterMeters());
         devices.addAll(getP1Meters());
         devices.addAll(getEnergySockets());
         devices.addAll(getKWhMeters());

@@ -15,7 +15,7 @@ import java.util.OptionalDouble;
  * @see Device
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class Watermeter extends Device {
+public class WaterMeter extends Device {
     /**
      * Possible unique product identifiers for this device.
      *
@@ -47,14 +47,14 @@ public class Watermeter extends Device {
     @JsonProperty("total_liter_offset_m3")
     private final OptionalDouble totalLiterOffsetM3 = OptionalDouble.empty();
 
-    Watermeter(final Optional<String> serviceName,
-                      final boolean apiEnabled,
-                      final String hostAddress,
-                      final int port,
-                      final String apiPath,
-                      final Optional<String> productType,
-                      final Optional<String> productName,
-                      final Optional<String> serial) {
+    WaterMeter(final Optional<String> serviceName,
+               final boolean apiEnabled,
+               final String hostAddress,
+               final int port,
+               final String apiPath,
+               final Optional<String> productType,
+               final Optional<String> productName,
+               final Optional<String> serial) {
         super(
                 serviceName,
                 apiEnabled,
@@ -69,7 +69,7 @@ public class Watermeter extends Device {
     }
 
     /**
-     * Manually create a {@link Watermeter}. When getting devices this way, some methods become useless,
+     * Manually create a {@link WaterMeter}. When getting devices this way, some methods become useless,
      * for example {@link #getServiceName()}. For more information on what data is available,
      * check the Javadocs for the methods.
      *
@@ -78,7 +78,7 @@ public class Watermeter extends Device {
      * @param port port, should be {@code 80}
      * @param apiPath API path, should be {@code /api/v1}
      */
-    public Watermeter(final boolean apiEnabled,
+    public WaterMeter(final boolean apiEnabled,
                       final String hostAddress,
                       final int port,
                       final String apiPath) {
@@ -95,14 +95,14 @@ public class Watermeter extends Device {
     }
 
     /**
-     * Manually create a {@link Watermeter}. This assumes that the API is enabled. It is important that you have checked
+     * Manually create a {@link WaterMeter}. This assumes that the API is enabled. It is important that you have checked
      * this before, because if the API is not actually enabled, some exceptions when updating could occur.
      * <p>
      * For port and API path, the values {@link Device#DEFAULT_PORT} and {@link Device#DEFAULT_API_PATH} are used.
      *
      * @param hostAddress the host
      */
-    public Watermeter(final String hostAddress) {
+    public WaterMeter(final String hostAddress) {
         this(
                 true,
                 hostAddress,
