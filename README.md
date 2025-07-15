@@ -5,9 +5,11 @@
 
   _automatic discovery_ • _retrieving data_ • _changing configuration_
 
-  [![Code quality](https://img.shields.io/codefactor/grade/github/Thijzert123/homewizard4j?style=for-the-badge&logo=codefactor&logoColor=ffffff)](https://www.codefactor.io/repository/github/thijzert123/homewizard4j)
-  [![Java CI with Maven](https://img.shields.io/github/actions/workflow/status/Thijzert123/homewizard4j/maven.yml?style=for-the-badge&label=BUILD&logo=apachemaven&logoColor=ffffff)](https://github.com/Thijzert123/homewizard4j/actions/workflows/maven.yml)
-  [![License](https://img.shields.io/github/license/Thijzert123/homewizard4j?style=for-the-badge&logo=apache&logoColor=ffffff)](https://opensource.org/license/apache-2-0)
+  ![Maven-central](https://img.shields.io/maven-central/v/io.github.thijzert123/homewizard4j?style=for-the-badge&logo=maven&color=blue)
+  [![Javadoc](https://javadoc.io/badge2/io.github.thijzert123/homewizard4j/javadoc.svg?style=for-the-badge&color=yellow)](https://javadoc.io/doc/io.github.thijzert123/homewizard4j) 
+  [![Code quality](https://img.shields.io/codefactor/grade/github/Thijzert123/homewizard4j?style=for-the-badge)](https://www.codefactor.io/repository/github/thijzert123/homewizard4j)
+  [![Java CI with Maven](https://img.shields.io/github/actions/workflow/status/Thijzert123/homewizard4j/maven.yml?style=for-the-badge&label=Build)](https://github.com/Thijzert123/homewizard4j/actions/workflows/maven.yml)
+  [![License](https://img.shields.io/github/license/Thijzert123/homewizard4j?style=for-the-badge&color=A9CF04)](https://opensource.org/license/apache-2-0)
 </div>
 
 ## Compatibility
