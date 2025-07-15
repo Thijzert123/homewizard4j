@@ -50,6 +50,9 @@ class HomeWizardServiceListener implements ServiceListener {
         } else if (EnergySocket.PRODUCT_TYPES.contains(productType)) {
             LOGGER.trace("Product type EnergySocket");
             addEnergySocket(serviceInfo);
+        } else if (KWhMeter.PRODUCT_TYPES.contains(productType)) {
+            LOGGER.trace("Product type KWhMeter");
+            addKWhMeter(serviceInfo);
         }
     }
 
@@ -93,5 +96,9 @@ class HomeWizardServiceListener implements ServiceListener {
 
     private void addEnergySocket(final ServiceInfo serviceInfo) {
         discoverer.energySockets.add((EnergySocket) createDevice(EnergySocket.class, serviceInfo));
+    }
+
+    private void addKWhMeter(final ServiceInfo serviceInfo) {
+        discoverer.kWhMeters.add((KWhMeter) createDevice(KWhMeter.class, serviceInfo));
     }
 }

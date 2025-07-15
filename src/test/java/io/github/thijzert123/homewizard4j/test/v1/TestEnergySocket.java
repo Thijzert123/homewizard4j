@@ -4,7 +4,6 @@ import com.sun.net.httpserver.HttpServer;
 import io.github.thijzert123.homewizard4j.test.TestHttpHandler;
 import io.github.thijzert123.homewizard4j.test.Utils;
 import io.github.thijzert123.homewizard4j.v1.EnergySocket;
-import io.github.thijzert123.homewizard4j.v1.P1Meter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

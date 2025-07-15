@@ -45,6 +45,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     final List<Watermeter> watermeters;
     final List<P1Meter> p1Meters;
     final List<EnergySocket> energySockets;
+    final List<KWhMeter> kWhMeters;
 
     /**
      * Initializes the discoverer and starts scanning for HomeWizard devices.
@@ -56,6 +57,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
         watermeters = new ArrayList<>();
         p1Meters = new ArrayList<>();
         energySockets = new ArrayList<>();
+        kWhMeters = new ArrayList<>();
 
         jmDNS = JmDNS.create(InetAddress.getLocalHost());
         jmDNS.addServiceListener(SERVICE_TYPE, new HomeWizardServiceListener(this));
@@ -110,6 +112,15 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
+     * Returns all kWh meter devices.
+     *
+     * @return all kWh meter devices
+     */
+    public List<KWhMeter> getKWhMeters() {
+        return kWhMeters;
+    }
+
+    /**
      * Returns all devices.
      *
      * @return all devices
@@ -119,6 +130,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
         devices.addAll(getWatermeters());
         devices.addAll(getP1Meters());
         devices.addAll(getEnergySockets());
+        devices.addAll(getKWhMeters());
         return devices;
     }
 }
