@@ -6,7 +6,7 @@
   _automatic discovery_ • _retrieving data_ • _changing configuration_
 
   [![Code quality](https://img.shields.io/codefactor/grade/github/Thijzert123/homewizard4j?style=for-the-badge&logo=codefactor&logoColor=ffffff)](https://www.codefactor.io/repository/github/thijzert123/homewizard4j)
-  [![Java CI with Maven](https://img.shields.io/github/actions/workflow/status/Thijzert123/homewizard4j/maven.yml?style=for-the-badge&label=Maven&logo=apachemaven&logoColor=ffffff)](https://github.com/Thijzert123/homewizard4j/actions/workflows/maven.yml)
+  [![Java CI with Maven](https://img.shields.io/github/actions/workflow/status/Thijzert123/homewizard4j/maven.yml?style=for-the-badge&label=BUILD&logo=apachemaven&logoColor=ffffff)](https://github.com/Thijzert123/homewizard4j/actions/workflows/maven.yml)
   [![License](https://img.shields.io/github/license/Thijzert123/homewizard4j?style=for-the-badge&logo=apache&logoColor=ffffff)](https://opensource.org/license/apache-2-0)
 </div>
 
