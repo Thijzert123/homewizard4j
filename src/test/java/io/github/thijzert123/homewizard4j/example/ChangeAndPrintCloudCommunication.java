@@ -21,6 +21,6 @@ public class ChangeAndPrintCloudCommunication {
             // Update fields and print data
             configuration.update(); // This isn't technically necessary, but it's good practise
             System.out.println("Cloud enabled: " + configuration.isCloudEnabled());
-        };
+        }
     }
 }
