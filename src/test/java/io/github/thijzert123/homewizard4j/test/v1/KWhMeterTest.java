@@ -5,6 +5,7 @@ import io.github.thijzert123.homewizard4j.test.TestHttpHandler;
 import io.github.thijzert123.homewizard4j.test.Utils;
 import io.github.thijzert123.homewizard4j.v1.KWhMeter;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -14,9 +15,10 @@ import java.net.InetSocketAddress;
  * @author Thijzert123
  */
 public class KWhMeterTest {
-    private final KWhMeter kWhMeter;
+    private static KWhMeter kWhMeter;
 
-    public KWhMeterTest() throws IOException {
+    @BeforeAll
+    public static void beforeAll() throws IOException {
         final HttpServer server = HttpServer.create(new InetSocketAddress(8324), 0);
         server.setExecutor(null);
 
