@@ -5,7 +5,6 @@ import io.github.thijzert123.homewizard4j.test.TestHttpHandler;
 import io.github.thijzert123.homewizard4j.test.Utils;
 import io.github.thijzert123.homewizard4j.v1.P1Meter;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -15,10 +14,9 @@ import java.net.InetSocketAddress;
  * @author Thijzert123
  */
 public class P1MeterTest {
-    private static P1Meter p1Meter;
+    private final P1Meter p1Meter;
 
-    @BeforeAll
-    public static void beforeAll() throws IOException {
+    public P1MeterTest() throws IOException {
         final HttpServer server = HttpServer.create(new InetSocketAddress(8322), 0);
         server.setExecutor(null);
 

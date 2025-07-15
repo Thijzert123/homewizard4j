@@ -10,7 +10,7 @@ import java.util.OptionalDouble;
 /**
  * A HomeWizard device, such as a Watermeter or P1-meter.
  * <p>
- * For some methods, you first need to call an update method ({@link #updateDeviceInfo()} and {@link #updateMeasurements()}).
+ * For some methods, you first need to call an update method ({@link #updateDeviceInfo()} or {@link #updateMeasurements()}).
  * If you don't do that, they return an empty {@link Optional}.
  * See <a href="https://github.com/Thijzert123/homewizard4j#updating-data">updating data</a> for more information.
  *
