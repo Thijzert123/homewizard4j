@@ -22,9 +22,9 @@ public class WatermeterTest {
         final HttpServer server = HttpServer.create(new InetSocketAddress(8321), 0);
         server.setExecutor(null);
 
-        server.createContext("/api", new TestHttpHandler(Utils.getResourceAsString("watermeter/deviceInfo")));
-        server.createContext("/test/data", new TestHttpHandler(Utils.getResourceAsString("watermeter/measurements")));
-        server.createContext("/test/system", new TestHttpHandler(Utils.getResourceAsString("watermeter/systemConfiguration")));
+        server.createContext("/api", new TestHttpHandler(Utils.getResourceAsString("watermeter/deviceInfo.json")));
+        server.createContext("/test/data", new TestHttpHandler(Utils.getResourceAsString("watermeter/measurements.json")));
+        server.createContext("/test/system", new TestHttpHandler(Utils.getResourceAsString("watermeter/systemConfiguration.json")));
 
         server.start();
 

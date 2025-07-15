@@ -22,10 +22,10 @@ public class EnergySocketTest {
         final HttpServer server = HttpServer.create(new InetSocketAddress(8323), 0);
         server.setExecutor(null);
 
-        server.createContext("/api", new TestHttpHandler(Utils.getResourceAsString("energySocket/deviceInfo")));
-        server.createContext("/test/data", new TestHttpHandler(Utils.getResourceAsString("energySocket/measurements")));
-        server.createContext("/test/system", new TestHttpHandler(Utils.getResourceAsString("energySocket/systemConfiguration")));
-        server.createContext("/test/state", new TestHttpHandler(Utils.getResourceAsString("energySocket/deviceState")));
+        server.createContext("/api", new TestHttpHandler(Utils.getResourceAsString("energySocket/deviceInfo.json")));
+        server.createContext("/test/data", new TestHttpHandler(Utils.getResourceAsString("energySocket/measurements.json")));
+        server.createContext("/test/system", new TestHttpHandler(Utils.getResourceAsString("energySocket/systemConfiguration.json")));
+        server.createContext("/test/state", new TestHttpHandler(Utils.getResourceAsString("energySocket/deviceState.json")));
 
         server.start();
 

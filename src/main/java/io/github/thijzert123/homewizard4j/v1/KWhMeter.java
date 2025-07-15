@@ -19,7 +19,7 @@ import java.util.OptionalDouble;
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public abstract class KWhMeter extends Device {
+public class KWhMeter extends Device {
     /**
      * Possible unique product identifiers for this device.
      *

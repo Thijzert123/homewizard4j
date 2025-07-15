@@ -22,9 +22,9 @@ public class P1MeterTest {
         final HttpServer server = HttpServer.create(new InetSocketAddress(8322), 0);
         server.setExecutor(null);
 
-        server.createContext("/api", new TestHttpHandler(Utils.getResourceAsString("p1Meter/deviceInfo")));
-        server.createContext("/test/data", new TestHttpHandler(Utils.getResourceAsString("p1Meter/measurements")));
-        server.createContext("/test/system", new TestHttpHandler(Utils.getResourceAsString("p1Meter/systemConfiguration")));
+        server.createContext("/api", new TestHttpHandler(Utils.getResourceAsString("p1Meter/deviceInfo.json")));
+        server.createContext("/test/data", new TestHttpHandler(Utils.getResourceAsString("p1Meter/measurements.json")));
+        server.createContext("/test/system", new TestHttpHandler(Utils.getResourceAsString("p1Meter/systemConfiguration.json")));
 
         server.start();
 
