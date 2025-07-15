@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 /**
  * @author Thijzert123
  */
-public class TestWatermeter {
+public class WatermeterTest {
     private static Watermeter watermeter;
 
     @BeforeAll

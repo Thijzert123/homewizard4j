@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 /**
  * @author Thijzert123
  */
-public class TestP1Meter {
+public class P1MeterTest {
     private static P1Meter p1Meter;
 
     @BeforeAll

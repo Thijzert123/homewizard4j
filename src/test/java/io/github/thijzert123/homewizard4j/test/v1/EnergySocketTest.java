@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 /**
  * @author Thijzert123
  */
-public class TestEnergySocket {
+public class EnergySocketTest {
     private static EnergySocket energySocket;
 
     @BeforeAll
