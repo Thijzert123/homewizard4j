@@ -41,6 +41,7 @@ public class WaterMeterTest {
         Assertions.assertEquals("v1", waterMeter.getApiVersion().get());
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void testMeasurements() {
         Assertions.assertEquals("My Wi-Fi", waterMeter.getWifiSsid().get());
