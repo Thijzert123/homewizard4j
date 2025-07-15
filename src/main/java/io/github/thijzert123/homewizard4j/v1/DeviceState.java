@@ -27,7 +27,7 @@ public class DeviceState extends Savable {
     private OptionalInt brightness = OptionalInt.empty();
 
     DeviceState(final Device device) {
-        apiAddress = device.getFullApiPath() + "/state";
+        apiAddress = device.getFullApiAddress() + "/state";
     }
 
     /**

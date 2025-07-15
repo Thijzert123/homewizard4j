@@ -194,7 +194,7 @@ public class P1Meter extends Device {
      * @throws HomeWizardApiException when something has gone wrong while retrieving the telegram
      */
     public String retrieveLastTelegram() throws HomeWizardApiException {
-        return HttpUtils.getBody("GET", getFullApiPath() + "/telegram");
+        return HttpUtils.getBody("GET", getFullApiAddress() + "/telegram");
     }
 
     @Override

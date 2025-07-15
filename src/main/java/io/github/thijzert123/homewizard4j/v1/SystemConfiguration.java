@@ -27,7 +27,7 @@ public class SystemConfiguration extends Savable {
     private Optional<Boolean> cloudEnabled = Optional.empty();
 
     SystemConfiguration(final Device device) {
-        apiAddress = device.getFullApiPath() + "/system";
+        apiAddress = device.getFullApiAddress() + "/system";
     }
 
     /**

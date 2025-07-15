@@ -12,6 +12,7 @@ import java.util.OptionalDouble;
  * <p>
  * For some methods, you first need to call an update method ({@link #updateDeviceInfo()} and {@link #updateMeasurements()}).
  * If you don't do that, they return an empty {@link Optional}.
+ * See <a href="https://github.com/Thijzert123/homewizard4j#updating-data">updating data</a> for more information.
  *
  * @author Thijzert123
  * @see Optional
@@ -23,7 +24,8 @@ public abstract class Device extends Updatable {
      */
     public static final int DEFAULT_PORT = 80;
     /**
-     * The default API path.
+     * The default API path. This is what {@link String} you append to the IP.
+     * In {@code 192.168.1.123/api/v1} is {@code /api/v1} the API path.
      */
     public static final String DEFAULT_API_PATH = "/api/v1";
 
@@ -54,7 +56,7 @@ public abstract class Device extends Updatable {
     }
 
     void updateMeasurements(final Device objectToUpdate) throws HomeWizardApiException {
-        update(getFullApiPath() + "/data", objectToUpdate);
+        update(getFullApiAddress() + "/data", objectToUpdate);
     }
 
     /**
@@ -100,11 +102,12 @@ public abstract class Device extends Updatable {
      */
     public void identify() throws HomeWizardApiException {
         LOGGER.debug("Identify device");
-        HttpUtils.getBody("PUT", getFullApiPath() + "/identify");
+        HttpUtils.getBody("PUT", getFullApiAddress() + "/identify");
     }
 
     /**
-     * Returns the full qualified service name, for example <code>watermeter-ABC123._hwenergy._tcp.local.</code>.
+     * Returns the full qualified mDNS service name.
+     * For example: <code>watermeter-ABC123._hwenergy._tcp.local.</code>.
      * <p>
      * This information is always available if the instance was returned by {@link HomeWizardDiscoverer}.
      * Otherwise, you can never get this information, even if you use one of the update methods.
@@ -116,7 +119,8 @@ public abstract class Device extends Updatable {
     }
 
     /**
-     * Returns the full API path (example: <code>http://192.168.1.123:80/api/v1</code>) constructed in this way:
+     * Returns the full API address. For example: <code>http://192.168.1.123:80/api/v1</code>.
+     * It is constructed like this:
      * <p>
      * {@link #getFullAddress()} + {@link #getApiPath()}
      *
@@ -124,12 +128,14 @@ public abstract class Device extends Updatable {
      * @see #getFullAddress()
      * @see #getApiPath()
      */
-    public String getFullApiPath() {
+    public String getFullApiAddress() {
         return getFullAddress() + getApiPath();
     }
 
     /**
-     * Returns the full address (example: <code>http://192.168.1.123:80</code>) constructed in this way:
+     * Returns the full address. For example: <code>http://192.168.1.123:80</code>.
+     * It is constructed like this:
+     * <p>
      * <code>http://</code> + {@link #getHostAddress()} + <code>:</code> + {@link #getPort()}
      *
      * @return full address
@@ -157,7 +163,8 @@ public abstract class Device extends Updatable {
     }
 
     /**
-     * Returns the host address, for example <code>192.168.1.123</code>.
+     * Returns the host address. This is the IP address of the device.
+     * For example: <code>192.168.1.123</code>.
      * <p>
      * This information is always available.
      *
@@ -231,8 +238,9 @@ public abstract class Device extends Updatable {
     public abstract Optional<String> getProductType();
 
     /**
-     * Returns a user-friendly name (example: <code>Watermeter</code>) that may change at any time, so you should not use this for device identification.
-     * Instead, use {@link #getProductType()}.
+     * Returns a user-friendly name representation of the device. For example: <code>Watermeter</code>.
+     * It may change at any time, so you should not use this for device identification.
+     * Instead, use {@link #getProductType()} if you want to know exactly what type of device something is.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
      * Otherwise, you have to call {@link #updateDeviceInfo()} first.
