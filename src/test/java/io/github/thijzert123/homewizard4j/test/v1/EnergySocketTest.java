@@ -33,6 +33,11 @@ public class EnergySocketTest {
         energySocket.updateAll();
     }
 
+//    @Test
+//    public void testToString() {
+//        Assertions.assertEquals("{\"isApiEnabled\":true,\"getFirmwareVersion\":\"5.18\",\"getServiceName\":null,\"getActivePowerW\":543.312,\"getProductName\":\"Energy Socket\",\"getActiveApparentPowerVa\":666.768,\"getActiveReactivePowerVar\":123.456,\"getActiveVoltageV\":231.539,\"getDeviceState\":{\"power_on\":true,\"switch_lock\":false,\"brightness\":255},\"getWifiSsid\":\"My Wi-Fi\",\"getActivePowerFactor\":0.81688,\"getFullApiAddress\":\"http://localhost:8323/test\",\"getTotalPowerImportKwh\":30.511,\"getApiVersion\":\"v1\",\"getHostAddress\":\"localhost\",\"getFullAddress\":\"http://localhost:8323\",\"getActiveCurrentA\":2.346,\"getWifiStrength\":100.0,\"getTotalPowerExportKwh\":85.951,\"getSerial\":\"3c35e7aabbcc\",\"getPort\":8323,\"getSystemConfiguration\":{\"cloud_enabled\":true},\"getActiveFrequencyHz\":50.005,\"getApiPath\":\"/test\",\"getProductType\":\"HWE-SKT\"}", energySocket.toString());
+//    }
+
     @Test
     public void testDeviceInfo() {
         Assertions.assertEquals("HWE-SKT", energySocket.getProductType().get());

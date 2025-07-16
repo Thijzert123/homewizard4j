@@ -32,6 +32,11 @@ public class KWhMeterTest {
         kWhMeter.updateAll();
     }
 
+//    @Test
+//    public void testToString() {
+//        Assertions.assertEquals("{\"getFirmwareVersion\":\"5.18\",\"getActiveCurrentL3A\":15.477,\"getActiveApparentCurrentL2A\":15.539,\"getActiveApparentPowerL2Va\":3548.879,\"getActivePowerW\":7100.278,\"getProductName\":\"kWh Meter\",\"getActiveReactiveCurrentL3A\":1.143,\"getActiveVoltageV\":null,\"getActiveVoltageL3V\":229.612,\"getFullAddress\":\"http://localhost:8324\",\"getActiveCurrentA\":30.999,\"getWifiStrength\":84.0,\"getActiveCurrentL2A\":15.521,\"getActiveApparentCurrentL3A\":15.519,\"getActiveReactivePowerL1Var\":0.0,\"getSystemConfiguration\":{\"cloud_enabled\":true},\"getActiveFrequencyHz\":49.926,\"getApiPath\":\"/test\",\"getActivePowerL3W\":3553.263,\"getActiveReactiveCurrentL1A\":0.0,\"isApiEnabled\":true,\"getActiveCurrentL1A\":0.0,\"getServiceName\":null,\"getActiveApparentPowerL1Va\":0.0,\"getActiveApparentPowerL3Va\":3563.414,\"getActiveApparentPowerVa\":7112.293,\"getActiveReactivePowerVar\":-429.025,\"getActiveReactivePowerL2Var\":-166.675,\"getActivePowerL2W\":3547.015,\"getActivePowerFactorL1\":1.0,\"getActiveVoltageL1V\":230.751,\"getActivePowerFactorL3\":0.997,\"getWifiSsid\":\"HW WiFi\",\"getActivePowerFactorL2\":0.999,\"getActivePowerFactor\":null,\"getFullApiAddress\":\"http://localhost:8324/test\",\"getTotalPowerImportKwh\":2940.101,\"getApiVersion\":\"v1\",\"getHostAddress\":\"localhost\",\"getActiveApparentCurrentA\":31.058,\"getTotalPowerExportKwh\":0.0,\"getActiveApparentCurrentL1A\":0.0,\"getActiveReactiveCurrentL2A\":0.73,\"getActivePowerL1W\":0.0,\"getActiveReactivePowerL3Var\":-262.35,\"getSerial\":\"3c39e7aa2bcc\",\"getPort\":8324,\"getActiveVoltageL2V\":228.391,\"getActiveReactiveCurrentA\":1.872,\"getProductType\":\"HWE-KWH3\"}", kWhMeter.toString());
+//    }
+
     @Test
     public void testDeviceInfo() {
         Assertions.assertEquals("HWE-KWH3", kWhMeter.getProductType().get());

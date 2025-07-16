@@ -13,8 +13,15 @@ import java.lang.invoke.MethodHandles;
  * @author Thijzert123
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-abstract class Updatable extends DataContainable {
+abstract class Updatable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    final ObjectMapper objectMapper;
+
+    Updatable() {
+        objectMapper = new ObjectMapper();
+        // Makes sure Optional is supported
+        objectMapper.registerModule(new Jdk8Module());
+    }
 
     /**
      * Updates the data from the device.

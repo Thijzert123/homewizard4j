@@ -32,6 +32,11 @@ public class WaterMeterTest {
         waterMeter.updateAll();
     }
 
+//    @Test
+//    public void testToString() {
+//        Assertions.assertEquals("{\"getTotalLiterOffsetM3\":0.0,\"isApiEnabled\":true,\"getWifiStrength\":100.0,\"getFirmwareVersion\":\"5.18\",\"getServiceName\":null,\"getProductName\":\"Watermeter\",\"getActiveLiterLpm\":7.2,\"getSerial\":\"3c39e7363bCC\",\"getPort\":8321,\"getSystemConfiguration\":{\"cloud_enabled\":true},\"getWifiSsid\":\"My Wi-Fi\",\"getFullApiAddress\":\"http://localhost:8321/test\",\"getApiVersion\":\"v1\",\"getTotalLiterM3\":123.456,\"getHostAddress\":\"localhost\",\"getFullAddress\":\"http://localhost:8321\",\"getApiPath\":\"/test\",\"getProductType\":\"HWE-WTR\"}", waterMeter.toString());
+//    }
+
     @Test
     public void testDeviceInfo() {
         Assertions.assertEquals("HWE-WTR", waterMeter.getProductType().get());

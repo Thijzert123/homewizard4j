@@ -32,6 +32,11 @@ public class P1MeterTest {
         p1Meter.updateAll();
     }
 
+//    @Test
+//    public void testToString() {
+//        Assertions.assertEquals("{\"getSmrVersion\":50.0,\"getFirmwareVersion\":\"5.18\",\"getActiveCurrentL3A\":null,\"getVoltageSagL2Count\":null,\"getTotalPowerImportT2Kwh\":2948.827,\"getActivePowerW\":-678.0,\"getProductName\":\"P1 Meter\",\"getTotalPowerExportT4Kwh\":null,\"getActivePowerAverageW\":null,\"getUniqueId\":null,\"getActiveVoltageL3V\":null,\"getMonthlyPowerPeakW\":null,\"getFullAddress\":\"http://localhost:8322\",\"getVoltageSwellL3Count\":null,\"getExternalP1Devices\":null,\"getVoltageSagL1Count\":null,\"getWifiStrength\":100.0,\"getActiveCurrentL2A\":null,\"getTotalPowerImportT3Kwh\":null,\"getTotalPowerExportT1Kwh\":1285.951,\"getVoltageSwellL2Count\":null,\"getMonthlyPowerPeakTimestamp\":null,\"getSystemConfiguration\":{\"cloud_enabled\":true},\"getActiveFrequencyHz\":null,\"getApiPath\":\"/test\",\"getActivePowerL3W\":null,\"isApiEnabled\":true,\"getUniqueGasId\":null,\"getActiveCurrentL1A\":null,\"getServiceName\":null,\"getMeterModel\":\"ISKRA 2M550T-101\",\"getTotalPowerImportT4Kwh\":null,\"getTotalPowerExportT2Kwh\":2876.51,\"getActivePowerL2W\":null,\"getLongPowerFailCount\":null,\"getActiveVoltageL1V\":null,\"getWifiSsid\":\"My Wi-Fi\",\"getFullApiAddress\":\"http://localhost:8322/test\",\"getTotalPowerImportKwh\":null,\"getApiVersion\":\"v1\",\"getHostAddress\":\"localhost\",\"getAnyPowerFailCount\":null,\"getTotalPowerExportKwh\":null,\"getTotalPowerImportT1Kwh\":10830.511,\"getTotalGasM3\":null,\"getTotalPowerExportT3Kwh\":null,\"getActivePowerL1W\":-676.0,\"getVoltageSagL3Count\":null,\"getSerial\":\"3c39e7aabbcc\",\"getPort\":8322,\"getActiveVoltageL2V\":null,\"getVoltageSwellL1Count\":null,\"getProductType\":\"HWE-P1\",\"getGasTimestamp\":null}", p1Meter.toString());
+//    }
+
     @Test
     public void testDeviceInfo() {
         Assertions.assertEquals("HWE-P1", p1Meter.getProductType().get());
