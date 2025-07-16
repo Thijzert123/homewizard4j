@@ -54,14 +54,6 @@ public abstract class Device extends Updatable {
         systemConfiguration = new SystemConfiguration(this);
     }
 
-    void updateDeviceInfo(final Device objectToUpdate) throws HomeWizardApiException {
-        update(getFullAddress() + "/api", objectToUpdate);
-    }
-
-    void updateMeasurements(final Device objectToUpdate) throws HomeWizardApiException {
-        update(getFullApiAddress() + "/data", objectToUpdate);
-    }
-
     /**
      * Updates the fields related to the device info. Requires {@link #isApiEnabled()} to be <code>true</code>.
      * <p>
@@ -70,7 +62,9 @@ public abstract class Device extends Updatable {
      * @see #isApiEnabled()
      * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public abstract void updateDeviceInfo() throws HomeWizardApiException;
+    public void updateDeviceInfo() throws HomeWizardApiException {
+        update(getFullAddress() + "/api");
+    }
 
     /**
      * Updates the fields related to measurements. Requires {@link #isApiEnabled()} to be <code>true</code>.
@@ -80,7 +74,9 @@ public abstract class Device extends Updatable {
      * @see #isApiEnabled()
      * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    public abstract void updateMeasurements() throws HomeWizardApiException;
+    public void updateMeasurements() throws HomeWizardApiException {
+        update(getFullApiAddress() + "/data");
+    }
 
     /**
      * Calls {@link #updateDeviceInfo()} and {@link #updateMeasurements()}.

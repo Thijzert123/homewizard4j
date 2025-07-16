@@ -13,11 +13,16 @@ import java.net.http.HttpRequest;
 abstract class Savable extends Updatable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    void save(final String fullAddress, final Object objectToSave) throws HomeWizardApiException {
+    /**
+     * Saves all the changed data.
+     *
+     * @throws HomeWizardApiException when something goes wrong while saving
+     */
+    public void save(final String fullAddress) throws HomeWizardApiException {
         LOGGER.debug("Saving system configuration");
 
         try {
-            final String body = objectMapper.writeValueAsString(objectToSave);
+            final String body = objectMapper.writeValueAsString(this);
 
             HttpUtils.getBody("PUT", fullAddress,
                     HttpRequest.BodyPublishers.ofString(body));

@@ -25,17 +25,17 @@ abstract class Updatable {
 
     /**
      * Updates the data from the device.
-     * If you have made changes without saving them using {@link Savable#save(String, Object)}, they will be discarded!
+     * If you have made changes without saving them using {@link Savable#save(String)}, they will be discarded!
      *
      * @throws HomeWizardApiException when something has gone wrong while updating data
      */
-    void update(final String fullAddress, final Object objectToUpdate) throws HomeWizardApiException {
+    void update(final String fullAddress) throws HomeWizardApiException {
         LOGGER.debug("Updating device fields");
 
         final String responseBody = HttpUtils.getBody("GET", fullAddress);
         try {
             LOGGER.debug("Mapping body with ObjectMapper, updating this instance... ");
-            objectMapper.readerForUpdating(objectToUpdate).readValue(responseBody);
+            objectMapper.readerForUpdating(this).readValue(responseBody);
             LOGGER.debug("Mapping body with ObjectMapper, updating this instance, done");
         } catch (final JsonProcessingException jsonProcessingException) {
             throw new HomeWizardApiException(jsonProcessingException, LOGGER);

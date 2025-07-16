@@ -36,12 +36,12 @@ public class SystemConfiguration extends Savable {
      * @throws HomeWizardApiException when something has gone wrong while updating
      */
     public void update() throws HomeWizardApiException {
-        update(apiAddress, this);
+        update(apiAddress);
     }
 
     @Override
     public void save() throws HomeWizardApiException {
-        save(apiAddress, this);
+        save(apiAddress);
     }
 
     /**

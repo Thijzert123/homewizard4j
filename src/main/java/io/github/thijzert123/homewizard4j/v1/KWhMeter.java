@@ -180,16 +180,6 @@ public class KWhMeter extends Device {
     }
 
     @Override
-    public void updateDeviceInfo() throws HomeWizardApiException {
-        updateDeviceInfo(this);
-    }
-
-    @Override
-    public void updateMeasurements() throws HomeWizardApiException {
-        updateMeasurements(this);
-    }
-
-    @Override
     public Optional<String> getSerial() {
         return serial;
     }
