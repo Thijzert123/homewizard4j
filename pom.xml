@@ -8,9 +8,9 @@
     <artifactId>homewizard4j</artifactId>
     <version>1.0.0</version>
 
-    <name>HomeWizard API for Java</name>
+    <name>homewizard4j</name>
     <description>Unofficial Java API for HomeWizard devices</description>
-    <url>https://github.com/Thijzert123/home-wizard-api</url>
+    <url>https://github.com/Thijzert123/homewizard4j</url>
 
     <developers>
         <developer>
