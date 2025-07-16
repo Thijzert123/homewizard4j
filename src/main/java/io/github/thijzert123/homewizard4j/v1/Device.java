@@ -1,5 +1,7 @@
 package io.github.thijzert123.homewizard4j.v1;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +36,17 @@ public abstract class Device extends Updatable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @JsonProperty("service_name")
     private final Optional<String> serviceName;
+    @JsonProperty("api_enabled")
     private final boolean apiEnabled;
+    @JsonProperty("host_address")
     private final String hostAddress;
+    @JsonProperty("port")
     private final int port;
+    @JsonProperty("api_path")
     private final String apiPath;
+    @JsonProperty("system_configuration")
     private final SystemConfiguration systemConfiguration;
 
     Device(final Optional<String> serviceName,
@@ -55,12 +63,31 @@ public abstract class Device extends Updatable {
     }
 
     /**
+     * Generates a JSON based on all the currently loaded values.
+     * The generated JSON won't be compatible with the official HomeWizard API,
+     * but you can use it to save {@link Device} instances to files.
+     * <p>
+     * Empty {@link Optional} values will be {@code null}!
+     *
+     * @return JSON based on all the currently loaded values
+     * @throws HomeWizardApiException when something has gone wrong
+     * @since 2.0.0
+     */
+    public String toJson() throws HomeWizardApiException {
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (final JsonProcessingException jsonProcessingException) {
+            throw new HomeWizardApiException(jsonProcessingException, LOGGER);
+        }
+    }
+
+    /**
      * Updates the fields related to the device info. Requires {@link #isApiEnabled()} to be <code>true</code>.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/api#parameters">Official API documentation related to this method</a>
      *
-     * @see #isApiEnabled()
      * @throws HomeWizardApiException when something has gone wrong while updating
+     * @see #isApiEnabled()
      */
     public void updateDeviceInfo() throws HomeWizardApiException {
         update(getFullAddress() + "/api");
@@ -71,8 +98,8 @@ public abstract class Device extends Updatable {
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v1/measurement">Official API documentation related to this method</a>
      *
-     * @see #isApiEnabled()
      * @throws HomeWizardApiException when something has gone wrong while updating
+     * @see #isApiEnabled()
      */
     public void updateMeasurements() throws HomeWizardApiException {
         update(getFullApiAddress() + "/data");

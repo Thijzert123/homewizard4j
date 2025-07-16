@@ -1,4 +1,8 @@
 # Changelog
 
+## 2.0.0 (in development)
+- `toString()` is no longer overridden in these classes (and subclasses): `Device`, `DeviceState`, `SystemConfiguration`
+- `toJson()` has been added in `Device`
+
 ## 1.0.0
 First release. Only API `v1` is supported, and `EnergySocket` and `KWhMeter` are untested.
