@@ -1,5 +1,7 @@
 ---
 title: Choosing API version
+nav_order: 2
+layout: default
 ---
 
 # Choosing API version
