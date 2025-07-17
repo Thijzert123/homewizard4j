@@ -1,8 +1,8 @@
-title: Just the Docs Template
-description: A starter template for a Jeykll site using the Just the Docs theme!
+title: homewizard4j
+description: Unofficial Java API for HomeWizard devices
 theme: just-the-docs
 
-url: https://just-the-docs.github.io
+url: https://thijzert123.github.io/homewizard4j
 
 aux_links:
-  Template Repository: https://github.com/just-the-docs/just-the-docs-template
+  GitHub Repository: https://github.com/Thijzert123/homewizard4j
