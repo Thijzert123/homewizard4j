@@ -23,8 +23,8 @@ public class EnergySocket extends Device {
      */
     public static final List<String> PRODUCT_TYPES = List.of("HWE-SKT");
 
-    @JsonProperty("device_state")
-    private final DeviceState deviceState;
+    @JsonProperty("energy_socket_state")
+    private final EnergySocketState energySocketState;
 
     @JsonProperty("product_type")
     private final Optional<String> productType;
@@ -45,16 +45,10 @@ public class EnergySocket extends Device {
 
     @JsonProperty("total_power_import_kwh")
     private final OptionalDouble totalPowerImportKwh = OptionalDouble.empty();
-    @JsonProperty("total_power_import_t1_kwh")
-    private final OptionalDouble totalPowerImportT1Kwh = OptionalDouble.empty();
     @JsonProperty("total_power_export_kwh")
     private final OptionalDouble totalPowerExportKwh = OptionalDouble.empty();
-    @JsonProperty("total_power_export_t1_kwh")
-    private final OptionalDouble totalPowerExportT1Kwh = OptionalDouble.empty();
     @JsonProperty("active_power_w")
     private final OptionalDouble activePowerW = OptionalDouble.empty();
-    @JsonProperty("active_power_l1_w")
-    private final OptionalDouble activePowerL1W = OptionalDouble.empty();
     @JsonProperty("active_voltage_v")
     private final OptionalDouble activeVoltageV = OptionalDouble.empty();
     @JsonProperty("active_current_a")
@@ -84,7 +78,7 @@ public class EnergySocket extends Device {
                 apiPath
         );
 
-        deviceState = new DeviceState(this);
+        energySocketState = new EnergySocketState(this);
 
         this.productType = productType;
         this.productName = productName;
@@ -137,7 +131,7 @@ public class EnergySocket extends Device {
     @Override
     public void updateAll() throws HomeWizardApiException {
         super.updateAll();
-        getDeviceState().update();
+        getEnergySocketState().update();
     }
 
     @Override
@@ -305,12 +299,12 @@ public class EnergySocket extends Device {
     }
 
     /**
-     * Returns the {@link DeviceState}. With this you are able to change settings specific to the energy socket.
+     * Returns the {@link EnergySocketState}. With this you are able to change settings specific to the energy socket.
      *
-     * @return the {@link DeviceState}
-     * @see DeviceState
+     * @return the {@link EnergySocketState}
+     * @see EnergySocketState
      */
-    public DeviceState getDeviceState() {
-        return deviceState;
+    public EnergySocketState getEnergySocketState() {
+        return energySocketState;
     }
 }

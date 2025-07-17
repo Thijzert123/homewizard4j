@@ -9,13 +9,13 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 /**
- * Represents the actual state of an energy socket.
+ * Represents the actual state of an {@link EnergySocket}.
  *
  * @author Thijzert123
  * @see EnergySocket
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class DeviceState extends Savable {
+public class EnergySocketState extends Savable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final String apiAddress;
 
@@ -26,7 +26,7 @@ public class DeviceState extends Savable {
     @JsonProperty("brightness")
     private OptionalInt brightness = OptionalInt.empty();
 
-    DeviceState(final Device device) {
+    EnergySocketState(final Device device) {
         apiAddress = device.getFullApiAddress() + "/state";
     }
 
