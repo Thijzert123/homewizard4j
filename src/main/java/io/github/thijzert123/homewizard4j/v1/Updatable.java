@@ -39,11 +39,11 @@ abstract class Updatable {
      * @throws HomeWizardApiException when something has gone wrong while updating data
      */
     void update(final String fullAddress) throws HomeWizardApiException {
-        LOGGER.debug("Updating device fields");
+        LOGGER.debug("Updating fields");
 
         final String responseBody = HttpUtils.getBody("GET", fullAddress);
         try {
-            LOGGER.debug("Mapping body with ObjectMapper, updating this instance... ");
+            LOGGER.debug("Mapping body '{}' with ObjectMapper, updating this instance...", responseBody);
             objectMapper.readerForUpdating(this).readValue(responseBody);
             LOGGER.debug("Mapping body with ObjectMapper, updating this instance, done");
         } catch (final JsonProcessingException jsonProcessingException) {

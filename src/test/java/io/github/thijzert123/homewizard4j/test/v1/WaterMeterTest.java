@@ -1,15 +1,13 @@
 package io.github.thijzert123.homewizard4j.test.v1;
 
-import com.sun.net.httpserver.HttpServer;
-import io.github.thijzert123.homewizard4j.test.TestHttpHandler;
 import io.github.thijzert123.homewizard4j.test.Utils;
+import io.github.thijzert123.homewizard4j.v1.HomeWizardApiException;
 import io.github.thijzert123.homewizard4j.v1.WaterMeter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 
 /**
  * @author Thijzert123
@@ -19,45 +17,15 @@ public class WaterMeterTest {
 
     @BeforeAll
     public static void beforeAll() throws IOException {
-        final HttpServer server = HttpServer.create(new InetSocketAddress(8321), 0);
-        server.setExecutor(null);
-
-        server.createContext("/api", new TestHttpHandler(Utils.getResourceAsString("waterMeter/deviceInfo.json")));
-        server.createContext("/test/data", new TestHttpHandler(Utils.getResourceAsString("waterMeter/measurements.json")));
-        server.createContext("/test/system", new TestHttpHandler(Utils.getResourceAsString("waterMeter/systemConfiguration.json")));
-
-        server.start();
+        Utils.initializeServer(8321, "waterMeter").start();
 
         waterMeter = new WaterMeter(true, "localhost", 8321, "/test");
         waterMeter.updateAll();
     }
 
-//    @Test
-//    public void testToString() {
-//        Assertions.assertEquals("{\"getTotalLiterOffsetM3\":0.0,\"isApiEnabled\":true,\"getWifiStrength\":100.0,\"getFirmwareVersion\":\"5.18\",\"getServiceName\":null,\"getProductName\":\"Watermeter\",\"getActiveLiterLpm\":7.2,\"getSerial\":\"3c39e7363bCC\",\"getPort\":8321,\"getSystemConfiguration\":{\"cloud_enabled\":true},\"getWifiSsid\":\"My Wi-Fi\",\"getFullApiAddress\":\"http://localhost:8321/test\",\"getApiVersion\":\"v1\",\"getTotalLiterM3\":123.456,\"getHostAddress\":\"localhost\",\"getFullAddress\":\"http://localhost:8321\",\"getApiPath\":\"/test\",\"getProductType\":\"HWE-WTR\"}", waterMeter.toString());
-//    }
-
     @Test
-    public void testDeviceInfo() {
-        Assertions.assertEquals("HWE-WTR", waterMeter.getProductType().get());
-        Assertions.assertEquals("Watermeter", waterMeter.getProductName().get());
-        Assertions.assertEquals("3c39e7363bCC", waterMeter.getSerial().get());
-        Assertions.assertEquals("5.18", waterMeter.getFirmwareVersion().get());
-        Assertions.assertEquals("v1", waterMeter.getApiVersion().get());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testMeasurements() {
-        Assertions.assertEquals("My Wi-Fi", waterMeter.getWifiSsid().get());
-        Assertions.assertEquals(100.0, waterMeter.getWifiStrength().getAsDouble());
-        Assertions.assertEquals(123.456, waterMeter.getTotalLiterM3().getAsDouble());
-        Assertions.assertEquals(7.2, waterMeter.getActiveLiterLpm().getAsDouble());
-        Assertions.assertEquals(0.0, waterMeter.getTotalLiterOffsetM3().getAsDouble());
-    }
-
-    @Test
-    public void testSystemConfiguration() {
-        Assertions.assertEquals(true, waterMeter.getSystemConfiguration().isCloudEnabled().get());
+    public void test() throws HomeWizardApiException {
+        Assertions.assertEquals("{\"service_name\":null,\"api_enabled\":true,\"host_address\":\"localhost\",\"port\":8321,\"api_path\":\"/test\",\"system_configuration\":{\"cloud_enabled\":true},\"product_type\":\"HWE-WTR\",\"product_name\":\"Watermeter\",\"serial\":\"3c39e7363bCC\",\"firmware_version\":\"5.18\",\"api_version\":\"v1\",\"wifi_ssid\":\"My Wi-Fi\",\"wifi_strength\":100.0,\"total_liter_m3\":123.456,\"active_liter_lpm\":7.2,\"total_liter_offset_m3\":0.0}",
+                waterMeter.toJson());
     }
 }

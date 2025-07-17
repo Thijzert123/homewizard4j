@@ -23,6 +23,7 @@ public class EnergySocket extends Device {
      */
     public static final List<String> PRODUCT_TYPES = List.of("HWE-SKT");
 
+    @JsonProperty("device_state")
     private final DeviceState deviceState;
 
     @JsonProperty("product_type")
