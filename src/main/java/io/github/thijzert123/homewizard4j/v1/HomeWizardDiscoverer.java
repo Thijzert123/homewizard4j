@@ -40,8 +40,8 @@ import java.util.List;
  * @see Device
  */
 public class HomeWizardDiscoverer implements AutoCloseable {
+    public static final String SERVICE_TYPE = "_hwenergy._tcp.local.";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final String SERVICE_TYPE = "_hwenergy._tcp.local.";
     private final JmDNS jmDNS;
 
     final List<WaterMeter> waterMeters;
