@@ -46,4 +46,5 @@ As mentioned before, `v2` is newer. Some HomeWizard devices are not yet supporte
 | kWh meter       | Yes | In beta                      |
 | Energy display  | No  | In development by HomeWizard |
 | Plug-in battery | No  | Yes                          |
+
 _* water meter only supports the API if it is connected via USB_
