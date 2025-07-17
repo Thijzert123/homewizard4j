@@ -39,7 +39,7 @@ whereas `v1` only supported HTTP. Support for `v2` in `homewizard4j` is still in
 As mentioned before, `v2` is newer. Some HomeWizard devices are not yet supported for the `v2` API:
 
 | Device          | v1  | v2                           |
-|-----------------|-----|------------------------------|
+|:----------------|:----|:-----------------------------|
 | P1 meter        | Yes | In beta                      |
 | Energy socket   | Yes | In development by HomeWizard |
 | Water meter*    | Yes | In development by HomeWizard |
