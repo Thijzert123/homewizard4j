@@ -20,7 +20,7 @@ public class EnergySocketTest {
     @BeforeAll
     public static void beforeAll() throws IOException {
         final HttpServer httpServer = Utils.initializeServer(8323, "energySocket");
-        httpServer.createContext("/test/state", new TestHttpHandler(Utils.getResourceAsString("energySocket/deviceState.json")));
+        httpServer.createContext("/test/state", new TestHttpHandler(Utils.getResourceAsString("energySocket/state.json")));
         httpServer.start();
 
         energySocket = new EnergySocket(true, "localhost", 8323, "/test");
