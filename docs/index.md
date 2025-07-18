@@ -30,3 +30,6 @@ implementation group: 'io.github.thijzert123', name: 'homewizard4j', version: '1
 ## Javadoc
 The Javadoc is available at [javadoc.io](https://javadoc.io/doc/io.github.thijzert123/homewizard4j).
 It is always up-to-date with the newest version on Maven Central.
+
+## Code examples
+All the code examples in this documentation are [available on GitHub](https://github.com/Thijzert123/homewizard4j/tree/main/src/test/java/io/github/thijzert123/homewizard4j/example).

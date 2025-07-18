@@ -6,8 +6,8 @@ layout: default
 ---
 
 # Discovery
-You should always start with a `HomeWizardDiscoverer`. This can scan for all HomeWizard devices in your local network.
-When initializing the discoverer, it immediately starts scanning for HomeWizard devices. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be achieved by using `Thread.sleep()`, waiting for user input, or employing an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know the number of devices to wait for.
+If you don't know the IP addresses of your devices, you can use the `HomeWizardDiscoverer`. This scans your local network for all HomeWizard devices.
+When initializing the discoverer, it immediately starts scanning. This is done on a different thread than the main thread, so you should wait on your main thread for a few seconds before getting the devices from the `HomeWizardDiscoverer`. This can be achieved by using `Thread.sleep()`, waiting for user input, or employing an algorithm like [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) if you know the number of devices to wait for.
 
 When you eventually have a `List` with multiple instances of `Device`, you can use `getProductName()` for a user-friendly name representation of the device. This can be useful for debugging purposes, but also for quick examples like this.
 
