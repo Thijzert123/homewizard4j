@@ -1,3 +1,8 @@
+---
+title: Changelog
+layout: default
+---
+
 # Changelog
 
 ## 2.0.0 (in development)
