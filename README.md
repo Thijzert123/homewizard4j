@@ -12,7 +12,7 @@
 </div>
 
 ## Documentation
-You can use one of these three documentation sources when using this project:
+You can these documentation sources when using this project:
 - [Main `homewizard4j` documentation](https://thijzert123.github.io/homewizard4j)
 - [Javadoc](https://javadoc.io/doc/io.github.thijzert123/homewizard4j)
 - [Official HomeWizard API documentation](https://api-documentation.homewizard.com)
