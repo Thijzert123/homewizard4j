@@ -1,9 +1,17 @@
 title: homewizard4j
 description: Unofficial Java API for HomeWizard devices
 theme: just-the-docs
+color_scheme: dark
+
+logo: "/logo.png"
+favicon_ico: "/logo.png"
 
 url: https://thijzert123.github.io/homewizard4j
 
 aux_links:
   Javadoc: https://javadoc.io/doc/io.github.thijzert123/homewizard4j
   GitHub Repository: https://github.com/Thijzert123/homewizard4j
+
+nav_external_links:
+  - title: HomeWizard official API
+    url: https://api-documentation.homewizard.com
