@@ -40,6 +40,9 @@ import java.util.List;
  * @see Device
  */
 public class HomeWizardDiscoverer implements AutoCloseable {
+    /**
+     * Full service type. If a device on your local network has this service type, this discoverer will detect and register it.
+     */
     public static final String SERVICE_TYPE = "_hwenergy._tcp.local.";
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final JmDNS jmDNS;
