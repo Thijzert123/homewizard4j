@@ -3,8 +3,8 @@ description: Unofficial Java API for HomeWizard devices
 theme: just-the-docs
 color_scheme: dark
 
-logo: "../logo.png"
-favicon_ico: "../logo.png"
+logo: "/logo.png"
+favicon_ico: "/logo.png"
 
 url: https://thijzert123.github.io/homewizard4j
 
