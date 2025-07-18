@@ -12,7 +12,7 @@
 </div>
 
 ## Compatibility
-Currently only the `v1` API is supported. Support for `v2` is in development. All devices (that are nativly compatible with `v1`) are implemented in this Java API, but `EnergySocket` and `KWhMeter` are untested. They _should_ work, but if you have encountered a bug or error, please open an issue.
+Currently only the `v1` API is supported. Support for `v2` is in development. All devices (that are natively compatible with `v1`) are implemented in this Java API, but `EnergySocket` and `KWhMeter` are not tested on real devices. They _should_ work, but if you have encountered a bug or error, please open an issue.
 
 ## Usage
 For more in-depth explanation per class/method than is mentioned on this page, please refer to the [Javadocs](https://javadoc.io/doc/io.github.thijzert123/homewizard4j). It is also recommended to take a look at the [Official HomeWizard API documentation](https://api-documentation.homewizard.com/docs/introduction).
