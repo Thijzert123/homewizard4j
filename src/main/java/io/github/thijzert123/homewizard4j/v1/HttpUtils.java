@@ -36,7 +36,7 @@ public class HttpUtils {
      * @return whether the HTTP version is correct for this API
      */
     public static boolean setHttpClient(final HttpClient httpClient) {
-        LOGGER.trace("Set HTTP client to '{}'", httpClient.toString());
+        LOGGER.debug("Set HTTP client to '{}'", httpClient.toString());
         HttpUtils.httpClient = httpClient;
         return httpClient.version() == HttpClient.Version.HTTP_1_1;
     }
@@ -57,7 +57,7 @@ public class HttpUtils {
             fullAddress = "http://" + fullAddress;
         }
 
-        LOGGER.debug("Request body, method: '{}', fullAddress: '{}'", method, fullAddress);
+        LOGGER.trace("Request body, method: '{}', fullAddress: '{}'", method, fullAddress);
         final HttpRequest httpRequest = HttpRequest.newBuilder()
                 .method(method, bodyPublisher)
                 .uri(URI.create(fullAddress))
@@ -69,7 +69,7 @@ public class HttpUtils {
             checkErrors(response);
 
             final String body = response.body();
-            LOGGER.debug("GET body retrieved: '{}'", body);
+            LOGGER.trace("GET body retrieved: '{}'", body);
             return body;
         } catch (final IOException | InterruptedException exception) {
             throw new HomeWizardApiException(exception, LOGGER);

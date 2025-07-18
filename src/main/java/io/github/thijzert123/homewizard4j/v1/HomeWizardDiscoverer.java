@@ -59,6 +59,8 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * @throws IOException when something has gone wrong while creating the mDNS discoverer
      */
     public HomeWizardDiscoverer() throws IOException {
+        LOGGER.trace("Initializing HomeWizardDiscoverer...");
+
         waterMeters = new ArrayList<>();
         p1Meters = new ArrayList<>();
         energySockets = new ArrayList<>();
@@ -86,6 +88,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * Closes the {@link JmDNS} discoverer.
      */
     public void close() throws IOException {
+        LOGGER.debug("Closing...");
         jmDNS.close();
     }
 

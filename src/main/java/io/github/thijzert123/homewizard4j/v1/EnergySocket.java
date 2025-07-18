@@ -1,7 +1,10 @@
 package io.github.thijzert123.homewizard4j.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;

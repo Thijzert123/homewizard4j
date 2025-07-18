@@ -54,6 +54,7 @@ public abstract class Device extends Updatable {
            final String hostAddress,
            final int port,
            final String apiPath) {
+        LOGGER.trace("Initializing Device...");
         this.serviceName = serviceName;
         this.apiEnabled = apiEnabled;
         this.hostAddress = hostAddress;
@@ -75,7 +76,9 @@ public abstract class Device extends Updatable {
      */
     public String toJson() throws HomeWizardApiException {
         try {
-            return objectMapper.writeValueAsString(this);
+            final String json = objectMapper.writeValueAsString(this);
+            LOGGER.debug("Mapped Device to JSON: '{}'", json);
+            return json;
         } catch (final JsonProcessingException jsonProcessingException) {
             throw new HomeWizardApiException(jsonProcessingException, LOGGER);
         }
@@ -90,6 +93,7 @@ public abstract class Device extends Updatable {
      * @see #isApiEnabled()
      */
     public void updateDeviceInfo() throws HomeWizardApiException {
+        LOGGER.trace("Updating device info...");
         update(getFullAddress() + "/api");
     }
 
@@ -102,6 +106,7 @@ public abstract class Device extends Updatable {
      * @see #isApiEnabled()
      */
     public void updateMeasurements() throws HomeWizardApiException {
+        LOGGER.trace("Updating measurements...");
         update(getFullApiAddress() + "/data");
     }
 
@@ -113,6 +118,7 @@ public abstract class Device extends Updatable {
      * @throws HomeWizardApiException when something has gone wrong while updating
      */
     public void updateAll() throws HomeWizardApiException {
+        LOGGER.trace("Updating all...");
         updateDeviceInfo();
         updateMeasurements();
         getSystemConfiguration().update();
@@ -127,7 +133,7 @@ public abstract class Device extends Updatable {
      * @throws HomeWizardApiException when something has gone wrong when requesting blinking the status light
      */
     public void identify() throws HomeWizardApiException {
-        LOGGER.debug("Identify device");
+        LOGGER.debug("Identify Device");
         HttpUtils.getBody("PUT", getFullApiAddress() + "/identify");
     }
 

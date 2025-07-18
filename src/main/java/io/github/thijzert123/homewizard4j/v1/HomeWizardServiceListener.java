@@ -25,38 +25,35 @@ class HomeWizardServiceListener implements ServiceListener {
 
     @Override
     public void serviceAdded(final ServiceEvent serviceEvent) {
-        LOGGER.debug("Service added: {}", serviceEvent.getInfo());
+        LOGGER.trace("Service added: {}", serviceEvent.getInfo());
     }
 
     @Override
     public void serviceRemoved(final ServiceEvent serviceEvent) {
-        LOGGER.debug("Service removed: {}", serviceEvent.getInfo());
+        LOGGER.trace("Service removed: {}", serviceEvent.getInfo());
     }
 
     @Override
     public void serviceResolved(final ServiceEvent serviceEvent) {
-        LOGGER.debug("Service resolved: {}", serviceEvent.getInfo());
+        LOGGER.trace("Service resolved: {}", serviceEvent.getInfo());
 
         final ServiceInfo serviceInfo = serviceEvent.getInfo();
         final String productType = serviceInfo.getPropertyString("product_type");
 
-        LOGGER.trace("Product type: {}", productType);
+        LOGGER.debug("Discovered device, product type: {}", productType);
         if (WaterMeter.PRODUCT_TYPES.contains(productType)) {
-            LOGGER.trace("Product type WaterMeter");
             addWaterMeter(serviceInfo);
         } else if (P1Meter.PRODUCT_TYPES.contains(productType)) {
-            LOGGER.trace("Product type P1Meter");
             addP1Meter(serviceInfo);
         } else if (EnergySocket.PRODUCT_TYPES.contains(productType)) {
-            LOGGER.trace("Product type EnergySocket");
             addEnergySocket(serviceInfo);
         } else if (KWhMeter.PRODUCT_TYPES.contains(productType)) {
-            LOGGER.trace("Product type KWhMeter");
             addKWhMeter(serviceInfo);
         }
     }
 
     private Object createDevice(final Class<?> clazz, final ServiceInfo serviceInfo) {
+        LOGGER.trace("Creating device, class name: '{}', service info: '{}'", clazz.getName(), serviceInfo);
         try {
             return clazz.getDeclaredConstructor(
                     Optional.class,
@@ -87,18 +84,22 @@ class HomeWizardServiceListener implements ServiceListener {
     }
 
     private void addWaterMeter(final ServiceInfo serviceInfo) {
+        LOGGER.trace("Adding WaterMeter...");
         discoverer.waterMeters.add((WaterMeter) createDevice(WaterMeter.class, serviceInfo));
     }
 
     private void addP1Meter(final ServiceInfo serviceInfo) {
+        LOGGER.trace("Adding P1Meter...");
         discoverer.p1Meters.add((P1Meter) createDevice(P1Meter.class, serviceInfo));
     }
 
     private void addEnergySocket(final ServiceInfo serviceInfo) {
+        LOGGER.trace("Adding EnergySocket...");
         discoverer.energySockets.add((EnergySocket) createDevice(EnergySocket.class, serviceInfo));
     }
 
     private void addKWhMeter(final ServiceInfo serviceInfo) {
+        LOGGER.trace("Adding KWhMeter...");
         discoverer.kWhMeters.add((KWhMeter) createDevice(KWhMeter.class, serviceInfo));
     }
 }

@@ -19,13 +19,14 @@ abstract class Savable extends Updatable {
      * @throws HomeWizardApiException when something goes wrong while saving
      */
     public void save(final String fullAddress) throws HomeWizardApiException {
-        LOGGER.debug("Saving system configuration");
+        LOGGER.debug("Saving fields...");
 
         try {
-            final String body = objectMapper.writeValueAsString(this);
-
-            HttpUtils.getBody("PUT", fullAddress,
-                    HttpRequest.BodyPublishers.ofString(body));
+            final String requestBody = objectMapper.writeValueAsString(this);
+            LOGGER.trace("Requesting with body: '{}'", requestBody);
+            final String responseBody = HttpUtils.getBody("PUT", fullAddress,
+                    HttpRequest.BodyPublishers.ofString(requestBody));
+            LOGGER.trace("Response with body: '{}'", responseBody);
         } catch (final JsonProcessingException jsonProcessingException) {
             throw new HomeWizardApiException(jsonProcessingException, LOGGER);
         }
