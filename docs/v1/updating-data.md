@@ -1,7 +1,7 @@
 ---
 title: Updating data
-parent: V1 API
-nav_order: 1
+parent: V1
+nav_order: 4
 layout: default
 ---
 

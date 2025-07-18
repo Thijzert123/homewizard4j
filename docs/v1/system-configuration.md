@@ -1,7 +1,7 @@
 ---
 title: System configuration
-parent: V1 API
-nav_order: 1
+parent: V1
+nav_order: 3
 layout: default
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Discovery
-parent: V1 API
+parent: V1
 nav_order: 1
 layout: default
 ---

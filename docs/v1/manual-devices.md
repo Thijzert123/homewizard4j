@@ -1,7 +1,7 @@
 ---
 title: Manual devices
-parent: V1 API
-nav_order: 1
+parent: V1
+nav_order: 2
 layout: default
 ---
 

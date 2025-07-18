@@ -1,5 +1,5 @@
 ---
-title: V1 API
+title: V1
 nav_order: 3
 layout: default
 ---
