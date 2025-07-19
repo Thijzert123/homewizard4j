@@ -14,7 +14,7 @@ That is because we also pass whether the API is enabled on the device (hence the
 
 When using a manually added `Device`, you lose access to some of its fields, for example, `getServiceName()`. That is because this data is only passed to the `Device` initializer when using the discoverer. For more information about if or when data is available, check the methods in the Javadocs.
 ```java
-package io.github.thijzert123.homewizard4j.example;
+package io.github.thijzert123.homewizard4j.example.v1;
 import io.github.thijzert123.homewizard4j.v1.*;
 import java.util.*;
 import java.io.IOException;

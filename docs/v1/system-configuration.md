@@ -12,14 +12,13 @@ To change a value, simply use one of the setters, which, in this case, is `setCl
 In the example below, you can see that after changing the value, `update()` is still called. This isn't _necessary_, but it is recommended because other programs can change the same value after you have saved your value.
 In conclusion, you should call `update()` regularly.
 ```java
-package io.github.thijzert123.homewizard4j.example;
+package io.github.thijzert123.homewizard4j.example.v1;
 import io.github.thijzert123.homewizard4j.v1.*;
 import java.io.IOException;
 
 public class ChangeAndPrintCloudCommunication {
-    public static void main(final String[] args) throws InterruptedException, IOException {
-        final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer();
-        Thread.sleep(1000);
+    public static void main(final String[] args) throws IOException {
+        final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer(1000);
 
         for (final Device device : discoverer.getAllDevices()) {
             final SystemConfiguration configuration = device.getSystemConfiguration();

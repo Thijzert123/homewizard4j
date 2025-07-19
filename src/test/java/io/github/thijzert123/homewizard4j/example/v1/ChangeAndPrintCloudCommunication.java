@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class ChangeAndPrintCloudCommunication {
     public static void main(final String[] args) throws IOException {
-        final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer().waitForMillis(1000);
+        final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer(1000);
 
         for (final Device device : discoverer.getAllDevices()) {
             final SystemConfiguration configuration = device.getSystemConfiguration();

@@ -5,7 +5,7 @@ layout: default
 
 # Changelog
 
-## 2.0.0 (in development)
+## 2.0.0
 This new release offers new features, as well as some breaking changes to make the API more clear.
 
 ### Breaking changes

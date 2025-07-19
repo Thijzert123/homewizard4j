@@ -18,13 +18,13 @@ Below are code snippets for Maven and Gradle:
 <dependency>
     <groupId>io.github.thijzert123</groupId>
     <artifactId>homewizard4j</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation group: 'io.github.thijzert123', name: 'homewizard4j', version: '1.0.0'
+implementation group: 'io.github.thijzert123', name: 'homewizard4j', version: '2.0.0'
 ```
 
 ## Javadoc
