@@ -5,7 +5,7 @@ nav_order: 1
 ---
 
 # Welcome to the `homewizard4j` documentation page!
-This Java API allows you to effortlessly connect with [HomeWizard](https://www.homewizard.com).
+This Java API allows you to effortlessly connect with [HomeWizard](https://www.homewizard.com) devices.
 It is a wrapper of their official web API. You can read more about it on their
 [official documentation](https://api-documentation.homewizard.com).
 
