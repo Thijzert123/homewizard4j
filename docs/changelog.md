@@ -23,10 +23,14 @@ These methods have been added:
    and closes the discoverer after
 - `getDevices(DeviceType)`: returns a list of devices with the specified type of device
 
+### JSON tools for `Device` (non-breaking)
+Tools have been added to `Device` that allow you to (de)serialize JSONs to `Device` instances:
+- `toJson()`: converts an instance to a JSON that you can use for saving the device to a file.
+- `updateFromJson(String)`: uses a provided JSON to update all the data in a `Device`.
+
 ### Miscellaneous changes (non-breaking)
-- `toJson()` has been added in `Device`. It converts an instance to a JSON that you can use for saving the device to a file.
 - `SERVICE_TYPE` field has been added to `HomeWizardDiscoverer`
-- Improve logging in a variety of classes
+- Improved logging in a variety of classes
 
 ## 1.0.0
 First release. Only API `v1` is supported, and `EnergySocket` and `KWhMeter` are untested.

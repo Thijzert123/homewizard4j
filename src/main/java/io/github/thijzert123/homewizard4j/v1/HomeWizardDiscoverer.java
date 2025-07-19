@@ -40,11 +40,31 @@ import java.util.List;
  * @see Device
  */
 public class HomeWizardDiscoverer implements AutoCloseable {
+    /**
+     * The type of device, used for blocking methods.
+     *
+     * @since 2.0.0
+     */
     public enum DeviceType {
+        /**
+         * Represents all devices
+         */
         ALL,
+        /**
+         * Represents only the energy socket
+         */
         ENERGY_SOCKET,
+        /**
+         * Represents only the kWh meter
+         */
         KWH_METER,
+        /**
+         * Represents only the P1 meter
+         */
         P1_METER,
+        /**
+         * Represents only the water meter
+         */
         WATER_METER
     }
 
@@ -100,6 +120,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      *
      * @param millis time in millis
      * @throws IOException when something has gone wrong while creating the mDNS discoverer
+     * @since 2.0.0
      */
     public HomeWizardDiscoverer(final long millis) throws IOException {
         this();
@@ -112,6 +133,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      *
      * @param millis time in millis
      * @return the current discoverer
+     * @since 2.0.0
      */
     public HomeWizardDiscoverer waitForMillis(final long millis) {
         LOGGER.debug("Blocking for {} millis", millis);
@@ -130,6 +152,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * @param deviceType  type of device to wait for
      * @param deviceCount device count to wait for
      * @return the current discoverer
+     * @since 2.0.0
      */
     public HomeWizardDiscoverer waitForDevices(final DeviceType deviceType, final int deviceCount) {
         LOGGER.debug("Blocking until device count is {}, including all devices", deviceCount);
@@ -154,6 +177,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      *
      * @param deviceType type to include in the returned list
      * @return {@link List} of devices with the specified type
+     * @since 2.0.0
      */
     public List<? extends Device> getDevices(final DeviceType deviceType) {
         if (deviceType == DeviceType.ENERGY_SOCKET) {

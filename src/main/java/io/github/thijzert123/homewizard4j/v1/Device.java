@@ -2,6 +2,7 @@ package io.github.thijzert123.homewizard4j.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,10 +76,34 @@ public abstract class Device extends Updatable {
      * @since 2.0.0
      */
     public String toJson() throws HomeWizardApiException {
+        LOGGER.trace("Mapping Device to JSON...");
         try {
             final String json = objectMapper.writeValueAsString(this);
-            LOGGER.debug("Mapped Device to JSON: '{}'", json);
+            LOGGER.debug("Mapped Device to JSON from JSON: '{}'", json);
             return json;
+        } catch (final JsonProcessingException jsonProcessingException) {
+            throw new HomeWizardApiException(jsonProcessingException, LOGGER);
+        }
+    }
+
+    /**
+     * Updates data based on the provided JSON.
+     *
+     * @param json JSON to use for updating
+     * @throws HomeWizardApiException when something has gone wrong
+     * @since 2.0.0
+     */
+    public void updateFromJson(final String json) throws HomeWizardApiException {
+        LOGGER.trace("Updating Device from JSON: '{}'", json);
+        try {
+            final Device device = objectMapper.readerForUpdating(this).readValue(json);
+            LOGGER.debug("Updated Device from JSON");
+
+            // done to make sure the configuration has access to fields of this instance
+            systemConfiguration.updatePrivateFields(this);
+            if (this instanceof EnergySocket energySocket) {
+                energySocket.getEnergySocketState().updatePrivateFields(device);
+            }
         } catch (final JsonProcessingException jsonProcessingException) {
             throw new HomeWizardApiException(jsonProcessingException, LOGGER);
         }

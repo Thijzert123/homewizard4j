@@ -16,8 +16,7 @@ import java.util.OptionalInt;
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class EnergySocketState extends Savable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final String apiAddress;
+    private String apiAddress;
 
     @JsonProperty("power_on")
     private Optional<Boolean> powerOn = Optional.empty();
@@ -26,7 +25,22 @@ public class EnergySocketState extends Savable {
     @JsonProperty("brightness")
     private OptionalInt brightness = OptionalInt.empty();
 
+    /**
+     * For Jackson
+     */
+    private EnergySocketState() {}
+
     EnergySocketState(final Device device) {
+        updatePrivateFields(device);
+    }
+
+    /**
+     * Updates the private fields in this class.
+     * Used for when Device gets updated from JSON.
+     *
+     * @param device the device to use for updating
+     */
+    void updatePrivateFields(final Device device) {
         apiAddress = device.getFullApiAddress() + "/state";
     }
 

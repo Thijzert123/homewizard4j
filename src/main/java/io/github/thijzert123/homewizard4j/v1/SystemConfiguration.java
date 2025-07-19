@@ -21,12 +21,26 @@ import java.util.Optional;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class SystemConfiguration extends Savable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final String apiAddress;
-
+    private String apiAddress;
     @JsonProperty("cloud_enabled")
     private Optional<Boolean> cloudEnabled = Optional.empty();
 
+    /**
+     * For Jackson
+     */
+    private SystemConfiguration() {}
+
     SystemConfiguration(final Device device) {
+        updatePrivateFields(device);
+    }
+
+    /**
+     * Updates the private fields in this class.
+     * Used for when Device gets updated from JSON.
+     *
+     * @param device the device to use for updating
+     */
+    void updatePrivateFields(final Device device) {
         apiAddress = device.getFullApiAddress() + "/system";
     }
 
