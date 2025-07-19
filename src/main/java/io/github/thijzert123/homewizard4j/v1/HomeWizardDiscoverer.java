@@ -128,6 +128,12 @@ public class HomeWizardDiscoverer implements AutoCloseable {
         close();
     }
 
+    public HomeWizardDiscoverer(final DeviceType deviceType, final int deviceCount) throws IOException {
+        this();
+        waitForDevices(deviceType, deviceCount);
+        close();
+    }
+
     /**
      * Blocks for a specified time.
      *
