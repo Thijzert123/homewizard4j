@@ -33,13 +33,21 @@ import java.util.List;
  *     System.out.println(device.getProductName());
  * }
  * </pre>
- *
+ * <p>
  * For more information, see <a href="https://github.com/Thijzert123/homewizard4j?tab=readme-ov-file#discovery">discovery</a>.
  *
  * @author Thijzert123
  * @see Device
  */
 public class HomeWizardDiscoverer implements AutoCloseable {
+    public enum DeviceType {
+        ALL,
+        ENERGY_SOCKET,
+        KWH_METER,
+        P1_METER,
+        WATER_METER
+    }
+
     /**
      * Full service type. If a device on your local network has this service type, this discoverer will detect and register it.
      */
@@ -51,6 +59,8 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     final List<P1Meter> p1Meters;
     final List<EnergySocket> energySockets;
     final List<KWhMeter> kWhMeters;
+
+    final Object deviceAddedNotifier = new Object();
 
     /**
      * Initializes the discoverer and starts scanning for HomeWizard devices.
@@ -82,6 +92,81 @@ public class HomeWizardDiscoverer implements AutoCloseable {
         waterMeters.addAll(discovererToMerge.getWaterMeters());
         p1Meters.addAll(discovererToMerge.getP1Meters());
         energySockets.addAll(discovererToMerge.getEnergySockets());
+    }
+
+    /**
+     * Blocks for a specified time and closes the listener. It does this by calling {@link #waitForMillis(long)} and
+     * {@link #close()}.
+     *
+     * @param millis time in millis
+     * @throws IOException when something has gone wrong while creating the mDNS discoverer
+     */
+    public HomeWizardDiscoverer(final long millis) throws IOException {
+        this();
+        waitForMillis(millis);
+        close();
+    }
+
+    /**
+     * Blocks for a specified time.
+     *
+     * @param millis time in millis
+     * @return the current discoverer
+     */
+    public HomeWizardDiscoverer waitForMillis(final long millis) {
+        LOGGER.debug("Blocking for {} millis", millis);
+        try {
+            Thread.sleep(millis);
+        } catch (final InterruptedException interruptedException) {
+            LOGGER.error(interruptedException.getMessage(), interruptedException);
+            Thread.currentThread().interrupt();
+        }
+        return this;
+    }
+
+    /**
+     * Blocks until a specific cound of a specified device type is reached.
+     *
+     * @param deviceType  type of device to wait for
+     * @param deviceCount device count to wait for
+     * @return the current discoverer
+     */
+    public HomeWizardDiscoverer waitForDevices(final DeviceType deviceType, final int deviceCount) {
+        LOGGER.debug("Blocking until device count is {}, including all devices", deviceCount);
+        synchronized (deviceAddedNotifier) {
+            while (getDevices(deviceType).size() < deviceCount) {
+                LOGGER.trace("Still blocking, waiting for device count to go up");
+                try {
+                    deviceAddedNotifier.wait();
+                } catch (final InterruptedException interruptedException) {
+                    LOGGER.error(interruptedException.getMessage(), interruptedException);
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        LOGGER.trace("Device count {} reached, stopped blocking", deviceCount);
+
+        return this;
+    }
+
+    /**
+     * Returns a {@link List} of devices with the specified type.
+     *
+     * @param deviceType type to include in the returned list
+     * @return {@link List} of devices with the specified type
+     */
+    public List<? extends Device> getDevices(final DeviceType deviceType) {
+        if (deviceType == DeviceType.ENERGY_SOCKET) {
+            return getEnergySockets();
+        } else if (deviceType == DeviceType.KWH_METER) {
+            return getKWhMeters();
+        } else if (deviceType == DeviceType.P1_METER) {
+            return getP1Meters();
+        } else if (deviceType == DeviceType.WATER_METER) {
+            return getWaterMeters();
+        } else {
+            return getAllDevices();
+        }
     }
 
     /**

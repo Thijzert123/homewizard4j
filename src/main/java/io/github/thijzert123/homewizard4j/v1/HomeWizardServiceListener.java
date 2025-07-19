@@ -50,6 +50,11 @@ class HomeWizardServiceListener implements ServiceListener {
         } else if (KWhMeter.PRODUCT_TYPES.contains(productType)) {
             addKWhMeter(serviceInfo);
         }
+
+        // Notify the discoverer that a new device has been added
+        synchronized (discoverer.deviceAddedNotifier) {
+            discoverer.deviceAddedNotifier.notifyAll();
+        }
     }
 
     private Object createDevice(final Class<?> clazz, final ServiceInfo serviceInfo) {

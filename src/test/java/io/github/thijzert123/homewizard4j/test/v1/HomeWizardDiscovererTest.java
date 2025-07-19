@@ -28,10 +28,7 @@ public class HomeWizardDiscovererTest {
         jmDNS.registerService(generateServiceInfo("HWE-SKT", "EnergySocket", 7702));
         jmDNS.registerService(generateServiceInfo("SDM230-wifi", "kWhMeter", 7703));
 
-        discoverer = new HomeWizardDiscoverer();
-
-        // Make sure all services are registered and discovered
-        Thread.sleep(5000);
+        discoverer = new HomeWizardDiscoverer().waitForDevices(HomeWizardDiscoverer.DeviceType.ALL, 4);
     }
 
     private static ServiceInfo generateServiceInfo(final String productType, final String name, final int port) {
