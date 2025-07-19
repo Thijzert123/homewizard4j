@@ -18,8 +18,8 @@ For some of these tools to work, an enum `DeviceType` has been added as an embed
 
 These methods have been added:
 - `waitForMillis(long)`: blocks current thread for a specified amount of time in millis
-- `waitForDevices(DeviceType, int)`: block current thread until a specified amount of devices are found
-- `HomeWizardDiscoverer(long)`: new constructor that blocks for specified amount of time in millis and
+- `waitForDevices(DeviceType, int)`: block current thread until a specified amount of devices is found
+- `HomeWizardDiscoverer(long)`: new constructor that blocks for specified amount of time in millis
    and closes the discoverer after
 - `getDevices(DeviceType)`: returns a list of devices with the specified type of device
 
