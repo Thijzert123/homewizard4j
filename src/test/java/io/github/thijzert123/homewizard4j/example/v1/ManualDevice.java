@@ -1,4 +1,4 @@
-package io.github.thijzert123.homewizard4j.example;
+package io.github.thijzert123.homewizard4j.example.v1;
 import io.github.thijzert123.homewizard4j.v1.*;
 import java.util.*;
 import java.io.IOException;

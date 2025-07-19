@@ -1,16 +1,16 @@
-package io.github.thijzert123.homewizard4j.example;
+package io.github.thijzert123.homewizard4j.example.v1;
 import io.github.thijzert123.homewizard4j.v1.*;
 import java.util.*;
 import java.io.IOException;
 
 public class AutomaticDeviceDiscovery {
-    public static void main(final String[] args) throws InterruptedException, IOException {
+    public static void main(final String[] args) throws IOException {
         // Create the discoverer and start scanning for HomeWizard devices.
         final HomeWizardDiscoverer discoverer = new HomeWizardDiscoverer();
 
-        // Wait for a second to give the discoverer time
+        // Wait for 1 second to give the discoverer time
         // to discover HomeWizard devices.
-        Thread.sleep(1000);
+        discoverer.waitForMillis(1000);
 
         // Get all discovered devices
         final List<Device> deviceList = discoverer.getAllDevices();
