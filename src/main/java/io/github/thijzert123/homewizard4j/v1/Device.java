@@ -47,6 +47,24 @@ public abstract class Device extends Updatable {
     private final int port;
     @JsonProperty("api_path")
     private final String apiPath;
+
+    @JsonProperty("product_type")
+    private final Optional<String> productType;
+    @JsonProperty("product_name")
+    private final Optional<String> productName;
+    @JsonProperty("serial")
+    private final Optional<String> serial;
+
+    @JsonProperty("firmware_version")
+    private final Optional<String> firmwareVersion = Optional.empty();
+    @JsonProperty("api_version")
+    private final Optional<String> apiVersion = Optional.empty();
+
+    @JsonProperty("wifi_ssid")
+    private final Optional<String> wifiSsid = Optional.empty();
+    @JsonProperty("wifi_strength")
+    private final OptionalDouble wifiStrength = OptionalDouble.empty();
+
     @JsonProperty("system_configuration")
     private final SystemConfiguration systemConfiguration;
 
@@ -54,13 +72,22 @@ public abstract class Device extends Updatable {
            final boolean apiEnabled,
            final String hostAddress,
            final int port,
-           final String apiPath) {
+           final String apiPath,
+           final Optional<String> productType,
+           final Optional<String> productName,
+           final Optional<String> serial) {
         LOGGER.trace("Initializing Device...");
+
         this.serviceName = serviceName;
         this.apiEnabled = apiEnabled;
         this.hostAddress = hostAddress;
         this.port = port;
         this.apiPath = apiPath;
+
+        this.productType = productType;
+        this.productName = productName;
+        this.serial = serial;
+
         systemConfiguration = new SystemConfiguration(this);
     }
 
@@ -280,7 +307,9 @@ public abstract class Device extends Updatable {
      *
      * @return a unique serial number for this device
      */
-    public abstract Optional<String> getSerial();
+    public Optional<String> getSerial() {
+        return serial;
+    }
 
     /**
      * A unique identifier for a device that won't change in the official API, for example <code>HWE-WTR</code>.
@@ -292,7 +321,9 @@ public abstract class Device extends Updatable {
      *
      * @return the unique product type
      */
-    public abstract Optional<String> getProductType();
+    public Optional<String> getProductType() {
+        return productType;
+    }
 
     /**
      * Returns a user-friendly name representation of the device. For example: <code>WaterMeter</code>.
@@ -306,7 +337,9 @@ public abstract class Device extends Updatable {
      *
      * @return product name
      */
-    public abstract Optional<String> getProductName();
+    public Optional<String> getProductName() {
+        return productName;
+    }
 
     /**
      * Returns the version of the currently installed firmware.
@@ -318,7 +351,9 @@ public abstract class Device extends Updatable {
      * @return the version of the currently installed firmware
      * @see #updateDeviceInfo()
      */
-    public abstract Optional<String> getFirmwareVersion();
+    public Optional<String> getFirmwareVersion() {
+        return firmwareVersion;
+    }
 
     /**
      * Returns the current API version. It should always be <code>v1</code>.
@@ -330,7 +365,9 @@ public abstract class Device extends Updatable {
      * @return the current API version
      * @see #updateDeviceInfo()
      */
-    public abstract Optional<String> getApiVersion();
+    public Optional<String> getApiVersion() {
+        return apiVersion;
+    }
 
     /**
      * Returns the SSID of the Wi-Fi network the device is connected to.
@@ -342,7 +379,9 @@ public abstract class Device extends Updatable {
      * @return the SSID of the Wi-Fi network the device is connected to
      * @see #updateMeasurements()
      */
-    public abstract Optional<String> getWifiSsid();
+    public Optional<String> getWifiSsid() {
+        return wifiSsid;
+    }
 
     /**
      * Returns the strength of the Wi-Fi the device is currently connected to.
@@ -354,5 +393,7 @@ public abstract class Device extends Updatable {
      * @return the Wi-Fi strength
      * @see #updateMeasurements()
      */
-    public abstract OptionalDouble getWifiStrength();
+    public OptionalDouble getWifiStrength() {
+        return wifiStrength;
+    }
 }

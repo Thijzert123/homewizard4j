@@ -15,30 +15,13 @@ import java.util.OptionalDouble;
  * @see Device
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class P1Meter extends Device {
+public class P1Meter extends EnergyMeter {
     /**
      * Possible unique product identifiers for this device.
      *
      * @see #getProductType()
      */
     public static final List<String> PRODUCT_TYPES = List.of("HWE-P1");
-
-    @JsonProperty("product_type")
-    private final Optional<String> productType;
-    @JsonProperty("product_name")
-    private final Optional<String> productName;
-    @JsonProperty("serial")
-    private final Optional<String> serial;
-
-    @JsonProperty("firmware_version")
-    private final Optional<String> firmwareVersion = Optional.empty();
-    @JsonProperty("api_version")
-    private final Optional<String> apiVersion = Optional.empty();
-
-    @JsonProperty("wifi_ssid")
-    private final Optional<String> wifiSsid = Optional.empty();
-    @JsonProperty("wifi_strength")
-    private final OptionalDouble wifiStrength = OptionalDouble.empty();
 
     @JsonProperty("unique_id")
     private final Optional<String> uniqueId = Optional.empty();
@@ -120,24 +103,23 @@ public class P1Meter extends Device {
     private final Optional<List<ExternalP1Device>> externalP1Devices = Optional.empty();
 
     P1Meter(final Optional<String> serviceName,
-               final boolean apiEnabled,
-               final String hostAddress,
-               final int port,
-               final String apiPath,
-               final Optional<String> productType,
-               final Optional<String> productName,
-               final Optional<String> serial) {
+                final boolean apiEnabled,
+                final String hostAddress,
+                final int port,
+                final String apiPath,
+                final Optional<String> productType,
+                final Optional<String> productName,
+                final Optional<String> serial) {
         super(
                 serviceName,
                 apiEnabled,
                 hostAddress,
                 port,
-                apiPath
+                apiPath,
+                productType,
+                productName,
+                serial
         );
-
-        this.productType = productType;
-        this.productName = productName;
-        this.serial = serial;
     }
 
     /**
@@ -154,7 +136,7 @@ public class P1Meter extends Device {
                       final String hostAddress,
                       final int port,
                       final String apiPath) {
-        this(
+        super(
                 Optional.empty(),
                 apiEnabled,
                 hostAddress,
@@ -195,41 +177,6 @@ public class P1Meter extends Device {
      */
     public String retrieveLastTelegram() throws HomeWizardApiException {
         return HttpUtils.getBody("GET", getFullApiAddress() + "/telegram");
-    }
-
-    @Override
-    public Optional<String> getSerial() {
-        return serial;
-    }
-
-    @Override
-    public Optional<String> getProductType() {
-        return productType;
-    }
-
-    @Override
-    public Optional<String> getProductName() {
-        return productName;
-    }
-
-    @Override
-    public Optional<String> getFirmwareVersion() {
-        return firmwareVersion;
-    }
-
-    @Override
-    public Optional<String> getApiVersion() {
-        return apiVersion;
-    }
-
-    @Override
-    public Optional<String> getWifiSsid() {
-        return wifiSsid;
-    }
-
-    @Override
-    public OptionalDouble getWifiStrength() {
-        return wifiStrength;
     }
 
     /**

@@ -23,23 +23,6 @@ public class WaterMeter extends Device {
      */
     public static final List<String> PRODUCT_TYPES = List.of("HWE-WTR");
 
-    @JsonProperty("product_type")
-    private final Optional<String> productType;
-    @JsonProperty("product_name")
-    private final Optional<String> productName;
-    @JsonProperty("serial")
-    private final Optional<String> serial;
-
-    @JsonProperty("firmware_version")
-    private final Optional<String> firmwareVersion = Optional.empty();
-    @JsonProperty("api_version")
-    private final Optional<String> apiVersion = Optional.empty();
-
-    @JsonProperty("wifi_ssid")
-    private final Optional<String> wifiSsid = Optional.empty();
-    @JsonProperty("wifi_strength")
-    private final OptionalDouble wifiStrength = OptionalDouble.empty();
-
     @JsonProperty("total_liter_m3")
     private final OptionalDouble totalLiterM3 = OptionalDouble.empty();
     @JsonProperty("active_liter_lpm")
@@ -48,24 +31,23 @@ public class WaterMeter extends Device {
     private final OptionalDouble totalLiterOffsetM3 = OptionalDouble.empty();
 
     WaterMeter(final Optional<String> serviceName,
-               final boolean apiEnabled,
-               final String hostAddress,
-               final int port,
-               final String apiPath,
-               final Optional<String> productType,
-               final Optional<String> productName,
-               final Optional<String> serial) {
+                final boolean apiEnabled,
+                final String hostAddress,
+                final int port,
+                final String apiPath,
+                final Optional<String> productType,
+                final Optional<String> productName,
+                final Optional<String> serial) {
         super(
                 serviceName,
                 apiEnabled,
                 hostAddress,
                 port,
-                apiPath
+                apiPath,
+                productType,
+                productName,
+                serial
         );
-
-        this.productType = productType;
-        this.productName = productName;
-        this.serial = serial;
     }
 
     /**
@@ -82,7 +64,7 @@ public class WaterMeter extends Device {
                       final String hostAddress,
                       final int port,
                       final String apiPath) {
-        this(
+        super(
                 Optional.empty(),
                 apiEnabled,
                 hostAddress,
@@ -110,42 +92,6 @@ public class WaterMeter extends Device {
                 Device.DEFAULT_API_PATH
         );
     }
-
-    @Override
-    public Optional<String> getSerial() {
-        return serial;
-    }
-
-    @Override
-    public Optional<String> getProductType() {
-        return productType;
-    }
-
-    @Override
-    public Optional<String> getProductName() {
-        return productName;
-    }
-
-    @Override
-    public Optional<String> getFirmwareVersion() {
-        return firmwareVersion;
-    }
-
-    @Override
-    public Optional<String> getApiVersion() {
-        return apiVersion;
-    }
-
-    @Override
-    public Optional<String> getWifiSsid() {
-        return wifiSsid;
-    }
-
-    @Override
-    public OptionalDouble getWifiStrength() {
-        return wifiStrength;
-    }
-
 
     /**
      * Returns the total water usage in cubic meters (m^3) since the installation of the device.

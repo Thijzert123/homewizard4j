@@ -19,7 +19,7 @@ public class WaterMeterTest {
     public static void beforeAll() throws IOException {
         Utils.initializeServer(8321, "waterMeter").start();
 
-        expectedJson = "{\"service_name\":null,\"api_enabled\":true,\"host_address\":\"localhost\",\"port\":8321,\"api_path\":\"/test\",\"system_configuration\":{\"cloud_enabled\":true},\"product_type\":\"HWE-WTR\",\"product_name\":\"Watermeter\",\"serial\":\"3c39e7363bCC\",\"firmware_version\":\"5.18\",\"api_version\":\"v1\",\"wifi_ssid\":\"My Wi-Fi\",\"wifi_strength\":100.0,\"total_liter_m3\":123.456,\"active_liter_lpm\":7.2,\"total_liter_offset_m3\":0.0}";
+        expectedJson = "{\"service_name\":null,\"api_enabled\":true,\"host_address\":\"localhost\",\"port\":8321,\"api_path\":\"/test\",\"product_type\":\"HWE-WTR\",\"product_name\":\"Watermeter\",\"serial\":\"3c39e7363bCC\",\"firmware_version\":\"5.18\",\"api_version\":\"v1\",\"wifi_ssid\":\"My Wi-Fi\",\"wifi_strength\":100.0,\"system_configuration\":{\"cloud_enabled\":true},\"total_liter_m3\":123.456,\"active_liter_lpm\":7.2,\"total_liter_offset_m3\":0.0}";
     }
 
     @Test

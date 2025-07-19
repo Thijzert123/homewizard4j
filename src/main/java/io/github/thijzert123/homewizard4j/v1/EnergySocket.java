@@ -29,23 +29,6 @@ public class EnergySocket extends Device {
     @JsonProperty("energy_socket_state")
     private final EnergySocketState energySocketState;
 
-    @JsonProperty("product_type")
-    private final Optional<String> productType;
-    @JsonProperty("product_name")
-    private final Optional<String> productName;
-    @JsonProperty("serial")
-    private final Optional<String> serial;
-
-    @JsonProperty("firmware_version")
-    private final Optional<String> firmwareVersion = Optional.empty();
-    @JsonProperty("api_version")
-    private final Optional<String> apiVersion = Optional.empty();
-
-    @JsonProperty("wifi_ssid")
-    private final Optional<String> wifiSsid = Optional.empty();
-    @JsonProperty("wifi_strength")
-    private final OptionalDouble wifiStrength = OptionalDouble.empty();
-
     @JsonProperty("total_power_import_kwh")
     private final OptionalDouble totalPowerImportKwh = OptionalDouble.empty();
     @JsonProperty("total_power_export_kwh")
@@ -78,14 +61,13 @@ public class EnergySocket extends Device {
                 apiEnabled,
                 hostAddress,
                 port,
-                apiPath
+                apiPath,
+                productType,
+                productName,
+                serial
         );
 
         energySocketState = new EnergySocketState(this);
-
-        this.productType = productType;
-        this.productName = productName;
-        this.serial = serial;
     }
 
     /**
@@ -135,41 +117,6 @@ public class EnergySocket extends Device {
     public void updateAll() throws HomeWizardApiException {
         super.updateAll();
         getEnergySocketState().update();
-    }
-
-    @Override
-    public Optional<String> getSerial() {
-        return serial;
-    }
-
-    @Override
-    public Optional<String> getProductType() {
-        return productType;
-    }
-
-    @Override
-    public Optional<String> getProductName() {
-        return productName;
-    }
-
-    @Override
-    public Optional<String> getFirmwareVersion() {
-        return firmwareVersion;
-    }
-
-    @Override
-    public Optional<String> getApiVersion() {
-        return apiVersion;
-    }
-
-    @Override
-    public Optional<String> getWifiSsid() {
-        return wifiSsid;
-    }
-
-    @Override
-    public OptionalDouble getWifiStrength() {
-        return wifiStrength;
     }
 
     /**

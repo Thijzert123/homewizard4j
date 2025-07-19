@@ -19,30 +19,13 @@ import java.util.OptionalDouble;
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class KWhMeter extends Device {
+public class KWhMeter extends EnergyMeter {
     /**
      * Possible unique product identifiers for this device.
      *
      * @see #getProductType()
      */
     public static final List<String> PRODUCT_TYPES = List.of("HWE-KWH1", "HWE-KWH3", "SDM230-wifi", "SDM630-wifi");
-
-    @JsonProperty("product_type")
-    private final Optional<String> productType;
-    @JsonProperty("product_name")
-    private final Optional<String> productName;
-    @JsonProperty("serial")
-    private final Optional<String> serial;
-
-    @JsonProperty("firmware_version")
-    private final Optional<String> firmwareVersion = Optional.empty();
-    @JsonProperty("api_version")
-    private final Optional<String> apiVersion = Optional.empty();
-
-    @JsonProperty("wifi_ssid")
-    private final Optional<String> wifiSsid = Optional.empty();
-    @JsonProperty("wifi_strength")
-    private final OptionalDouble wifiStrength = OptionalDouble.empty();
 
     @JsonProperty("total_power_import_kwh")
     private final OptionalDouble totalPowerImportKwh = OptionalDouble.empty();
@@ -116,24 +99,23 @@ public class KWhMeter extends Device {
     private final OptionalDouble activeFrequencyHz = OptionalDouble.empty();
 
     KWhMeter(final Optional<String> serviceName,
-               final boolean apiEnabled,
-               final String hostAddress,
-               final int port,
-               final String apiPath,
-               final Optional<String> productType,
-               final Optional<String> productName,
-               final Optional<String> serial) {
+                final boolean apiEnabled,
+                final String hostAddress,
+                final int port,
+                final String apiPath,
+                final Optional<String> productType,
+                final Optional<String> productName,
+                final Optional<String> serial) {
         super(
                 serviceName,
                 apiEnabled,
                 hostAddress,
                 port,
-                apiPath
+                apiPath,
+                productType,
+                productName,
+                serial
         );
-
-        this.productType = productType;
-        this.productName = productName;
-        this.serial = serial;
     }
 
     /**
@@ -150,7 +132,7 @@ public class KWhMeter extends Device {
                       final String hostAddress,
                       final int port,
                       final String apiPath) {
-        this(
+        super(
                 Optional.empty(),
                 apiEnabled,
                 hostAddress,
@@ -177,41 +159,6 @@ public class KWhMeter extends Device {
                 Device.DEFAULT_PORT,
                 Device.DEFAULT_API_PATH
         );
-    }
-
-    @Override
-    public Optional<String> getSerial() {
-        return serial;
-    }
-
-    @Override
-    public Optional<String> getProductType() {
-        return productType;
-    }
-
-    @Override
-    public Optional<String> getProductName() {
-        return productName;
-    }
-
-    @Override
-    public Optional<String> getFirmwareVersion() {
-        return firmwareVersion;
-    }
-
-    @Override
-    public Optional<String> getApiVersion() {
-        return apiVersion;
-    }
-
-    @Override
-    public Optional<String> getWifiSsid() {
-        return wifiSsid;
-    }
-
-    @Override
-    public OptionalDouble getWifiStrength() {
-        return wifiStrength;
     }
 
     /**
