@@ -15,7 +15,7 @@ import java.util.OptionalDouble;
  * @see Device
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class P1Meter extends EnergyMeter {
+public class P1Meter extends Device {
     /**
      * Possible unique product identifiers for this device.
      *
