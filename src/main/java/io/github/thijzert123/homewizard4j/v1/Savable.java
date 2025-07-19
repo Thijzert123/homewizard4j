@@ -16,9 +16,10 @@ abstract class Savable extends Updatable {
     /**
      * Saves all the changed data.
      *
+     * @param fullAddress the address to make a request to
      * @throws HomeWizardApiException when something goes wrong while saving
      */
-    public void save(final String fullAddress) throws HomeWizardApiException {
+    void save(final String fullAddress) throws HomeWizardApiException {
         LOGGER.debug("Saving fields...");
 
         try {

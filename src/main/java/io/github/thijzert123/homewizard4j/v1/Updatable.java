@@ -36,6 +36,7 @@ abstract class Updatable {
      * Updates the data from the device.
      * If you have made changes without saving them using {@link Savable#save(String)}, they will be discarded!
      *
+     * @param fullAddress the address to make a request to
      * @throws HomeWizardApiException when something has gone wrong while updating data
      */
     void update(final String fullAddress) throws HomeWizardApiException {
