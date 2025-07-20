@@ -19,6 +19,7 @@ import java.util.Map;
 public class HomeWizardDiscovererTest {
     static JmDNS jmDNS;
     static HomeWizardDiscoverer discoverer;
+    static int serialLastNumber = 0;
 
     @BeforeAll
     public static void beforeAll() throws IOException, InterruptedException {
@@ -28,14 +29,19 @@ public class HomeWizardDiscovererTest {
         jmDNS.registerService(generateServiceInfo("HWE-SKT", "EnergySocket", 7702));
         jmDNS.registerService(generateServiceInfo("SDM230-wifi", "kWhMeter", 7703));
 
-        discoverer = new HomeWizardDiscoverer().waitForDevices(HomeWizardDiscoverer.DeviceType.ALL, 4);
+        discoverer = new HomeWizardDiscoverer()
+                .waitForDevices(HomeWizardDiscoverer.DeviceType.ALL, 4);
     }
 
     private static ServiceInfo generateServiceInfo(final String productType, final String name, final int port) {
         final Map<String, String> properties = new HashMap<>();
         properties.put("api_enabled", "1");
         properties.put("path", "/api/v1");
-        properties.put("serial", "5c2Faf1e8b42");
+
+        // The serial must be unique
+        properties.put("serial", "2d7Faf1e8b4" + serialLastNumber);
+        serialLastNumber++;
+
         properties.put("product_type", productType);
         properties.put("product_name", name);
 

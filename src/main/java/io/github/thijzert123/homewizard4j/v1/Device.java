@@ -298,7 +298,8 @@ public abstract class Device extends Updatable {
     /**
      * Returns the serial number, also used as the MAC address.
      * This unique value per device consists of 12 hexadecimal characters,
-     * for example <code>1a2b3c4d5e6f</code>.
+     * for example <code>1a2b3c4d5e6f</code>. The serial is used for unique identification:
+     * if serial is the same, the whole device must be the same.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
      * Otherwise, you have to call {@link #updateDeviceInfo()} first.
