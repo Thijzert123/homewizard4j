@@ -11,6 +11,7 @@ layout: default
  specified type are discovered and closes the discoverer afterward
 - `thenClose()` has been added to `HomeWizardDiscoverer`: it closes the discoverer,
  then returns the current discoverer instance
+- This project has now a module: `io.github.thijzert123.homewizard4j`
 
 ### Bug fixes
 - When merging `HomeWizardDiscoverer`, it no longer discovers the same device twice
