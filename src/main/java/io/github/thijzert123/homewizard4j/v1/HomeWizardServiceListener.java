@@ -17,7 +17,6 @@ import java.util.Optional;
  */
 class HomeWizardServiceListener implements ServiceListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private final HomeWizardDiscoverer discoverer;
 
     HomeWizardServiceListener(final HomeWizardDiscoverer discoverer) {

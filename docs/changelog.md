@@ -17,7 +17,7 @@ layout: default
 - When merging `HomeWizardDiscoverer`, it no longer discovers the same device twice
 
 ## 2.0.0
-This new release offers new features, as well as some breaking changes to make the API more clear.
+This release offers new features, as well as some breaking changes to make the API more clear.
 
 ### Breaking changes
 - `DeviceState` has been renamed to `EnergySocketState`
