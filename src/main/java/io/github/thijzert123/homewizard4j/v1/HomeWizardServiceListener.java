@@ -8,6 +8,7 @@ import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,8 +40,12 @@ class HomeWizardServiceListener implements ServiceListener {
 
         final ServiceInfo serviceInfo = serviceEvent.getInfo();
         final String productType = serviceInfo.getPropertyString("product_type");
-
         LOGGER.debug("Discovered device, product type: {}", productType);
+
+        if (isSerialRegistered(serviceInfo.getPropertyString("serial"))) {
+            return;
+        }
+
         if (WaterMeter.PRODUCT_TYPES.contains(productType)) {
             addWaterMeter(serviceInfo);
         } else if (P1Meter.PRODUCT_TYPES.contains(productType)) {
@@ -55,6 +60,30 @@ class HomeWizardServiceListener implements ServiceListener {
         synchronized (discoverer.deviceAddedNotifier) {
             discoverer.deviceAddedNotifier.notifyAll();
         }
+    }
+
+    /**
+     * Check if device is already registered in the discoverer. This is necessary because otherwise a discoverer
+     * can scan the same device twice if it was merged.
+     *
+     * @param serial serial to check
+     * @return whether the serial is registered in the discoverer
+     */
+    private boolean isSerialRegistered(final String serial) {
+        LOGGER.trace("Checking if serial is already registered...");
+
+        final List<Device> devices = discoverer.getAllDevices();
+        for (final Device device : devices) {
+            if (device.getSerial().isPresent()) {
+                // is serial the same as serial to check?
+                if (device.getSerial().get().equals(serial)) {
+                    LOGGER.trace("Serial was already registered");
+                    return true;
+                }
+            }
+        }
+        LOGGER.trace("Serial is not registered");
+        return false;
     }
 
     private Object createDevice(final Class<?> clazz, final ServiceInfo serviceInfo) {

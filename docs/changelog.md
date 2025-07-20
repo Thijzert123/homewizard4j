@@ -9,6 +9,11 @@ layout: default
 ### New features
 - `HomeWizardDiscoverer(DeviceType, int)`: new constructor that blocks until a specific number of devices with
  specified type are discovered and closes the discoverer afterward
+- `thenClose()` has been added to `HomeWizardDiscoverer`: it closes the discoverer,
+ then returns the current discoverer instance
+
+### Bug fixes
+- When merging `HomeWizardDiscoverer`, it no longer discovers the same device twice
 
 ## 2.0.0
 This new release offers new features, as well as some breaking changes to make the API more clear.

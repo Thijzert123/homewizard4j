@@ -201,10 +201,24 @@ public class HomeWizardDiscoverer implements AutoCloseable {
 
     /**
      * Closes the {@link JmDNS} discoverer.
+     *
+     * @throws IOException when something has gone wrong
      */
     public void close() throws IOException {
         LOGGER.debug("Closing...");
         jmDNS.close();
+    }
+
+    /**
+     * Closes the {@link JmDNS} discoverer and returns this discoverer instance.
+     *
+     * @return this discoverer instance
+     * @throws IOException when something has gone wrong
+     * @since 2.1.0
+     */
+    public HomeWizardDiscoverer thenClose() throws IOException {
+        close();
+        return this;
     }
 
     /**
