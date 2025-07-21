@@ -115,11 +115,12 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
-     * Blocks for a specified time and closes the listener. It does this by calling {@link #waitForMillis(long)} and
-     * {@link #close()}.
+     * Initializes the discoverer and starts scanning for HomeWizard devices.
+     * It blocks for the specified amount of time and closes the listener.
+     * This is done by calling {@link #waitForMillis(long)} and {@link #close()}.
      *
      * @param millis time in millis
-     * @throws IOException when something has gone wrong while creating the mDNS discoverer
+     * @throws IOException when something has gone wrong while creating or closing the mDNS discoverer
      * @since 2.0.0
      */
     public HomeWizardDiscoverer(final long millis) throws IOException {
@@ -128,6 +129,15 @@ public class HomeWizardDiscoverer implements AutoCloseable {
         close();
     }
 
+    /**
+     * Initializes the discoverer and starts scanning for HomeWizard devices.
+     * It blocks until a specific count of the specified device type is reached and closes after.
+     * This is done by calling {@link #waitForDevices(DeviceType, int)} and {@link #close()}.
+     *
+     * @param deviceType type of device to wait for
+     * @param deviceCount device count to wait for
+     * @throws IOException when something has gone wrong while creating or closing the mDNS discoverer
+     */
     public HomeWizardDiscoverer(final DeviceType deviceType, final int deviceCount) throws IOException {
         this();
         waitForDevices(deviceType, deviceCount);
@@ -153,7 +163,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
-     * Blocks until a specific cound of a specified device type is reached.
+     * Blocks until a specific count of the specified device type is reached.
      *
      * @param deviceType  type of device to wait for
      * @param deviceCount device count to wait for
@@ -222,9 +232,9 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
-     * Returns all waterMeter devices.
+     * Returns all water meter devices.
      *
-     * @return all waterMeter devices
+     * @return all water meter devices
      */
     public List<WaterMeter> getWaterMeters() {
         return waterMeters;
