@@ -137,6 +137,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      * @param deviceType type of device to wait for
      * @param deviceCount device count to wait for
      * @throws IOException when something has gone wrong while creating or closing the mDNS discoverer
+     * @since 2.0.0
      */
     public HomeWizardDiscoverer(final DeviceType deviceType, final int deviceCount) throws IOException {
         this();
