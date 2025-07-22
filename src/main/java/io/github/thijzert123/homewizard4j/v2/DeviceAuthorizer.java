@@ -2,7 +2,6 @@ package io.github.thijzert123.homewizard4j.v2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.github.thijzert123.homewizard4j.v2.json.AuthorizeRequest;
 import io.github.thijzert123.homewizard4j.v2.json.AuthorizeResponse;
 import org.slf4j.Logger;
@@ -15,6 +14,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * With this authorizer, you are able to request a token.
+ *
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -61,6 +62,27 @@ public class DeviceAuthorizer {
         } catch (final JsonProcessingException jsonProcessingException) {
             throw new HomeWizardApiException(jsonProcessingException, LOGGER);
         }
+    }
+
+    public AuthorizeStatus waitForAuthorizeSuccess(final String name, final long interval) throws HomeWizardApiException {
+        while (true) {
+            final AuthorizeStatus authorizeStatus = authorize(name);
+
+            if (authorizeStatus == AuthorizeStatus.AUTHORISATION_SUCCESS) {
+                return AuthorizeStatus.AUTHORISATION_SUCCESS;
+            }
+
+            try {
+                Thread.sleep(interval);
+            } catch (final InterruptedException interruptedException) {
+                LOGGER.error(interruptedException.getMessage(), interruptedException);
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    public AuthorizeStatus waitForAuthorizeSuccess(final String name) throws HomeWizardApiException {
+        return waitForAuthorizeSuccess(name, 5000);
     }
 
     public Optional<String> getName() {
