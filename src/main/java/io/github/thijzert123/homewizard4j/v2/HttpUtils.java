@@ -125,4 +125,15 @@ class HttpUtils {
                 bodyPublisher
         );
     }
+
+    static HttpResponse<String> sendRequest(final String token, final String fullAddress) throws HomeWizardApiException {
+        return sendRequest(
+                "GET",
+                "application/json",
+                "2.0.1",
+                Optional.of(token),
+                fullAddress,
+                HttpRequest.BodyPublishers.noBody()
+        );
+    }
 }

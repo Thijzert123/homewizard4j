@@ -11,7 +11,7 @@ import java.util.Optional;
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public abstract class Device { // TODO check all Javadoc, as well as links to official documentation
+public abstract class Device extends Updatable { // TODO check all Javadoc, as well as links to official documentation
     /**
      * The default port of the API.
      */
@@ -73,6 +73,34 @@ public abstract class Device { // TODO check all Javadoc, as well as links to of
         return "https://" + getHostAddress() + apiEndpoint;
     }
 
+//    boolean updateDeviceData(final String apiEndpoint) throws HomeWizardApiException {
+//        final Optional<String> token = authorizer.getToken();
+//        if (token.isPresent()) {
+//            update(token.get(), createFullApiAddress(apiEndpoint));
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+
+    /**
+     * Update all the basic information from the device. This method returns {@code true} when updating was
+     * successful. If the token is not present ({@link DeviceAuthorizer#getToken()}), this method returns {@code false}.
+     *
+     * @return {@code true} when successful
+     * @throws HomeWizardApiException when something has gone wrong while updating
+     */
+    @Override
+    public boolean update() throws HomeWizardApiException {
+        final Optional<String> token = authorizer.getToken();
+        if (token.isPresent()) {
+            update(token.get(), createFullApiAddress("/api"));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Returns the full qualified mDNS service name.
      * For example: <code>watermeter-ABC123._homewizard._tcp.local.</code>.
@@ -132,9 +160,9 @@ public abstract class Device { // TODO check all Javadoc, as well as links to of
      *
      * @return the system configuration
      */
-    public SystemConfiguration getSystemConfiguration() {
-        return systemConfiguration;
-    }
+//    public SystemConfiguration getSystemConfiguration() {
+//        return systemConfiguration;
+//    }
 
     /**
      * Returns the serial number, also used as the MAC address.
