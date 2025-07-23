@@ -75,16 +75,6 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
         return "https://" + getHostAddress() + apiEndpoint;
     }
 
-//    boolean updateDeviceData(final String apiEndpoint) throws HomeWizardApiException {
-//        final Optional<String> token = authorizer.getToken();
-//        if (token.isPresent()) {
-//            update(token.get(), createFullApiAddress(apiEndpoint));
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
     /**
      * Update all the basic information from the device. This method returns {@code true} when updating was
      * successful. If the token is not present ({@link DeviceAuthorizer#getToken()}), this method returns {@code false}.

@@ -175,4 +175,13 @@ public class DeviceSystem extends Updatable {
     public void setApiV1Enabled(final boolean apiV1Enabled) {
         this.apiV1Enabled = Optional.of(apiV1Enabled);
     }
+
+    /**
+     * Returns the device associated with this system.
+     *
+     * @return the device associated with this system
+     */
+    public Device getDevice() {
+        return device;
+    }
 }

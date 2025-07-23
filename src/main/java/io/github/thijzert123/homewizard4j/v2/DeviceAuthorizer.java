@@ -14,12 +14,23 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * With this authorizer, you are able to request a token.
+ * This class serves as an authorizer for one device. For most API requests, you need a token. You can use this
+ * class to get one. It works as follows:
+ * <ul>
+ *     <li>A request with a name is made to the device
+ *     <li>The device denies, doesn't give a token and says to press the physical button on the device
+ *     <li>The user presses the button
+ *     <li>Another request is made within 30 seconds of pressing the button
+ *     <li>The device responds with a token that you can use to make all other requests
+ * </ul>
  *
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class DeviceAuthorizer {
+    /**
+     * The status after authorizing.
+     */
     public enum AuthorizeStatus {
         AUTHORISATION_SUCCESS,
         NEEDS_BUTTON_PRESS
@@ -36,6 +47,13 @@ public class DeviceAuthorizer {
         this.device = device;
     }
 
+    /**
+     * Makes an authorisation request to the device.
+     *
+     * @param name name to use for authorisation
+     * @return the status of the authorisation process
+     * @throws HomeWizardApiException when something has gone wrong while making the API request
+     */
     public AuthorizeStatus authorize(final String name) throws HomeWizardApiException {
         this.name = Optional.of(name);
         final AuthorizeRequest authorizeRequestBody = new AuthorizeRequest(name);
@@ -64,6 +82,15 @@ public class DeviceAuthorizer {
         }
     }
 
+    /**
+     * Continuously makes authorisation requests with {@link #authorize(String)} with the given interval. It blocks
+     * until {@link #authorize(String)} returns {@link AuthorizeStatus#AUTHORISATION_SUCCESS}.
+     *
+     * @param name     name to use for authorisation
+     * @param interval the interval between making requests in ms
+     * @return the status of the authorisation process - should always be {@link AuthorizeStatus#AUTHORISATION_SUCCESS}
+     * @throws HomeWizardApiException when something has gone wrong while making the API request
+     */
     public AuthorizeStatus waitForAuthorizeSuccess(final String name, final long interval) throws HomeWizardApiException {
         while (true) {
             final AuthorizeStatus authorizeStatus = authorize(name);
@@ -81,26 +108,60 @@ public class DeviceAuthorizer {
         }
     }
 
+    /**
+     * Does the same as {@link #waitForAuthorizeSuccess(String, long)}, but this method takes {@code 5000} ms as interval.
+     *
+     * @param name name to use for authorisation
+     * @return the status of the authorisation process - should always be {@link AuthorizeStatus#AUTHORISATION_SUCCESS}
+     * @throws HomeWizardApiException when something has gone wrong while making the API request
+     */
     public AuthorizeStatus waitForAuthorizeSuccess(final String name) throws HomeWizardApiException {
         return waitForAuthorizeSuccess(name, 5000);
     }
 
+    /**
+     * Returns the name associated with the token. This is available after the first request, the person does not
+     * have to press the button for this information to be available.
+     *
+     * @return optional name associated with the token
+     */
     public Optional<String> getName() {
         return name;
     }
 
+    /**
+     * Returns the token when the device is already authorized.
+     *
+     * @return the token
+     */
     public Optional<String> getToken() {
         return token;
     }
 
+    /**
+     * Sets the name associated with the token. It is important to not change the name when one request has already
+     * been made.
+     *
+     * @param name new name associated with the token
+     */
     public void setName(final String name) {
         this.name = Optional.of(name);
     }
 
+    /**
+     * Sets the token if you already had one.
+     *
+     * @param token new token
+     */
     public void setToken(final String token) {
         this.token = Optional.of(token);
     }
 
+    /**
+     * Returns the device associated with this authorizer.
+     *
+     * @return the device associated with this authorizer
+     */
     public Device getDevice() {
         return device;
     }
