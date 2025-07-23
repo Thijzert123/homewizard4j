@@ -39,6 +39,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     private final Optional<String> firmwareVersion = Optional.empty();
 
     private final DeviceAuthorizer authorizer;
+    private final DeviceSystem system;
 
     // TODO wifi info
 
@@ -63,6 +64,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
         this.apiVersion = apiVersion;
 
         authorizer = new DeviceAuthorizer(this);
+        system = new DeviceSystem(this);
 
         // TODO system configuration
     }
@@ -257,5 +259,15 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      */
     public DeviceAuthorizer getAuthorizer() {
         return authorizer;
+    }
+
+    /**
+     * Returns the system associated with this device. It can be used to get and set some system information,
+     * like the state of the cloud communication and the uptime of the device.
+     *
+     * @return the system associated with this device
+     */
+    public DeviceSystem getSystem() {
+        return system;
     }
 }

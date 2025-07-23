@@ -114,15 +114,14 @@ class HttpUtils {
 
     static HttpResponse<String> sendRequest(final String method,
                                             final String token,
-                                            final String fullAddress,
-                                            final HttpRequest.BodyPublisher bodyPublisher) throws HomeWizardApiException {
+                                            final String fullAddress) throws HomeWizardApiException {
         return sendRequest(
                 method,
                 "application/json",
                 "2.0.1",
                 Optional.of(token),
                 fullAddress,
-                bodyPublisher
+                HttpRequest.BodyPublishers.noBody()
         );
     }
 
