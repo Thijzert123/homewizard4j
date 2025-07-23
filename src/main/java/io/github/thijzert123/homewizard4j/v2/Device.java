@@ -72,7 +72,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     // TODO getFullApiPath or something
 
     String createFullApiAddress(final String apiEndpoint) {
-        return "https://" + getHostAddress() + apiEndpoint;
+        return getFullAddress() + apiEndpoint;
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * For example: <code>watermeter-ABC123._homewizard._tcp.local.</code>.
      * <p>
      * This information is always available if the instance was returned by {@link HomeWizardDiscoverer}.
-     * Otherwise, you can never get this information, even if you use one of the update methods.
+     * Otherwise, you can never get this information, even if you use {@link #update()}.
      *
      * @return full qualified service name
      */
@@ -107,17 +107,17 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     }
 
     /**
-     * Returns the full address. For example: <code>http://192.168.1.123:443</code>. // TODO check port here
+     * Returns the full address. For example: <code>https://192.168.1.123:443</code>. // TODO check port here
      * It is constructed like this:
      * <p>
-     * <code>http://</code> + {@link #getHostAddress()} + <code>:</code> + {@link #getPort()}
+     * <code>https://</code> + {@link #getHostAddress()} + <code>:</code> + {@link #getPort()}
      *
      * @return full address
      * @see #getHostAddress()
      * @see #getPort()
      */
     public String getFullAddress() {
-        return "http://" + getHostAddress() + ":" + getPort();
+        return "https://" + getHostAddress() + ":" + getPort();
     }
 
     /**
@@ -144,28 +144,15 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     }
 
     /**
-     * Returns the system configuration. You can change the values with the returned class.
-     * <p>
-     * This information is always available.
-     * <p>
-     * <a href="https://api-documentation.homewizard.com/docs/v1/system">Official API documentation related to this method</a>
-     *
-     * @return the system configuration
-     */
-//    public SystemConfiguration getSystemConfiguration() {
-//        return systemConfiguration;
-//    }
-
-    /**
      * Returns the serial number, also used as the MAC address.
      * This unique value per device consists of 12 hexadecimal characters,
-     * for example <code>1a2b3c4d5e6f</code>. The serial is used for unique identification:
+     * for example, <code>1a2b3c4d5e6f</code>. The serial is used for unique identification:
      * if serial is the same, the whole device must be the same.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
+     * Otherwise, you have to call {@link #update()} first.
      * <p>
-     * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records">Official API documentation related to this method</a>
+     * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
      * @return a unique serial number for this device
      */
@@ -177,9 +164,9 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * A unique identifier for a device that won't change in the official API, for example <code>HWE-WTR</code>.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
+     * Otherwise, you have to call {@link #update()} first.
      * <p>
-     * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records">Official API documentation related to this method</a>
+     * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
      * @return the unique product type
      */
@@ -193,9 +180,9 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * Instead, use {@link #getProductType()} if you want to know exactly what type of device something is.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
+     * Otherwise, you have to call {@link #update()} first.
      * <p>
-     * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records">Official API documentation related to this method</a>
+     * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
      * @return product name
      */
@@ -206,22 +193,34 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     /**
      * Returns the device identifier used during validation of the SSL certificate, formatted as
      * {@code appliance/<product_type>/<serial>}. Example: {@code appliance/p1dongle/5c2fafaabbcc}.
+     * <p>
+     * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
+     * Otherwise, you have to call {@link #update()} first.
+     * <p>
+     * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records-1">Official API documentation related to this method</a>
      *
      * @return the device identifier used during validation of the SSL certificate
      */
     public Optional<String> getId() {
-        return id;
+        if (id.isPresent()) {
+            return id;
+        } else if (productType.isPresent() && serial.isPresent()) {
+            return Optional.of("appliance/" + productType.get() + "/" + serial.get());
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
      * Returns the current API version. It should always be <code>v1</code>.
      * <p>
-     * In order to get this information, you must first call {@link #updateDeviceInfo()}.
+     * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
+     * Otherwise, you have to call {@link #update()} first.
      * <p>
-     * <a href="https://api-documentation.homewizard.com/docs/v1/api#parameters">Official API documentation related to this method</a>
+     * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
      * @return the current API version
-     * @see #updateDeviceInfo()
+     * @see #update()
      */
     public Optional<String> getApiVersion() {
         return apiVersion;
@@ -230,12 +229,12 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     /**
      * Returns the version of the currently installed firmware.
      * <p>
-     * In order to get this information, you must first call {@link #updateDeviceInfo()}.
+     * In order to get this information, you must first call {@link #update()}.
      * <p>
-     * <a href="https://api-documentation.homewizard.com/docs/v1/api#parameters">Official API documentation related to this method</a>
+     * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
      * @return the version of the currently installed firmware
-     * @see #updateDeviceInfo()
+     * @see #update()
      */
     public Optional<String> getFirmwareVersion() {
         return firmwareVersion;
