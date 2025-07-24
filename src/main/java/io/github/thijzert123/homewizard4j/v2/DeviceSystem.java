@@ -1,7 +1,14 @@
 package io.github.thijzert123.homewizard4j.v2;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
+import java.net.http.HttpRequest;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -9,7 +16,10 @@ import java.util.OptionalDouble;
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // don't include Optional.empty() values in JSON TODO check if this works
 public class DeviceSystem extends Updatable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @JsonProperty("wifi_ssid")
     private final Optional<String> wifiSsid = Optional.empty();
     @JsonProperty("wifi_rssi_db")
@@ -29,12 +39,50 @@ public class DeviceSystem extends Updatable {
         this.device = device;
     }
 
+    /**
+     * Updates all the data from the device. It requires the token to be present in the
+     * associated {@link DeviceAuthorizer}. If you have changed any values, they will be discarded.
+     *
+     * @return whether updating the data was successful
+     * @throws HomeWizardApiException when something has gone wrong while updating
+     */
     public boolean update() throws HomeWizardApiException {
+        LOGGER.debug("Updating Device...");
         final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isPresent()) {
-            update(token.get(), device.createFullApiAddress("/api"));
+            update(token.get(), device.createFullApiAddress("/api/system"));
             return true;
         } else {
+            LOGGER.trace("No token present while updating DeviceSystem, returning false");
+            return false;
+        }
+    }
+
+    /**
+     * Saves all the changed data to the device. It requires the token to be present in the
+     * associated {@link DeviceAuthorizer}. If you have changed an unsupported value for your device,
+     * this method will throw an exception.
+     *
+     * @return whether saving the data was successful
+     * @throws HomeWizardApiException when something has gone wrong while saving
+     */
+    public boolean save() throws HomeWizardApiException {
+        LOGGER.debug("Saving DeviceSystem...");
+        final Optional<String> token = device.getAuthorizer().getToken();
+        if (token.isPresent()) {
+            try {
+                final String systemJson = objectMapper.writeValueAsString(this);
+                LOGGER.trace("Saving json: {}", systemJson);
+                HttpUtils.sendRequest("PUT",
+                        token.get(),
+                        device.createFullApiAddress("/api/system"),
+                        HttpRequest.BodyPublishers.ofString(systemJson));
+                return true;
+            } catch (final JsonProcessingException jsonProcessingException) {
+                throw new HomeWizardApiException(jsonProcessingException, LOGGER);
+            }
+        } else {
+            LOGGER.trace("No token present while saving DeviceSystem, returning false");
             return false;
         }
     }
@@ -49,11 +97,13 @@ public class DeviceSystem extends Updatable {
      * @throws HomeWizardApiException when something has gone wrong while sending the request
      */
     public boolean reboot() throws HomeWizardApiException {
+        LOGGER.debug("Rebooting device...");
         final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isPresent()) {
             HttpUtils.sendRequest("PUT", token.get(), device.createFullApiAddress("/api/system/reboot"));
             return true;
         } else {
+            LOGGER.trace("No token present while rebooting device, returning false");
             return false;
         }
     }
@@ -68,11 +118,13 @@ public class DeviceSystem extends Updatable {
      * @throws HomeWizardApiException when something has gone wrong while sending the request
      */
     public boolean identify() throws HomeWizardApiException {
+        LOGGER.debug("Identifying device...");
         final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isPresent()) {
             HttpUtils.sendRequest("PUT", token.get(), device.createFullApiAddress("/api/system/identify"));
             return true;
         } else {
+            LOGGER.trace("No token present while identifying device, returning false");
             return false;
         }
     }

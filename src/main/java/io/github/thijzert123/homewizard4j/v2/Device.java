@@ -8,10 +8,12 @@ import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
 /**
+ * A HomeWizard device, such as a Water meter or P1-meter.
+ *
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public abstract class Device extends Updatable { // TODO check all Javadoc, as well as links to official documentation
+public abstract class Device extends Updatable {
     /**
      * The default port of the API.
      */
@@ -41,8 +43,6 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     private final DeviceAuthorizer authorizer;
     private final DeviceSystem system;
 
-    // TODO wifi info
-
     Device(final Optional<String> serviceName,
            final String hostAddress,
            final int port,
@@ -65,32 +65,59 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
 
         authorizer = new DeviceAuthorizer(this);
         system = new DeviceSystem(this);
-
-        // TODO system configuration
     }
-
-    // TODO getFullApiPath or something
 
     String createFullApiAddress(final String apiEndpoint) {
         return getFullAddress() + apiEndpoint;
     }
 
     /**
-     * Update all the basic information from the device. This method returns {@code true} when updating was
+     * Updates all the basic information from the device. This method returns {@code true} when updating was
      * successful. If the token is not present ({@link DeviceAuthorizer#getToken()}), this method returns {@code false}.
      *
      * @return {@code true} when successful
      * @throws HomeWizardApiException when something has gone wrong while updating
      */
-    @Override
-    public boolean update() throws HomeWizardApiException {
+    public boolean updateDeviceInfo() throws HomeWizardApiException {
+        LOGGER.debug("Updating Device info...");
         final Optional<String> token = authorizer.getToken();
         if (token.isPresent()) {
             update(token.get(), createFullApiAddress("/api"));
             return true;
         } else {
+            LOGGER.trace("No token present while updating Device info, returning false");
             return false;
         }
+    }
+
+    /**
+     * Updates all the measurements from the device. It requires a token to be present in the associated
+     * {@link DeviceAuthorizer}. If the token is not present, this method returns {@code false}.
+     *
+     * @return whether updating was successful
+     * @throws HomeWizardApiException when something has gone wrong while updating
+     */
+    public boolean updateMeasurements() throws HomeWizardApiException {
+        LOGGER.debug("Updating Device measurements...");
+        final Optional<String> token = authorizer.getToken();
+        if (token.isPresent()) {
+            update(token.get(), createFullApiAddress("/api/measurement"));
+            return true;
+        } else {
+            LOGGER.trace("No token present while updating Device measurements, returning false");
+            return false;
+        }
+    }
+
+    /**
+     * Updates all possible values from the device. It requires a token to be present in the associated
+     * {@link DeviceAuthorizer}.
+     *
+     * @return whether updating was successful
+     * @throws HomeWizardApiException when something has gone wrong while updating
+     */
+    public boolean update() throws HomeWizardApiException {
+        return updateDeviceInfo() && updateMeasurements();
     }
 
     /**
@@ -98,7 +125,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * For example: <code>watermeter-ABC123._homewizard._tcp.local.</code>.
      * <p>
      * This information is always available if the instance was returned by {@link HomeWizardDiscoverer}.
-     * Otherwise, you can never get this information, even if you use {@link #update()}.
+     * Otherwise, you can never get this information, even if you use {@link #updateDeviceInfo()}.
      *
      * @return full qualified service name
      */
@@ -150,7 +177,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * if serial is the same, the whole device must be the same.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #update()} first.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
@@ -164,7 +191,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * A unique identifier for a device that won't change in the official API, for example <code>HWE-WTR</code>.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #update()} first.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
@@ -180,7 +207,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * Instead, use {@link #getProductType()} if you want to know exactly what type of device something is.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #update()} first.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
@@ -195,7 +222,7 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * {@code appliance/<product_type>/<serial>}. Example: {@code appliance/p1dongle/5c2fafaabbcc}.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #update()} first.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/discovery#txt-records-1">Official API documentation related to this method</a>
      *
@@ -215,12 +242,12 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
      * Returns the current API version. It should always be <code>v1</code>.
      * <p>
      * If the instance was returned by {@link HomeWizardDiscoverer}, this information is always available.
-     * Otherwise, you have to call {@link #update()} first.
+     * Otherwise, you have to call {@link #updateDeviceInfo()} first.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
      * @return the current API version
-     * @see #update()
+     * @see #updateDeviceInfo()
      */
     public Optional<String> getApiVersion() {
         return apiVersion;
@@ -229,12 +256,12 @@ public abstract class Device extends Updatable { // TODO check all Javadoc, as w
     /**
      * Returns the version of the currently installed firmware.
      * <p>
-     * In order to get this information, you must first call {@link #update()}.
+     * In order to get this information, you must first call {@link #updateDeviceInfo()}.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/device_information#parameters">Official API documentation related to this method</a>
      *
      * @return the version of the currently installed firmware
-     * @see #update()
+     * @see #updateDeviceInfo()
      */
     public Optional<String> getFirmwareVersion() {
         return firmwareVersion;
