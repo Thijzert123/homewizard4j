@@ -48,7 +48,9 @@ public class DeviceAuthorizer {
     }
 
     /**
-     * Makes an authorisation request to the device.
+     * Makes an authorisation request to the device. You have to provide a name. With that username,
+     * you can remove the token. The name has to satisfy this regex: {@code ^local\/[a-zA-Z0-9\-_/\\# ]{1,40}$}.
+     * See <a href="https://api-documentation.homewizard.com/docs/v2/authorization#parameters">the official documentation</a> for more information.
      *
      * @param name name to use for authorisation
      * @return the status of the authorisation process
