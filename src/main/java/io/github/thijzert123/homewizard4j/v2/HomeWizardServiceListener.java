@@ -44,7 +44,9 @@ class HomeWizardServiceListener implements ServiceListener {
             return;
         }
 
-        if (PlugInBattery.PRODUCT_TYPES.contains(productType)) {
+        if (P1Meter.PRODUCT_TYPES.contains(productType)) {
+            addP1Meter(serviceInfo);
+        } else if (PlugInBattery.PRODUCT_TYPES.contains(productType)) {
             addPlugInBattery(serviceInfo);
         }
 
@@ -87,6 +89,8 @@ class HomeWizardServiceListener implements ServiceListener {
                     int.class,
                     Optional.class,
                     Optional.class,
+                    Optional.class,
+                    Optional.class,
                     Optional.class
             ).newInstance(
                     Optional.of(serviceInfo.getQualifiedName()),
@@ -94,7 +98,9 @@ class HomeWizardServiceListener implements ServiceListener {
                     serviceInfo.getPort(),
                     Optional.of(serviceInfo.getPropertyString("product_type")),
                     Optional.of(serviceInfo.getPropertyString("product_name")),
-                    Optional.of(serviceInfo.getPropertyString("serial"))
+                    Optional.of(serviceInfo.getPropertyString("serial")),
+                    Optional.of(serviceInfo.getPropertyString("id")),
+                    Optional.of(serviceInfo.getPropertyString("api_version"))
             );
         } catch (final InstantiationException |
                        IllegalAccessException |
@@ -103,6 +109,11 @@ class HomeWizardServiceListener implements ServiceListener {
             LOGGER.error("Fatal error while creating device, please report this to the library developer(s)", exception);
             throw new RuntimeException(exception);
         }
+    }
+
+    private void addP1Meter(final ServiceInfo serviceInfo) {
+        LOGGER.trace("Adding P1 meter...");
+        discoverer.p1Meters.add((P1Meter) createDevice(P1Meter.class, serviceInfo));
     }
 
     private void addPlugInBattery(final ServiceInfo serviceInfo) {

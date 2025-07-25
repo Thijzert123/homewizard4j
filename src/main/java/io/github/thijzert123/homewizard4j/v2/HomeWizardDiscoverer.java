@@ -20,6 +20,7 @@ import java.util.List;
 public class HomeWizardDiscoverer implements AutoCloseable {
     public enum DeviceType {
         ALL,
+        P1_METER,
         PLUG_IN_BATTERY
     }
 
@@ -32,11 +33,13 @@ public class HomeWizardDiscoverer implements AutoCloseable {
 
     final Object deviceAddedNotifier = new Object();
 
+    final List<P1Meter> p1Meters;
     final List<PlugInBattery> plugInBatteries;
 
     public HomeWizardDiscoverer() throws IOException {
         LOGGER.trace("Initializing HomeWizardDiscoverer...");
 
+        p1Meters = new ArrayList<>();
         plugInBatteries = new ArrayList<>();
 
         jmDNS = JmDNS.create(InetAddress.getLocalHost());
@@ -52,6 +55,7 @@ public class HomeWizardDiscoverer implements AutoCloseable {
      */
     public HomeWizardDiscoverer(final HomeWizardDiscoverer discovererToMerge) throws IOException {
         this();
+        p1Meters.addAll(discovererToMerge.p1Meters);
         plugInBatteries.addAll(discovererToMerge.plugInBatteries);
     }
 
@@ -128,13 +132,15 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
-     * Returns a {@link List} of devices with the specified type.
+     * Returns a {@link List} of discovered  devices with the specified type.
      *
      * @param deviceType type to include in the returned list
-     * @return {@link List} of devices with the specified type
+     * @return {@link List} of discovered devices with the specified type
      */
     public List<? extends Device> getDevices(final DeviceType deviceType) {
-        if (deviceType == DeviceType.PLUG_IN_BATTERY) {
+        if (deviceType == DeviceType.P1_METER) {
+            return getP1Meters();
+        } else if (deviceType == DeviceType.PLUG_IN_BATTERY) {
             return getPlugInBatteries();
         } else {
             return getAllDevices();
@@ -163,18 +169,27 @@ public class HomeWizardDiscoverer implements AutoCloseable {
     }
 
     /**
-     * Returns all plug-in battery devices.
+     * Returns all discovered P1 meter devices.
      *
-     * @return all plug-in battery devices
+     * @return all discovered P1 meter devices
+     */
+    public List<P1Meter> getP1Meters() {
+        return p1Meters;
+    }
+
+    /**
+     * Returns all discovered plug-in battery devices.
+     *
+     * @return all discovered plug-in battery devices
      */
     public List<PlugInBattery> getPlugInBatteries() {
         return plugInBatteries;
     }
 
     /**
-     * Returns all devices.
+     * Returns all discovered devices.
      *
-     * @return all devices
+     * @return all discovered devices
      */
     public List<Device> getAllDevices() {
         final List<Device> devices = new ArrayList<>();
