@@ -11,9 +11,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 /**
- * A device to measure mainly electricity and gas use.
- * <p>
- * <a href="https://api-documentation.homewizard.com/docs/v1/measurement#p1-meter-hwe-p1">Official API documentation related to this class</a>
+ * A device to measure electricity and gas use.
  *
  * @author Thijzert123
  * @see Device
