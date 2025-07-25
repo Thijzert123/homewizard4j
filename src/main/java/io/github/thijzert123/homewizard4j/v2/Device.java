@@ -51,6 +51,8 @@ public abstract class Device extends Updatable {
            final Optional<String> serial,
            final Optional<String> id,
            final Optional<String> apiVersion) {
+        setDevice(this);
+
         LOGGER.trace("Initializing Device...");
 
         this.serviceName = serviceName;
@@ -72,52 +74,29 @@ public abstract class Device extends Updatable {
     }
 
     /**
-     * Updates all the basic information from the device. This method returns {@code true} when updating was
-     * successful. If the token is not present ({@link DeviceAuthorizer#getToken()}), this method returns {@code false}.
+     * Updates all the basic information from the device.
      *
-     * @return {@code true} when successful
-     * @throws HomeWizardApiException when something has gone wrong while updating
+     * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
+     * @throws HomeWizardApiException when something else has gone wrong while updating
      */
-    public boolean updateDeviceInfo() throws HomeWizardApiException {
-        LOGGER.debug("Updating Device info...");
-        final Optional<String> token = authorizer.getToken();
-        if (token.isPresent()) {
-            update(token.get(), createFullApiAddress("/api"));
-            return true;
-        } else {
-            LOGGER.trace("No token present while updating Device info, returning false");
-            return false;
-        }
+    public void updateDeviceInfo() throws HomeWizardApiException {
+        update(createFullApiAddress("/api"));
     }
 
     /**
-     * Updates all the measurements from the device. It requires a token to be present in the associated
-     * {@link DeviceAuthorizer}. If the token is not present, this method returns {@code false}.
+     * Updates all the measurements from the device.
      *
-     * @return whether updating was successful
-     * @throws HomeWizardApiException when something has gone wrong while updating
+     * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
+     * @throws HomeWizardApiException when something else has gone wrong while updating
      */
-    public boolean updateMeasurements() throws HomeWizardApiException {
-        LOGGER.debug("Updating Device measurements...");
-        final Optional<String> token = authorizer.getToken();
-        if (token.isPresent()) {
-            update(token.get(), createFullApiAddress("/api/measurement"));
-            return true;
-        } else {
-            LOGGER.trace("No token present while updating Device measurements, returning false");
-            return false;
-        }
+    public void updateMeasurements() throws HomeWizardApiException {
+        update(createFullApiAddress("/api/measurement"));
     }
 
-    /**
-     * Updates all possible values from the device. It requires a token to be present in the associated
-     * {@link DeviceAuthorizer}.
-     *
-     * @return whether updating was successful
-     * @throws HomeWizardApiException when something has gone wrong while updating
-     */
-    public boolean update() throws HomeWizardApiException {
-        return updateDeviceInfo() && updateMeasurements();
+    public void update() throws HomeWizardApiException {
+        updateDeviceInfo();
+        updateMeasurements();
+        system.update();
     }
 
     /**

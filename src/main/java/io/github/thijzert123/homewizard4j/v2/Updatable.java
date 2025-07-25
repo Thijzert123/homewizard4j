@@ -10,12 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 
 /**
  * @author Thijzert123
  */
 abstract class Updatable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private Device device;
     final ObjectMapper objectMapper;
 
     Updatable() {
@@ -31,9 +33,24 @@ abstract class Updatable {
         objectMapper.registerModule(new Jdk8Module());
     }
 
-    void update(final String token, final String fullAddress) throws HomeWizardApiException {
-        LOGGER.debug("Updating instance from {}", fullAddress);
-        final HttpResponse<String> httpResponse = HttpUtils.sendRequest(token, fullAddress);
+    /**
+     * Used for token. You should always call this method when initialising an Updatable.
+     *
+     * @param device new Device
+     */
+    void setDevice(final Device device) {
+        this.device = device;
+    }
+
+    void update(final String fullAddress) throws HomeWizardApiException {
+        LOGGER.debug("Updating instance of {} from address: {}", getClass().getName(), fullAddress);
+
+        final Optional<String> token = device.getAuthorizer().getToken();
+        if (token.isEmpty()) {
+            throw new NoTokenPresentException("No token present while updating", LOGGER);
+        }
+
+        final HttpResponse<String> httpResponse = HttpUtils.sendRequest(token.get(), fullAddress);
 
         try {
             objectMapper.readerForUpdating(this).readValue(httpResponse.body());
@@ -43,10 +60,10 @@ abstract class Updatable {
     }
 
     /**
-     * Updates all the data of this instance.
+     * Updates all possible data of this instance, including sub-data classes like {@link DeviceSystem}.
      *
-     * @return {@code true} when successful, otherwise {@code false}
-     * @throws HomeWizardApiException when something has gone wrong while updating
+     * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
+     * @throws HomeWizardApiException when something else has gone wrong while updating
      */
-    public abstract boolean update() throws HomeWizardApiException;
+    public abstract void update() throws HomeWizardApiException;
 }

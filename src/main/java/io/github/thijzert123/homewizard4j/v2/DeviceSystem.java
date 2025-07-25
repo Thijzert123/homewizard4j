@@ -36,26 +36,18 @@ public class DeviceSystem extends Updatable {
     private final Device device;
 
     DeviceSystem(final Device device) {
+        setDevice(device);
         this.device = device;
     }
 
     /**
-     * Updates all the data from the device. It requires the token to be present in the
-     * associated {@link DeviceAuthorizer}. If you have changed any values, they will be discarded.
+     * Updates all the data from the device.
      *
-     * @return whether updating the data was successful
-     * @throws HomeWizardApiException when something has gone wrong while updating
+     * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
+     * @throws HomeWizardApiException when something else has gone wrong while updating
      */
-    public boolean update() throws HomeWizardApiException {
-        LOGGER.debug("Updating Device...");
-        final Optional<String> token = device.getAuthorizer().getToken();
-        if (token.isPresent()) {
-            update(token.get(), device.createFullApiAddress("/api/system"));
-            return true;
-        } else {
-            LOGGER.trace("No token present while updating DeviceSystem, returning false");
-            return false;
-        }
+    public void update() throws HomeWizardApiException {
+        update(device.createFullApiAddress("/api/system"));
     }
 
     /**
