@@ -42,6 +42,7 @@ public abstract class Device extends Updatable {
 
     private final DeviceAuthorizer authorizer;
     private final DeviceSystem system;
+    private final DeviceUserManagement userManagement;
 
     Device(final Optional<String> serviceName,
            final String hostAddress,
@@ -67,6 +68,7 @@ public abstract class Device extends Updatable {
 
         authorizer = new DeviceAuthorizer(this);
         system = new DeviceSystem(this);
+        userManagement = new DeviceUserManagement(this);
     }
 
     String createFullApiAddress(final String apiEndpoint) {
@@ -80,7 +82,7 @@ public abstract class Device extends Updatable {
      * @throws HomeWizardApiException when something else has gone wrong while updating
      */
     public void updateDeviceInfo() throws HomeWizardApiException {
-        update(createFullApiAddress("/api"));
+        update("/api");
     }
 
     /**
@@ -90,13 +92,15 @@ public abstract class Device extends Updatable {
      * @throws HomeWizardApiException when something else has gone wrong while updating
      */
     public void updateMeasurements() throws HomeWizardApiException {
-        update(createFullApiAddress("/api/measurement"));
+        update("/api/measurement");
     }
 
+    @Override
     public void update() throws HomeWizardApiException {
         updateDeviceInfo();
         updateMeasurements();
         system.update();
+        userManagement.update();
     }
 
     /**
@@ -264,5 +268,9 @@ public abstract class Device extends Updatable {
      */
     public DeviceSystem getSystem() {
         return system;
+    }
+
+    public DeviceUserManagement getUserManagement() { // TODO add javadoc
+        return userManagement;
     }
 }

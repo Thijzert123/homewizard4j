@@ -42,7 +42,8 @@ abstract class Updatable {
         this.device = device;
     }
 
-    void update(final String fullAddress) throws HomeWizardApiException {
+    void update(final String apiEndpoint) throws HomeWizardApiException {
+        final String fullAddress = device.createFullApiAddress(apiEndpoint);
         LOGGER.debug("Updating instance of {} from address: {}", getClass().getName(), fullAddress);
 
         final Optional<String> token = device.getAuthorizer().getToken();

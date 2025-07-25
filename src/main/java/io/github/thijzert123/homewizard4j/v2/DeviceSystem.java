@@ -46,8 +46,9 @@ public class DeviceSystem extends Updatable {
      * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
      * @throws HomeWizardApiException when something else has gone wrong while updating
      */
+    @Override
     public void update() throws HomeWizardApiException {
-        update(device.createFullApiAddress("/api/system"));
+        update("/api/system");
     }
 
     /**
