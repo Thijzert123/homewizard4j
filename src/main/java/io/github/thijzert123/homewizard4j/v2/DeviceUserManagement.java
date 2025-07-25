@@ -35,9 +35,9 @@ public class DeviceUserManagement extends Updatable {
      * Removes token associated with the given user.
      *
      * @param user user to remove
-     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
+     * @throws NoTokenPresentException          when no token is present in an associated {@link DeviceAuthorizer}
      * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
-     * @throws HomeWizardApiException when something else has gone wrong while removing the user
+     * @throws HomeWizardApiException           when something else has gone wrong while removing the user
      */
     public void removeUser(final DeviceUser user) throws HomeWizardApiException {
         LOGGER.debug("Removing user with name: {}", user.getName());
@@ -63,12 +63,21 @@ public class DeviceUserManagement extends Updatable {
      * Removes token associated with a user. It creates an {@link DeviceUser} based on the given username.
      *
      * @param username identifier of user to remove
-     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
+     * @throws NoTokenPresentException          when no token is present in an associated {@link DeviceAuthorizer}
      * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
-     * @throws HomeWizardApiException when something else has gone wrong while removing the user
+     * @throws HomeWizardApiException           when something else has gone wrong while removing the user
      */
     public void removeUser(final String username) throws HomeWizardApiException {
         removeUser(new DeviceUser(username));
+    }
+
+    /**
+     * Returns all users registered on this device.
+     *
+     * @return all users registered on this device
+     */
+    public List<DeviceUser> getUsers() {
+        return users;
     }
 
     /**

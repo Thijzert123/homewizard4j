@@ -17,23 +17,30 @@ import java.util.Optional;
 /**
  * This class serves as an authorizer for one device. For most API requests, you need a token. You can use this
  * class to get one. It works as follows:
- * <ul>
+ * <ol>
  *     <li>A request with a name is made to the device
  *     <li>The device denies, doesn't give a token and says to press the physical button on the device
  *     <li>The user presses the button
  *     <li>Another request is made within 30 seconds of pressing the button
  *     <li>The device responds with a token that you can use to make all other requests
- * </ul>
+ * </ol>
  *
  * @author Thijzert123
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class DeviceAuthorizer {
     /**
-     * The status after authorizing.
+     * The status of authorizing.
      */
     public enum AuthorizeStatus {
+        /**
+         * You have successfully authorised with the device, and you can get the token with {@link #getToken()}.
+         */
         AUTHORISATION_SUCCESS,
+        /**
+         * So far, authorisation is going well, but the user still needs to press the button before calling
+         * {@link #authorize(String)} again.
+         */
         NEEDS_BUTTON_PRESS
     }
 
