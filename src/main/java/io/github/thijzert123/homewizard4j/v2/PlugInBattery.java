@@ -58,21 +58,17 @@ public class PlugInBattery extends Device {
         );
     }
 
-    PlugInBattery(final String hostAddress, final int port) {
+    public PlugInBattery(final String hostAddress) {
         super(
                 Optional.empty(),
                 hostAddress,
-                port,
+                Device.DEFAULT_PORT,
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty()
         );
-    }
-
-    PlugInBattery(final String hostAddress) {
-        this(hostAddress, Device.DEFAULT_PORT);
     }
 
     /**

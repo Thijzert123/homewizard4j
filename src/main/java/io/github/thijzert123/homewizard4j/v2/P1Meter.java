@@ -123,21 +123,17 @@ public class P1Meter extends Device {
         );
     }
 
-    P1Meter(final String hostAddress, final int port) {
+    public P1Meter(final String hostAddress) {
         super(
                 Optional.empty(),
                 hostAddress,
-                port,
+                Device.DEFAULT_PORT,
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty()
         );
-    }
-
-    P1Meter(final String hostAddress) {
-        this(hostAddress, Device.DEFAULT_PORT);
     }
 
     /**
