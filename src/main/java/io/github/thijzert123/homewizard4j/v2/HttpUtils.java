@@ -1,5 +1,8 @@
 package io.github.thijzert123.homewizard4j.v2;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +22,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -26,6 +31,7 @@ import java.util.Optional;
  */
 class HttpUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final HttpClient httpClient;
 
     static {
@@ -93,9 +99,27 @@ class HttpUtils {
         try {
             final HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
             LOGGER.trace("Response body: {}", httpResponse.body());
+            errorHandling(httpResponse);
             return httpResponse;
         } catch (final IOException | InterruptedException exception) {
             throw new HomeWizardApiException(exception, LOGGER);
+        }
+    }
+
+    private static void errorHandling(final HttpResponse<String> httpResponse) throws HomeWizardApiException {
+        final int statusCode = httpResponse.statusCode();
+        LOGGER.trace("Handling errors, status code: {}", statusCode);
+        if (statusCode >= 200 && statusCode <= 299) { // success
+            return;
+        }
+
+        try {
+            final Map<String, String> errorResponse = objectMapper.readValue(httpResponse.body(),
+                    new TypeReference<HashMap<String, String>>() {});
+            final String errorCode = errorResponse.get("error");
+            throw new HomeWizardErrorResponseException(errorCode, LOGGER);
+        } catch (JsonProcessingException jsonProcessingException) {
+            throw new HomeWizardApiException(jsonProcessingException, LOGGER);
         }
     }
 

@@ -1,15 +1,16 @@
 package io.github.thijzert123.homewizard4j.v2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.thijzert123.homewizard4j.v2.json.AuthorizeRequest;
-import io.github.thijzert123.homewizard4j.v2.json.AuthorizeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -54,30 +55,35 @@ public class DeviceAuthorizer {
      *
      * @param name name to use for authorisation
      * @return the status of the authorisation process
+     * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
      * @throws HomeWizardApiException when something has gone wrong while making the API request
      */
     public AuthorizeStatus authorize(final String name) throws HomeWizardApiException {
         this.name = Optional.of(name);
-        final AuthorizeRequest authorizeRequestBody = new AuthorizeRequest(name);
-        try {
-            final String authorizeRequestBodyJson = objectMapper.writeValueAsString(authorizeRequestBody);
-            final HttpResponse<String> httpResponse = HttpUtils.sendRequest(
-                    "POST",
-                    device.createFullApiAddress("/api/user"),
-                    HttpRequest.BodyPublishers.ofString(authorizeRequestBodyJson));
 
-            final AuthorizeResponse authorizeResponse = objectMapper.readValue(httpResponse.body(), AuthorizeResponse.class);
-            final String error = authorizeResponse.getError();
-            if (error != null) {
-                // The button has not been pressed
-                if (Objects.equals(error, "user:creation-not-enabled")) {
+        try {
+            // create body to send with the request
+            final Map<String, String> requestBodyMap = Map.of("name", name);
+            final String requestBody = objectMapper.writeValueAsString(requestBodyMap);
+
+            try {
+                final HttpResponse<String> httpResponse = HttpUtils.sendRequest(
+                        "POST",
+                        device.createFullApiAddress("/api/user"),
+                        HttpRequest.BodyPublishers.ofString(requestBody));
+
+                final Map<String, String> response = objectMapper.readValue(httpResponse.body(),
+                        new TypeReference<HashMap<String, String>>() {});
+
+                this.token = Optional.of(response.get("token"));
+                return AuthorizeStatus.AUTHORISATION_SUCCESS;
+            } catch (final HomeWizardErrorResponseException homeWizardErrorResponseException) {
+                final String errorCode = homeWizardErrorResponseException.getErrorCode();
+                if (Objects.equals(errorCode, "user:creation-not-enabled")) {
                     return AuthorizeStatus.NEEDS_BUTTON_PRESS;
                 } else {
-                    throw new HomeWizardApiException("Unknown error response while authorizing: " + error, LOGGER);
+                    throw new HomeWizardApiException("Unknown error response while authorizing: " + errorCode, LOGGER);
                 }
-            } else {
-                this.token = Optional.of(authorizeResponse.getToken());
-                return AuthorizeStatus.AUTHORISATION_SUCCESS;
             }
         } catch (final JsonProcessingException jsonProcessingException) {
             throw new HomeWizardApiException(jsonProcessingException, LOGGER);

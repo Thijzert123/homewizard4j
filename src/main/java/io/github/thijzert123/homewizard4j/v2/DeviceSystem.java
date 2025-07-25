@@ -40,12 +40,6 @@ public class DeviceSystem extends Updatable {
         this.device = device;
     }
 
-    /**
-     * Updates all the data from the device.
-     *
-     * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
-     * @throws HomeWizardApiException when something else has gone wrong while updating
-     */
     @Override
     public void update() throws HomeWizardApiException {
         update("/api/system");
@@ -57,7 +51,8 @@ public class DeviceSystem extends Updatable {
      * this method will throw an exception.
      *
      * @return whether saving the data was successful
-     * @throws HomeWizardApiException when something has gone wrong while saving
+     * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
+     * @throws HomeWizardApiException when something else has gone wrong while saving
      */
     public boolean save() throws HomeWizardApiException {
         LOGGER.debug("Saving DeviceSystem...");
@@ -86,18 +81,17 @@ public class DeviceSystem extends Updatable {
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/system#actions">Official API related to this method</a>
      *
-     * @return whether the action was successful
+     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
      * @throws HomeWizardApiException when something has gone wrong while sending the request
      */
-    public boolean reboot() throws HomeWizardApiException {
+    public void reboot() throws HomeWizardApiException {
         LOGGER.debug("Rebooting device...");
         final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isPresent()) {
             HttpUtils.sendRequest("PUT", token.get(), device.createFullApiAddress("/api/system/reboot"));
-            return true;
         } else {
-            LOGGER.trace("No token present while rebooting device, returning false");
-            return false;
+            LOGGER.trace("No token present while rebooting device, throwing NoTokenPresentException");
+            throw new NoTokenPresentException(LOGGER);
         }
     }
 
@@ -107,18 +101,17 @@ public class DeviceSystem extends Updatable {
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/system#actions">Official API related to this method</a>
      *
-     * @return whether the action was successful
+     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
      * @throws HomeWizardApiException when something has gone wrong while sending the request
      */
-    public boolean identify() throws HomeWizardApiException {
+    public void identify() throws HomeWizardApiException {
         LOGGER.debug("Identifying device...");
         final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isPresent()) {
             HttpUtils.sendRequest("PUT", token.get(), device.createFullApiAddress("/api/system/identify"));
-            return true;
         } else {
-            LOGGER.trace("No token present while identifying device, returning false");
-            return false;
+            LOGGER.trace("No token present while identifying device, throwing NoTokenPresentException");
+            throw new NoTokenPresentException(LOGGER);
         }
     }
 

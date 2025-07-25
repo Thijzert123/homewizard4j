@@ -9,15 +9,7 @@ import org.slf4j.Logger;
  * @author Thijzert123
  */
 public class NoTokenPresentException extends HomeWizardApiException {
-    NoTokenPresentException(final String message, final Throwable cause, final Logger logger) {
-        super(message, cause, logger);
-    }
-
-    NoTokenPresentException(final Throwable cause, final Logger logger) {
-        super(cause, logger);
-    }
-
-    NoTokenPresentException(final String message, final Logger logger) {
-        super(message, logger);
+    NoTokenPresentException(final Logger logger) {
+        super("No token present in an associated DeviceAuthorizer", logger);
     }
 }

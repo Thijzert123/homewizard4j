@@ -142,26 +142,27 @@ public class P1Meter extends Device {
 
     /**
      * Returns the most recent, valid telegram that was given by the P1 meter. It requires a token to be
-     * present in the {@link DeviceAuthorizer}. If it is not, this method returns an empty {@link Optional}.
+     * present in the {@link DeviceAuthorizer}.
      * <p>
      * This method always does an HTTPS request, so you can always use it.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/telegram">Official API documentation related to this method</a>
      *
      * @return telegram by the P1 meter
+     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
      * @throws HomeWizardApiException when something has gone wrong while retrieving the telegram
      */
-    public Optional<String> retrieveLastTelegram() throws HomeWizardApiException {
+    public String retrieveLastTelegram() throws HomeWizardApiException {
         LOGGER.debug("Retrieving last telegram...");
         final Optional<String> token = getAuthorizer().getToken();
         if (token.isPresent()) {
             final HttpResponse<String> httpResponse = HttpUtils.sendRequest("PUT",
                     token.get(),
                     createFullApiAddress("/api/telegram"));
-            return Optional.of(httpResponse.body());
+            return httpResponse.body();
         } else {
-            LOGGER.trace("No token present while retrieving last telegram, returning empty Optional");
-            return Optional.empty();
+            LOGGER.trace("No token present while retrieving last telegram, throwing NoTokenPresentException");
+            throw new NoTokenPresentException(LOGGER);
         }
     }
 

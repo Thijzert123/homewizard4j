@@ -9,7 +9,6 @@ import java.lang.invoke.MethodHandles;
 import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -32,7 +31,15 @@ public class DeviceUserManagement extends Updatable {
         update("/api/user");
     }
 
-    public boolean removeUser(final DeviceUser user) throws HomeWizardApiException {
+    /**
+     * Removes token associated with the given user.
+     *
+     * @param user user to remove
+     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
+     * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
+     * @throws HomeWizardApiException when something else has gone wrong while removing the user
+     */
+    public void removeUser(final DeviceUser user) throws HomeWizardApiException {
         LOGGER.debug("Removing user with name: {}", user.getName());
         final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isPresent()) {
@@ -43,20 +50,32 @@ public class DeviceUserManagement extends Updatable {
                         token.get(),
                         device.createFullApiAddress("/api/user"),
                         HttpRequest.BodyPublishers.ofString(bodyToSend));
-                return true;
             } catch (final JsonProcessingException jsonProcessingException) {
                 throw new HomeWizardApiException(jsonProcessingException, LOGGER);
             }
         } else {
-            LOGGER.trace("No token present while removing user, returning false");
-            return false;
+            LOGGER.trace("No token present while removing user, throwing NoTokenPresentException");
+            throw new NoTokenPresentException(LOGGER);
         }
     }
 
-    public boolean removeUser(final String userName) throws HomeWizardApiException {
-        return removeUser(new DeviceUser(userName));
+    /**
+     * Removes token associated with a user. It creates an {@link DeviceUser} based on the given username.
+     *
+     * @param username identifier of user to remove
+     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
+     * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
+     * @throws HomeWizardApiException when something else has gone wrong while removing the user
+     */
+    public void removeUser(final String username) throws HomeWizardApiException {
+        removeUser(new DeviceUser(username));
     }
 
+    /**
+     * Returns the user of the token that is currently being used.
+     *
+     * @return the user of the token that is currently being used
+     */
     public DeviceUser getCurrentUser() {
         LOGGER.error("Looping users to find current user");
         for (final DeviceUser user : users) {

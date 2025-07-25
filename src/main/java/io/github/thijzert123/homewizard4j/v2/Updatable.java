@@ -48,7 +48,7 @@ abstract class Updatable {
 
         final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isEmpty()) {
-            throw new NoTokenPresentException("No token present while updating", LOGGER);
+            throw new NoTokenPresentException(LOGGER);
         }
 
         final HttpResponse<String> httpResponse = HttpUtils.sendRequest(token.get(), fullAddress);
@@ -61,9 +61,10 @@ abstract class Updatable {
     }
 
     /**
-     * Updates all possible data of this instance, including sub-data classes like {@link DeviceSystem}.
+     * Updates all possible data of this instance, including (if present) sub-data classes like {@link DeviceSystem}.
      *
      * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
+     * @throws HomeWizardErrorResponseException when an unexpected response gets returned
      * @throws HomeWizardApiException when something else has gone wrong while updating
      */
     public abstract void update() throws HomeWizardApiException;
