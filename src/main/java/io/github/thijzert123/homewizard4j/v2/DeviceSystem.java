@@ -50,17 +50,18 @@ public class DeviceSystem extends Updatable {
     }
 
     /**
-     * Saves all the changed data to the device. It requires the token to be present in the
-     * associated {@link DeviceAuthorizer}. If you have changed an unsupported value for your device,
+     * Saves all the changed data to the device. It requires the token to be present in the {@link Device}.
+     * If you have changed an unsupported value for your device,
      * this method will throw an exception.
      *
      * @return whether saving the data was successful
+     * @throws NoTokenPresentException          when no token is present
      * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
-     * @throws HomeWizardApiException when something else has gone wrong while saving
+     * @throws HomeWizardApiException           when something else has gone wrong while saving
      */
-    public boolean save() throws HomeWizardApiException {
+    public void save() throws HomeWizardApiException {
         LOGGER.debug("Saving DeviceSystem...");
-        final Optional<String> token = device.getAuthorizer().getToken();
+        final Optional<String> token = device.getToken();
         if (token.isPresent()) {
             try {
                 final String systemJson = objectMapper.writeValueAsString(this);
@@ -69,28 +70,28 @@ public class DeviceSystem extends Updatable {
                         token.get(),
                         device.createFullApiAddress("/api/system"),
                         HttpRequest.BodyPublishers.ofString(systemJson));
-                return true;
             } catch (final JsonProcessingException jsonProcessingException) {
                 throw new HomeWizardApiException(jsonProcessingException, LOGGER);
             }
         } else {
-            LOGGER.trace("No token present while saving DeviceSystem, returning false");
-            return false;
+            LOGGER.trace("No token present while saving DeviceSystem, throwing NoTokenPresentException");
+            throw new NoTokenPresentException(LOGGER);
         }
     }
 
     /**
-     * Reboots the device. This is not available for the plug-in battery. It requires the token to be present in the
-     * associated {@link DeviceAuthorizer}.
+     * Reboots the device. This is not available for the plug-in battery.
+     * It requires the token to be present in the {@link Device}.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/system#actions">Official API related to this method</a>
      *
-     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
-     * @throws HomeWizardApiException when something has gone wrong while sending the request
+     * @throws NoTokenPresentException          when no token is present
+     * @throws HomeWizardErrorResponseException when an unexpected error response gets returned
+     * @throws HomeWizardApiException           when something has gone wrong while sending the request
      */
     public void reboot() throws HomeWizardApiException {
         LOGGER.debug("Rebooting device...");
-        final Optional<String> token = device.getAuthorizer().getToken();
+        final Optional<String> token = device.getToken();
         if (token.isPresent()) {
             HttpUtils.sendRequest("PUT", token.get(), device.createFullApiAddress("/api/system/reboot"));
         } else {
@@ -101,16 +102,16 @@ public class DeviceSystem extends Updatable {
 
     /**
      * Lets the device identify itself by blinking the status LED. This is not available for the kWh meter.
-     * It requires the token to be present in the associated {@link DeviceAuthorizer}.
+     * It requires the token to be present in the {@link Device}.
      * <p>
      * <a href="https://api-documentation.homewizard.com/docs/v2/system#actions">Official API related to this method</a>
      *
-     * @throws NoTokenPresentException when no token is present in an associated {@link DeviceAuthorizer}
-     * @throws HomeWizardApiException when something has gone wrong while sending the request
+     * @throws NoTokenPresentException when no token is present
+     * @throws HomeWizardApiException  when something has gone wrong while sending the request
      */
     public void identify() throws HomeWizardApiException {
         LOGGER.debug("Identifying device...");
-        final Optional<String> token = device.getAuthorizer().getToken();
+        final Optional<String> token = device.getToken();
         if (token.isPresent()) {
             HttpUtils.sendRequest("PUT", token.get(), device.createFullApiAddress("/api/system/identify"));
         } else {

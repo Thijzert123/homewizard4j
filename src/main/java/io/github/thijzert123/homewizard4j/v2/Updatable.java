@@ -34,7 +34,7 @@ abstract class Updatable {
     }
 
     /**
-     * Used for token. You should always call this method when initialising an Updatable.
+     * Used for token. You should always call this method when initialising an Updatable. TODO check if this is always done
      *
      * @param device new Device
      */
@@ -42,11 +42,10 @@ abstract class Updatable {
         this.device = device;
     }
 
-    void update(final String apiEndpoint) throws HomeWizardApiException {
+    private void update(final String apiEndpoint, final Optional<String> token) throws HomeWizardApiException {
         final String fullAddress = device.createFullApiAddress(apiEndpoint);
         LOGGER.debug("Updating instance of {} from address: {}", getClass().getName(), fullAddress);
 
-        final Optional<String> token = device.getAuthorizer().getToken();
         if (token.isEmpty()) {
             throw new NoTokenPresentException(LOGGER);
         }
@@ -58,6 +57,14 @@ abstract class Updatable {
         } catch (final JsonProcessingException jsonProcessingException) {
             throw new HomeWizardApiException(jsonProcessingException, LOGGER);
         }
+    }
+
+    void update(final String apiEndpoint, final String token) throws HomeWizardApiException {
+        update(apiEndpoint, Optional.of(token));
+    }
+
+    void update(final String apiEndpoint) throws HomeWizardApiException {
+        update(apiEndpoint, device.getToken());
     }
 
     /**

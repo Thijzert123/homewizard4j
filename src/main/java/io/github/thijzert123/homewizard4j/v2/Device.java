@@ -40,7 +40,6 @@ public abstract class Device extends Updatable {
     @JsonProperty("firmware_version")
     private final Optional<String> firmwareVersion = Optional.empty();
 
-    private final DeviceAuthorizer authorizer;
     private final DeviceSystem system;
     private final DeviceUserManagement userManagement;
 
@@ -66,9 +65,12 @@ public abstract class Device extends Updatable {
         this.id = id;
         this.apiVersion = apiVersion;
 
-        authorizer = new DeviceAuthorizer(this);
         system = new DeviceSystem(this);
         userManagement = new DeviceUserManagement(this);
+    }
+
+    Optional<String> getToken() {
+        return getUserManagement().getCurrentUser().getToken();
     }
 
     String createFullApiAddress(final String apiEndpoint) {
@@ -78,7 +80,7 @@ public abstract class Device extends Updatable {
     /**
      * Updates all the basic information from the device.
      *
-     * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
+     * @throws NoTokenPresentException when no token was present
      * @throws HomeWizardApiException when something else has gone wrong while updating
      */
     public void updateDeviceInfo() throws HomeWizardApiException {
@@ -88,7 +90,7 @@ public abstract class Device extends Updatable {
     /**
      * Updates all the measurements from the device.
      *
-     * @throws NoTokenPresentException when no token was present in the associated {@link DeviceAuthorizer}
+     * @throws NoTokenPresentException when no token was present
      * @throws HomeWizardApiException when something else has gone wrong while updating
      */
     public void updateMeasurements() throws HomeWizardApiException {
@@ -248,16 +250,6 @@ public abstract class Device extends Updatable {
      */
     public Optional<String> getFirmwareVersion() {
         return firmwareVersion;
-    }
-
-    /**
-     * Returns the authorizer associated with this device. With this, you are able to create a token, as well as set one
-     * if you already have one.
-     *
-     * @return the authorizer associated with this device
-     */
-    public DeviceAuthorizer getAuthorizer() {
-        return authorizer;
     }
 
     /**
