@@ -19,4 +19,5 @@ module io.github.thijzert123.homewizard4j {
     opens io.github.thijzert123.homewizard4j.v1 to com.fasterxml.jackson.databind;
 
     exports io.github.thijzert123.homewizard4j.v1;
+    exports io.github.thijzert123.homewizard4j.v2;
 }
